@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  
+   <string-array name="fonts">
+        <item>Antipasto</item>
+        <item>AWL Unicode</item>
+        <item>Comic Sans MS</item>
+        <item>Roboto (Mặc định)</item>
+        <item>Times New Roman</item>
+        <item>Lingoes Unicode</item>
+    </string-array>
+    <string-array name="themes_lables">
+        <item>Màu cam (Mặc định)</item>
+        <item>Màu xanh sáng</item>
+    </string-array>
+
+</resources>

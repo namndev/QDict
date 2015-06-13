@@ -1,7 +1,7 @@
 # Built application files
 *.apk
 *.ap_
-
+.DS_Store
 # Files for the Dalvik VM
 *.dex
 
@@ -11,6 +11,8 @@
 # Generated files
 bin/
 gen/
+jni/
+obj/
 
 # Gradle files
 .gradle/

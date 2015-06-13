@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="action_search">Tìm kiếm</string>
+
+    <!-- ui -->
+    <string name="sdcard_error">Lỗi thể nhớ</string>
+    <string name="prefs_title_help">Trợ giúp</string>
+    <string name="prefs_title_feed_back">Phản hồi</string>
+
+    <!-- action -->
+    <string name="ok">Đồng ý</string>
+    <string name="cancel">Hủy</string>
+    <string name="delete">Xóa</string>
+    <string name="checked_all">Chọn tất</string>
+    <string name="unchecked_all">Bỏ chọn tất</string>
+    <string name="delete_all">Xóa tất cả</string>
+    <string name="hide">Ẩn</string>
+    <string name="close">Đóng</string>
+    <string name="corner">Kéo</string>
+    <string name="maximize">Phóng to</string>
+    <string name="delete_all_recent_summary">Bạn chắc chắn muốn xóa tất cả lịch sử?</string>
+    <string name="delete_all_favorite_summary">Bạn chắc chắn muốn xóa tất cả các từ yêu thích?</string>
+
+    <plurals name="words_count">
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> từ khóa</item>
+    </plurals>
+    <plurals name="items_count">
+        <item quantity="other"><xliff:g id="number" example="135">%d</xliff:g> mục</item>
+    </plurals>
+    <!-- dicitonary -->
+
+    <string name="recent_lable">Lịch sử</string>
+    <string name="favorite_lable">Yêu thích</string>
+    <string name="settings_lable">Tùy chỉnh</string>
+    <string name="guide_lable">Hướng dẫn</string>
+    <string name="select_dictionary">Chọn từ điển</string>
+    <string name="join_us">Join us</string>
+    <string name="share_lable">Chia sẽ</string>
+    <string name="about_lable">Thông tin</string>
+    <string name="keywords_null">Không tìm thấy kết quả</string>
+    <string name="favorites_no_word">Không có từ yêu thích</string>
+    <string name="recent_no_word">Chưa tra từ nào gần đây</string>
+    <string name="notification_message">Chạm vào để mở QDict</string>
+    <string name="notification_title">%1$s đang chạy</string>
+
+    <!-- seaching -->
+    <string name="keywords_search">Tìm kiếm&#8230;</string>
+    <string name="fuzzy_query_prompt">Chọn nút \'wordlist\' để thực hiện truy vấn \'Fuzzy\' với từ khóa trên.</string>
+    <string name="fulltext_query_prompt">Chọn nút \'wordlist\' để tìm kiếm \'Full-text\' với đoạn từ khóa trên.</string>
+    <string name="pattern_query_prompt">Chọn nút \'wordlist\'  để thực hiện truy vấn mẫu với từ khóa trên.</string>
+    <!-- setting -->
+    <string name="prefs_category_title_general">Thiết lập chung</string>
+    <string name="prefs_title_source">Dữ liệu</string>
+    <string name="prefs_title_tts">Phát âm</string>
+    <string name="prefs_title_tts_summary">Sử dụng máy</string>
+    <string name="prefs_title_notification">Thông báo</string>
+    <string name="prefs_title_capture">Bắt từ</string>
+    <string name="prefs_summary_capture">Tìm kiếm từ clipboard</string>
+    <string name="prefs_title_notification_summary">Sử dụng thông báo cửa sổ tra nhanh</string>
+    <string name="prefs_category_title_theme">Giao diện</string>
+    <!--  -->
+    <string name="prefs_title_font_text">Phông chữ</string>
+    <string name="prefs_title_theme">Giao diện</string>
+    <string name="prefs_title_max_favorite_word">Từ yêu thích</string>
+    <string name="prefs_title_max_favorite_word_summary">Số từ tối đa: %1$s</string>
+
+    <!-- about -->
+    <string name="app_license">Apache, phiên bản 2.0</string>
+    <string name="app_version_label">Phiên bản: </string>
+    <string name="app_author_label">Tác giả: </string>
+    <string name="app_license_label">Giấy phép: </string>
+    <string name="readme_text">1. Tìm kiếm theo mẫu (pattern matching):&lt;br&gt;
+       Bạn có thể nhập từ chứa \'*\' (wildcard) và \'?\' (joker) là mẫu (pattern). \'*\' tương ứng là một ký tự bất kỳ, có thể trống hoặc chuỗi, và \'?\' tương ứng với một ký tự bất kỳ. sau khi bấm nút \'wordlist\', các từ tương ứng với mẫu này sẽ hiển thị trong danh sách kết quả các từ khóa.&lt;br&gt;&lt;br&gt;
+       2. Truy vấn Fuzzy:&lt;br&gt;
+       Khi bạn không thể nhớ chính xác cách đánh vần từ bạn có thể thử với cách truy vấn Fuzzy. Bằng cách sử dụng thuật toán \"Levenshtein Edit Distance\" để tìm sự giống nhau giữa hai từ, và trả về kết quả giống nhất với từ bạn cần tìm. Để tạo một truy vấn fuzzy, chỉ cần nhập vào một từ bắt đầu bằng ký tự \"/\", và chọn nút \'wordlist\'.&lt;br&gt;&lt;br&gt;
+       3. Tìm kiếm \'Full-text\':&lt;br&gt;
+       Tìm kiếm \'Full-text\' là tìm kiếm một từ trong dữ liệu. Để thực hiện kiểu tìm kiếm \'Full-text\', bạn nhập vào từ bắt đầu bằng ký tự \":\", và chọn nút \'wordlist\'. Ví dụ, \":ab cd\" tìm dữ liệu có chứa cả \"ab\" và \"cd\". Nếu từ có chứa dấu khoảng cách, bạn có thể sử dụng ký tự \"\\ \", ví dụ \":apple\\ pie\", các ký tự thay thế khác: \"\\\\\" cho \'\\ \', \"\\t\" cho Tab và \"\\n\" ký tự xuống dòng (enter).&lt;br&gt;&lt;br&gt;
+       Để tìm hiểu thêm vui lòng đọc \'Hướng dẫn\':&lt;br&gt;
+       &lt;a href="http://madman-team.blogspot.com/2015/05/qdict-guide.html" target="_blank">http://madman-team.blogspot.com&lt;\/a&gt;&lt;br&gt;&lt;br&gt;</string>
+
+</resources>

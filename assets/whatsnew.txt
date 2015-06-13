@@ -1,0 +1,10 @@
+SVN Dictionaries.
+
+* Version 1.0.4 [24/11/2014]
+ - Improvements.
+ 
+* Version 1.0.3 [22/11/2014]
+ - Improvements and bug fixes.
+ - Added speech to text.
+ 
+* Version 1.0.2 [20/11/2014]

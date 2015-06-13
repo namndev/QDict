@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.mmt.widget.SlidingUpPanelLayout
+        xmlns:mmt="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        mmt:umanoDragView="@+id/dragView"
+        mmt:umanoOverlay="true"
+        mmt:umanoPanelHeight="68dp"
+        mmt:umanoParalaxOffset="100dp"
+        mmt:umanoShadowHeight="4dp" >
+
+        <!-- MAIN CONTENT -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <android.support.v7.widget.Toolbar
+                xmlns:mmt="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/mmt_white"
+                mmt:theme="@style/ActionBar" />
+
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/main_toolbar" />
+
+            <com.mmt.widget.ActionButton
+                android:id="@+id/action_button"
+                style="@style/mmt_action_button_style"
+                android:onClick="onActionButtonClick"
+                fab:button_color="?attr/colorPrimary"
+                fab:image="@drawable/ic_search"
+                fab:type="DEFAULT" />
+        </RelativeLayout>
+        <!-- SLIDING LAYOUT -->
+
+        <include layout="@layout/layout_drag" />
+    </com.mmt.widget.SlidingUpPanelLayout>
+
+</RelativeLayout>

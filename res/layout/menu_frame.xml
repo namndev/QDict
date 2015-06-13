@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navi_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary" >
+
+    <ImageView
+        android:id="@+id/img_header"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/navi_header_height"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        android:src="@drawable/bamboo" />
+
+    <FrameLayout
+        android:id="@+id/menu_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_footer"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/img_header" />
+
+    <LinearLayout
+        android:id="@+id/layout_footer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/second_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorPrimaryDark"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/action_about"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/action_bacground"
+            android:drawableLeft="@drawable/ic_about_white"
+            android:drawablePadding="@dimen/large_padding"
+            android:gravity="center_vertical"
+            android:onClick="onClick"
+            android:paddingLeft="@dimen/super_padding"
+            android:text="@string/about_lable"
+            android:textColor="@color/mmt_white" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/mmt_grey_500" />
+
+        <Button
+            android:id="@+id/action_share"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/action_bacground"
+            android:drawableLeft="@drawable/ic_share"
+            android:drawablePadding="@dimen/large_padding"
+            android:gravity="center_vertical"
+            android:onClick="onClick"
+            android:paddingLeft="@dimen/super_padding"
+            android:text="@string/share_lable"
+            android:textColor="@color/mmt_white" />
+    </LinearLayout>
+
+</RelativeLayout>

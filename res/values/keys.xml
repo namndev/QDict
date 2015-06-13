@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="prefs_key_source" translatable="false">prefs_key_source</string>
+    <string name="prefs_key_max_recent_word" translatable="false">prefs_key_max_recent_word</string>
+
+    <!-- ui -->
+    <string name="prefs_key_font_text" translatable="false">prefs_key_font_text</string>
+    <string name="prefs_key_theme" translatable="false">prefs_key_theme</string>
+    <string name="prefs_key_using_tts" translatable="false">prefs_key_using_tts</string>
+    <string name="prefs_key_using_capture" translatable="false">prefs_key_using_capture</string>
+    <!--  -->
+    <string name="prefs_key_index" translatable="false">prefs_key_index</string>
+    <string name="prefs_key_capture" translatable="false">prefs_key_capture</string>
+    <string name="prefs_key_index_all" translatable="false">prefs_key_index_all</string>
+    <string name="prefs_key_capture_all" translatable="false">prefs_key_capture_all</string>
+    <!--  -->
+    <string name="prefs_key_capture_notification" translatable="false">prefs_key_capture_notification</string>
+
+    <!-- app version -->
+    <string name="app_version" translatable="false">1.8.6</string>
+    <string name="app_email" translatable="false">madman.hust@gmail.com</string>
+
+</resources>

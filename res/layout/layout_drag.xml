@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dragView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mmt_white"
+    android:clickable="true"
+    android:focusable="false"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/small_padding"
+    android:paddingRight="@dimen/small_padding"
+    android:paddingTop="@dimen/small_padding" >
+
+    <LinearLayout
+        android:id="@+id/dictSearchBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/action_menu"
+            android:layout_width="@dimen/action_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/action_bacground"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="?attr/navigationIcon" >
+        </ImageButton>
+
+        <LinearLayout
+            android:id="@+id/layout_input"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/small_padding"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/medium_padding" >
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/action_wordslist"
+            android:layout_width="@dimen/about_padding"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/action_bacground"
+            android:contentDescription="@string/app_name"
+            android:src="?attr/icon_actionWordsList"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/action_voice"
+            android:layout_width="@dimen/action_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/action_bacground"
+            android:contentDescription="@string/app_name"
+            android:src="?attr/icon_actionVoice" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_info_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="3dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/empty_list"
+        android:visibility="gone" />
+
+    <com.mmt.widget.DropDownListView
+        android:id="@+id/drop_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" />
+
+</LinearLayout>
