@@ -1,4 +1,4 @@
-SVN Dictionaries.
+QDict.
 
 * Version 1.0.4 [24/11/2014]
  - Improvements.
