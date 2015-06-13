@@ -18,6 +18,11 @@ obj/
 .gradle/
 build/
 /*/build/
+.classpath
+.project
+lint.xml
+proguard.cfg
+project.properties
 
 # Local configuration file (sdk path, etc)
 local.properties
