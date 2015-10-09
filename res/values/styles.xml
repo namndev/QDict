@@ -73,6 +73,9 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@color/mmt_orange_700</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <!-- Support library attribute for compatibility -->
+        <item name="windowActionBarOverlay">false</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -86,6 +89,9 @@
         <item name="android:statusBarColor">@color/mmt_light_blue_700</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <!-- Support library attribute for compatibility -->
+        <item name="windowActionBarOverlay">false</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -141,6 +147,15 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/mmt_margin</item>
         <item name="android:layout_marginBottom">@dimen/mmt_margin</item>
+    </style>
+
+    <style name="QDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
 </resources>

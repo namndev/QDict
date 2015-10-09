@@ -29,6 +29,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
@@ -234,7 +235,7 @@ public class Utils {
 
     public static Dialog createAboutDialog(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.QDialog);
         builder.setView(inflater.inflate(R.layout.about, null));
         builder.setTitle(R.string.about_lable);
         builder.setNeutralButton(R.string.btn_more_apps, new DialogInterface.OnClickListener() {
@@ -254,10 +255,7 @@ public class Utils {
     }
 
     public static Dialog createWhatsNewDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        if (Build.VERSION.SDK_INT < 11) {
-            builder.setInverseBackgroundForced(true);
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.QDialog);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle(R.string.prefs_title_whatsnew);
         builder.setMessage(getTextFromAssets(context, "whatsnew.txt"));
@@ -489,6 +487,14 @@ public class Utils {
         return ta.getColor(0, ORANGE_500);
     }
 
+    public static int getDimens(Context activity, int attrResId) {
+        int[] attrs = {
+                attrResId
+        };
+        TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
+        return ta.getDimensionPixelOffset(0, 0);
+    }
+
     public static void changeToTheme(Activity activity) {
         activity.finish();
         activity.startActivity(new Intent(activity, activity.getClass()));
@@ -505,13 +511,13 @@ public class Utils {
         }
     }
 
-    public static void onServiceSetTheme(Service activity, int themeIndex) {
+    public static void onServiceSetTheme(Service service, int themeIndex) {
         switch (themeIndex) {
             case 1:
-                activity.setTheme(R.style.AppBlueLightTheme);
+                service.setTheme(R.style.AppBlueLightTheme);
                 break;
             default:
-                activity.setTheme(R.style.AppOrangeTheme);
+                service.setTheme(R.style.AppOrangeTheme);
                 break;
         }
 
@@ -519,7 +525,7 @@ public class Utils {
 
     public static WebSettings.LayoutAlgorithm getLayoutAlgorithm(boolean isSingColumn) {
         if (!isSingColumn) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (hasKkAbove()) {
                 return WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING;
             } else {
                 return WebSettings.LayoutAlgorithm.NARROW_COLUMNS;
@@ -539,7 +545,7 @@ public class Utils {
     }
 
     public static boolean hasSelfPermission(Context activity, String[] permissions) {
-        if (!Utils.hasMmAbove()) {
+        if (!hasMmAbove()) {
             return true;
         }
         // Verify that all the permissions.
@@ -557,6 +563,31 @@ public class Utils {
      */
     public static boolean hasMmAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    /**
+     * Uses static final constants to detect if the device's platform version is
+     * Lollipop or later.
+     */
+    public static boolean hasLlAbove() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    /**
+     * Uses static final constants to detect if the device's platform version is
+     * Kitkat or later.
+     */
+    public static boolean hasKkAbove() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    /**
+     * Uses static final constants to detect if the device's platform version is
+     * Kikat.
+     */
+    public static boolean hasKk() {
+        int v = Build.VERSION.SDK_INT;
+        return v >= Build.VERSION_CODES.KITKAT && v < Build.VERSION_CODES.LOLLIPOP;
     }
 
 }

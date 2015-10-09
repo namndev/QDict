@@ -148,9 +148,6 @@ public class QDictService extends StandOutWindow {
 
     @Override
     public void onCreate() {
-        mSharedPreferences = getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
-        int themeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
-        Utils.onServiceSetTheme(this, themeIndex);
         if (MainActivity.hasStoragePermission) {
             mQDictions = new QDictions(this);
         } else {
@@ -268,7 +265,6 @@ public class QDictService extends StandOutWindow {
     public void onSearch(String keyword) {
         makeDictContent(keyword);
         mKeywordLable.setText(keyword);
-        Log.e("NAMND", "service keyword = " + keyword);
     }
 
     @Override

@@ -59,6 +59,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements NavigationCallbacks, OnClickListener {
 
@@ -226,6 +227,20 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             } else {
                 finish();
             }
+        } else if (REQUEST_ALERT_WINDOW_CODE == requestCode) {
+            Intent i = new Intent(Intent.ACTION_RUN);
+            i.setClass(MainActivity.this, QDictService.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (!QDictService.RUNNING)
+                startService(i);
+            if (!isSucess) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, R.string.msg_do_not_show_popup, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
@@ -287,12 +302,9 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     }
 
     private void startService() {
-        Intent i = new Intent(Intent.ACTION_RUN);
-        i.setClass(MainActivity.this, QDictService.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (mSharedPreferences.getBoolean(getString(R.string.prefs_key_using_capture), false)) {
             if (!QDictService.RUNNING)
-                startService(i);
+                checkPermission(REQUEST_ALERT_WINDOW_CODE);
         } else {
             if (QDictService.RUNNING)
                 StandOutWindow.closeAll(this, QDictService.class);

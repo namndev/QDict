@@ -6,16 +6,23 @@ import com.annie.dictionary.frags.NavigatorFragment;
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
 import com.mmt.app.SlidingFragmentActivity;
+import com.mmt.app.SystemBarTintManager;
 import com.mmt.widget.slidemenu.SlidingMenu;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 public abstract class BaseActivity extends SlidingFragmentActivity {
 
@@ -32,7 +39,13 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
+    private static String ALERT_WINDOW_PERMISSIONS[] = new String[] {
+            Manifest.permission.SYSTEM_ALERT_WINDOW
+    };
+
     public final static int REQUEST_STORAGE_CODE = 1001;
+
+    public final static int REQUEST_ALERT_WINDOW_CODE = 1003;
 
     public static boolean isActive = false;
 
@@ -43,7 +56,19 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
                     onRequestPermissionResult(requestCode, true);
                 else
                     requestPermissions(STORAGE_PERMISSIONS, requestCode);
-
+                break;
+            case REQUEST_ALERT_WINDOW_CODE:
+                if (!Utils.hasMmAbove()) {
+                    onRequestPermissionResult(REQUEST_ALERT_WINDOW_CODE, true);
+                } else {
+                    if (Settings.canDrawOverlays(this)) {
+                        onRequestPermissionResult(REQUEST_ALERT_WINDOW_CODE, true);
+                    } else {
+                        Intent drawOverlaysSettingsIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                        drawOverlaysSettingsIntent.setData(Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(drawOverlaysSettingsIntent, REQUEST_ALERT_WINDOW_CODE);
+                    }
+                }
                 break;
             default:
                 break;
@@ -56,11 +81,21 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE_CODE:
+            case REQUEST_ALERT_WINDOW_CODE:
                 onRequestPermissionResult(requestCode, Utils.verifyAllPermissions(grantResults));
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ALERT_WINDOW_CODE) {
+            onRequestPermissionResult(REQUEST_ALERT_WINDOW_CODE, Settings.canDrawOverlays(this));
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -71,6 +106,12 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         Utils.onActivityCreateSetTheme(this, mThemeIndex, true);
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
+        if (Utils.hasKk()) {
+            setTranslucentStatus(true);
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setStatusBarTintColor(Utils.getColor(this, R.attr.colorPrimaryDark));
+        }
         // set the Behind View
         setBehindContentView(R.layout.menu_frame);
         float density = getResources().getDisplayMetrics().density;
@@ -93,6 +134,19 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     @Override

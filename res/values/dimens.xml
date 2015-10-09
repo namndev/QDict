@@ -42,5 +42,4 @@
     <dimen name="preference_fragment_padding_side">16dp</dimen>
     <dimen name="item_recent_padding_side">22dp</dimen>
     <dimen name="toast_y_offset">70dip</dimen>
-
 </resources>

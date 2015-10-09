@@ -93,6 +93,7 @@
         <com.mmt.widget.QTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:text="@string/app_license"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/mmt_black" />
@@ -117,7 +118,8 @@
         <com.mmt.widget.QTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
+            android:layout_marginLeft="2dp"
+            android:autoLink="web|email"
             android:linksClickable="true"
             android:text="@string/app_email"
             android:textAppearance="?android:attr/textAppearanceSmall"

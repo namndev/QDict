@@ -82,7 +82,7 @@
     <string name="prefs_title_max_favorite_word">Favorite words</string>
     <string name="prefs_title_max_favorite_word_summary">Max words count: %1$s</string>
     <string name="prefs_title_theme">Themes</string>
-
+    <string name="msg_do_not_show_popup">Don\'t show popup window from clipboard</string>
     <!-- about -->
     <string name="app_license">Apache, Version 2.0</string>
     <string name="app_version_label">Version: </string>
