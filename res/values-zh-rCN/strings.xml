@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="action_search">查询中</string>
+
+    <!-- ui -->
+    <string name="sdcard_error">SD卡错误</string>
+    <string name="prefs_title_help">帮助</string>
+    <string name="prefs_title_feed_back">反馈</string>
+
+    <!-- action -->
+    <string name="ok">行</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="checked_all">选择所有</string>
+    <string name="unchecked_all">取消所有</string>
+    <string name="delete_all">删除所有</string>
+    <string name="hide">隐藏</string>
+    <string name="close">关闭</string>
+    <string name="corner">角落</string>
+    <string name="maximize">最大化</string>
+    <!-- dicitonary -->
+
+    <string name="recent_lable">历史记录</string>
+    <string name="favorite_lable">喜爱</string>
+    <string name="settings_lable">设置</string>
+    <string name="guide_lable">使用指南</string>
+    <string name="select_dictionary">选择词典</string>
+    <string name="join_us">扇页</string>
+    <string name="share_lable">共享</string>
+    <string name="about_lable">关于</string>
+    <string name="keywords_null">没有找到任何单词。</string>
+    <string name="favorites_no_word">没有的话添加到收藏夹列表</string>
+    <string name="recent_no_word">最近没有字查找起来.</string>
+    <string name="notification_message">点击这里打开QDict</string>
+    <string name="notification_title">%1$s 正在运行</string>
+    <string name="delete_all_recent_summary">你想删除所有近期的话？</string>
+    <string name="delete_all_favorite_summary">你想删除所有最喜欢的话？</string>
+    <!-- seaching -->
+    <string name="keywords_search">查询中&#8230;</string>
+    <string name="fuzzy_query_prompt">按下单词列表按钮进行模糊查询。</string>
+    <string name="fulltext_query_prompt">按下单词列表按钮进行全文检索。</string>
+    <string name="pattern_query_prompt">按下单词列表按钮进行通配符匹配查询。</string>
+    <!-- setting -->
+    <string name="prefs_category_title_general">一般</string>
+    <string name="prefs_title_source">数据</string>
+    <string name="prefs_title_tts">演讲</string>
+    <string name="prefs_title_tts_summary">运用 TTS</string>
+    <string name="prefs_title_notification">通知</string>
+    <string name="prefs_title_capture">剪切板内容取词</string>
+    <string name="prefs_summary_capture">从剪贴板搜索</string>
+    <string name="prefs_title_notification_summary">使用通知快速搜索</string>
+    <string name="prefs_category_title_theme">主题</string>
+    <!--  -->
+    <string name="prefs_title_font_text">字体内容</string>
+    <string name="prefs_title_theme">主题</string>
+    <string name="prefs_title_max_favorite_word">最喜欢的话</string>
+    <string name="prefs_title_max_favorite_word_summary">马克斯算的话: %1$s</string>
+
+    <plurals name="words_count">
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 关键词</item>
+    </plurals>
+       <plurals name="items_count">
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 项目</item>
+    </plurals>
+    <!-- about -->
+    <string name="app_license">Apache, 版本 2.0</string>
+    <string name="app_version_label">版本: </string>
+    <string name="app_author_label">笔者: </string>
+    <string name="app_license_label">许可证: </string>
+    <string name="readme_text"> 1. 通配符匹配:&lt;br&gt;
+                  用户可以输入带有“*”和“?”的字符串，作为通配符匹配。“*”表示任意个字符；“?”表示某一个字符。按下单词列表按钮后，在左边的列表框中即会出现匹配此规则的单词。&lt;br&gt;&lt;br&gt;
+       2. 模糊查询:&lt;br&gt;
+                  当你记不清楚某个单词的具体拼写时，还可以尝试模糊查询。此方式使用“Levenshtein Edit Distance”计算两个单词的相似度，最后给出和输入单词最相似的匹配结果，你只需在所查的单词前加一个“/”，按下单词列表按钮即可。&lt;br&gt;&lt;br&gt;
+       3. 全文检索:&lt;br&gt;
+                  全文检索在数据里搜索单词。要进行全文检索，只需在所查的单词前加一个“:”，然后按下单词列表按钮。比如，“:ab cd”搜索包含“ab”和“cd”的数据。如果单词里有空格符，你可以使用“\\ ”，比如“:apple\\ pie”，其它的转义字符是“\\\\”表示“\\”，“\\t”表示制表符，“\\n”表示新行。&lt;br&gt;&lt;br&gt;
+                  请查看“用户手册”了解更详细的说明： &lt;br&gt;
+                  &lt;a href="http://madman-team.blogspot.com/2015/05/qdict-guide.html" target="_blank">http://madman-team.blogspot.com&lt;\/a&gt;&lt;br&gt;&lt;br&gt;</string>
+
+</resources>
