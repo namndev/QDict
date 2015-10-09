@@ -13,7 +13,7 @@
         android:background="@drawable/drag"
         android:contentDescription="@string/app_name" />
 
-    <CheckedTextView
+    <com.mmt.widget.QCheckedTextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

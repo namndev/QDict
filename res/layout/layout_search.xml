@@ -20,7 +20,7 @@
             android:src="?attr/icon_actionBack"
             android:visibility="invisible" />
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -18,7 +18,7 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbarStyle="@integer/preference_fragment_scrollbarStyle" />
 
-    <TextView
+    <com.mmt.widget.QTextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:src="@drawable/ic_launcher" />
 
-    <TextView
+    <com.mmt.widget.QTextView
         android:id="@+id/row_title"
         android:layout_width="0dp"
         android:layout_height="match_parent"

@@ -1,4 +1,15 @@
+
 package com.annie.dictionary.frags;
+
+import com.annie.dictionary.DictSpeechEng;
+import com.annie.dictionary.DictWebViewClient;
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.QDictions;
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.WebViewClientCallback;
+import com.annie.dictionary.utils.WordsFileUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,271 +29,256 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.annie.dictionary.DictSpeechEng;
-import com.annie.dictionary.DictWebViewClient;
-import com.annie.dictionary.QDictions;
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.WebViewClientCallback;
-import com.annie.dictionary.utils.WordsFileUtils;
-
 public class SearchFragment extends Fragment {
 
-	// UX
-	private QDictions mDictions = null;
-	private DictSpeechEng mSpeechEng = null;
-	private String mKeyword = "";
-	private WordsFileUtils mWordsFileUtilsHis, mWordsFileUtilsFavotire;
-	private String mReadmeHtml = null;
-	private boolean mIsSearch, mBackClick = false, mTts;
+    // UX
+    private QDictions mDictions = null;
 
-	private SharedPreferences mSharedPreferences;
-	private int mCurrentHisIndex = 0;
-	// UI
-	private WebView mDictContentView = null;
-	private TextView mTvKeyword;
-	private Menu mMenu;
-	private MenuInflater mMenuInflater;
-	private ImageButton mDictBackBtn, mSpeakBtn;
+    private DictSpeechEng mSpeechEng = null;
 
-	public SearchFragment() {
-		// default constructor
-	}
+    private String mKeyword = "";
 
-	public SearchFragment(DictSpeechEng dictSpeechEng, QDictions dictions,
-			String keyword, boolean search) {
-		mDictions = dictions;
-		mSpeechEng = dictSpeechEng;
-		mKeyword = keyword;
-		mIsSearch = search;
-	}
+    private WordsFileUtils mWordsFileUtilsHis, mWordsFileUtilsFavotire;
 
-	public void setDictions(QDictions dictions) {
-		if (mDictions == null)
-			mDictions = dictions;
-	}
+    private String mReadmeHtml = null;
 
-	public void setSpeechEng(DictSpeechEng dictSpeechEng) {
-		if (mSpeechEng == null)
-			mSpeechEng = dictSpeechEng;
-	}
+    private boolean mIsSearch, mBackClick = false, mTts;
 
-	public void setKeyword(String keyword, boolean search) {
-		mIsSearch = search;
-		mKeyword = keyword;
-		mTvKeyword.setText(mKeyword);
-		if (mMenu != null) {
-			onCreateOptionsMenu(mMenu, mMenuInflater);
-			if (Build.VERSION.SDK_INT > 10)
-				getActivity().invalidateOptionsMenu();
-		}
-		showSearchContent();
-	}
+    private SharedPreferences mSharedPreferences;
 
-	public boolean isSearch() {
-		return mIsSearch;
-	}
+    private int mCurrentHisIndex = 0;
 
-	public String getKeyword() {
-		return mKeyword;
-	}
+    // UI
+    private WebView mDictContentView = null;
 
-	public void setKeyword(String keyword) {
-		setKeyword(keyword, true);
-	}
+    private TextView mTvKeyword;
 
-	public class MyWebViewClientCallback extends WebViewClientCallback {
-		public MyWebViewClientCallback() {
-		}
+    private Menu mMenu;
 
-		@Override
-		public void shouldOverrideUrlLoading(String word) {
-			makeDictContent(word);
-		}
-	}
+    private MenuInflater mMenuInflater;
 
-	private void makeDictContent(String word) {
-		mTvKeyword.setText(word);
-		mSpeakBtn.setVisibility(mTts ? View.VISIBLE : View.GONE);
-		String htmlContent = mDictions.generateHtmlContent(word);
-		mDictions.showHtmlContent(htmlContent, mDictContentView);
-		if (null != word && word.length() > 0) {
-			if (!mBackClick)
-				mWordsFileUtilsHis.addWord(word);
-			if (mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
-				mDictBackBtn.setVisibility(View.VISIBLE);
-			}
-		}
-	}
+    private ImageButton mDictBackBtn, mSpeakBtn;
 
-	private void showSearchContent() {
-		if (mKeyword.length() <= 0) {
-			mDictions.showHtmlContent(mReadmeHtml, mDictContentView);
-			mDictBackBtn.setVisibility(View.INVISIBLE);
-			mSpeakBtn.setVisibility(View.GONE);
-		} else if (mKeyword.charAt(0) == '/') {
-			mDictions.showHtmlContent(
-					getResources().getString(R.string.fuzzy_query_prompt),
-					mDictContentView);
-		} else if (mKeyword.charAt(0) == ':') {
-			mDictions.showHtmlContent(
-					getResources().getString(R.string.fulltext_query_prompt),
-					mDictContentView);
-		} else if ((mKeyword.indexOf('*') >= 0) || (mKeyword.indexOf('?') >= 0)) {
-			mDictions.showHtmlContent(
-					getResources().getString(R.string.pattern_query_prompt),
-					mDictContentView);
-		} else {
-			makeDictContent(mKeyword);
-		}
-		if (!mBackClick) {
-			mCurrentHisIndex = 0;
-		}
-		mBackClick = false;
-	}
+    public SearchFragment() {
+        // default constructor
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.layout_search, container, false);
-		mDictBackBtn = (ImageButton) root.findViewById(R.id.back_word);
-		mTvKeyword = (TextView) root.findViewById(R.id.tv_title);
-		mSpeakBtn = (ImageButton) root.findViewById(R.id.action_speak);
-		mDictContentView = (WebView) root.findViewById(R.id.dictContentView);
-		DictWebViewClient webclient = new DictWebViewClient(getActivity()
-				.getApplicationContext(), new MyWebViewClientCallback());
-		mDictContentView.setWebViewClient(webclient);
-		WebSettings webSettings = mDictContentView.getSettings();
-		webSettings.setLayoutAlgorithm(Utils.getLayoutAlgorithm(true));
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setDefaultTextEncodingName("UTF-8");
-		// webSettings.setSupportZoom(true);
-		// webSettings.setBuiltInZoomControls(true);
-		setHasOptionsMenu(true);
+    public SearchFragment(DictSpeechEng dictSpeechEng, QDictions dictions, String keyword, boolean search) {
+        mDictions = dictions;
+        mSpeechEng = dictSpeechEng;
+        mKeyword = keyword;
+        mIsSearch = search;
+    }
 
-		// /
-		mDictBackBtn.setOnClickListener(new View.OnClickListener() {
+    public void setDictions(QDictions dictions) {
+        if (mDictions == null)
+            mDictions = dictions;
+    }
 
-			@Override
-			public void onClick(View v) {
-				mCurrentHisIndex++;
-				String text = mWordsFileUtilsHis
-						.getBeforeWord(mCurrentHisIndex);
-				if (!TextUtils.isEmpty(text)) {
-					mBackClick = true;
-					mKeyword = text;
-					mTvKeyword.setText(mKeyword);
-					if (mMenu != null) {
-						onCreateOptionsMenu(mMenu, mMenuInflater);
-						if (Build.VERSION.SDK_INT > 10)
-							getActivity().invalidateOptionsMenu();
-					}
-					showSearchContent();
-				}
-				if (!mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
-					mDictBackBtn.setVisibility(View.INVISIBLE);
-				}
-			}
-		});
-		mSpeakBtn.setOnClickListener(new View.OnClickListener() {
+    public void setSpeechEng(DictSpeechEng dictSpeechEng) {
+        if (mSpeechEng == null)
+            mSpeechEng = dictSpeechEng;
+    }
 
-			@Override
-			public void onClick(View v) {
-				mSpeechEng.speak(mKeyword.toString().trim());
-			}
-		});
-		return root;
-	}
+    public void setKeyword(String keyword, boolean search) {
+        mIsSearch = search;
+        mKeyword = keyword;
+        mTvKeyword.setText(mKeyword);
+        if (mMenu != null) {
+            onCreateOptionsMenu(mMenu, mMenuInflater);
+            if (Build.VERSION.SDK_INT > 10)
+                getActivity().invalidateOptionsMenu();
+        }
+        showSearchContent();
+    }
 
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mSharedPreferences = getActivity().getSharedPreferences(Def.APP_NAME,
-				Context.MODE_PRIVATE);
+    public boolean isSearch() {
+        return mIsSearch;
+    }
 
-		if (mDictions == null) {
-			mDictions = new QDictions(getActivity());
-			mDictions.initDicts();
-		}
-		if (mSpeechEng == null) {
-			mSpeechEng = DictSpeechEng.getInstance(getActivity()
-					.getApplicationContext());
-		}
-		mTts = mSharedPreferences.getBoolean(
-				getResources().getString(R.string.prefs_key_using_tts), true)
-				&& mSpeechEng.isCanSpeak();
-		mWordsFileUtilsHis = new WordsFileUtils(mSharedPreferences,
-				Def.TYPE_RECENTWORDS);
-		mWordsFileUtilsFavotire = new WordsFileUtils(mSharedPreferences,
-				Def.TYPE_FAVORITEWORDS);
-		mTvKeyword.setText(mKeyword);
-		mReadmeHtml = mDictions.getReadmeHtml();
-		if (mIsSearch) {
-			showSearchContent();
-		} else {
-			mDictions.showHtmlContent(mReadmeHtml, mDictContentView);
-			mDictBackBtn.setVisibility(View.INVISIBLE);
-			mSpeakBtn.setVisibility(View.GONE);
-		}
-	}
+    public String getKeyword() {
+        return mKeyword;
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mCurrentHisIndex = 0;
-	}
+    public void setKeyword(String keyword) {
+        setKeyword(keyword, true);
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		menu.clear();
-		inflater.inflate(R.menu.search_menu, menu);
-		mMenu = menu;
-		mMenuInflater = inflater;
-		if (!mIsSearch) {
-			menu.removeItem(R.id.action_favorite);
-		} else if (mWordsFileUtilsFavotire.contains(mKeyword)) {
-			menu.findItem(R.id.action_favorite).setIcon(R.drawable.unfavorite);
-		} else {
-			menu.findItem(R.id.action_favorite)
-					.setIcon(
-							Utils.getDrawable(getActivity(),
-									R.attr.icon_actionFavorite));
-		}
-	}
+    public class MyWebViewClientCallback extends WebViewClientCallback {
+        public MyWebViewClientCallback() {
+        }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_favorite) {
-			if (!mWordsFileUtilsFavotire.contains(mKeyword)) {
-				mWordsFileUtilsFavotire.addWord(mKeyword);
-				item.setIcon(R.drawable.unfavorite);
-				return true;
-			} else {
-				if (mWordsFileUtilsFavotire.remove(mKeyword)) {
-					item.setIcon(Utils.getDrawable(getActivity(),
-							R.attr.icon_actionFavorite));
-				}
-				return true;
-			}
-		}
-		return super.onOptionsItemSelected(item);
-	}
+        @Override
+        public void shouldOverrideUrlLoading(String word) {
+            makeDictContent(word);
+        }
+    }
 
-	@Override
-	public void onPause() {
-		mWordsFileUtilsFavotire.save();
-		mWordsFileUtilsHis.save();
-		super.onPause();
-	}
+    private void makeDictContent(String word) {
+        mTvKeyword.setText(word);
+        mSpeakBtn.setVisibility(mTts ? View.VISIBLE : View.GONE);
+        String htmlContent = mDictions.generateHtmlContent(word);
+        QDictions.showHtmlContent(htmlContent, mDictContentView);
+        if (null != word && word.length() > 0) {
+            if (!mBackClick)
+                mWordsFileUtilsHis.addWord(word);
+            if (mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
+                mDictBackBtn.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
-	@Override
-	public void onDestroyView() {
-		mWordsFileUtilsFavotire.save();
-		mWordsFileUtilsFavotire = null;
-		mWordsFileUtilsHis.save();
-		mWordsFileUtilsHis = null;
-		super.onDestroyView();
-	}
+    private void showSearchContent() {
+        if (mKeyword.length() <= 0) {
+            QDictions.showHtmlContent(mReadmeHtml, mDictContentView);
+            mDictBackBtn.setVisibility(View.INVISIBLE);
+            mSpeakBtn.setVisibility(View.GONE);
+        } else if (mKeyword.charAt(0) == '/') {
+            QDictions.showHtmlContent(getResources().getString(R.string.fuzzy_query_prompt), mDictContentView);
+        } else if (mKeyword.charAt(0) == ':') {
+            QDictions.showHtmlContent(getResources().getString(R.string.fulltext_query_prompt), mDictContentView);
+        } else if ((mKeyword.indexOf('*') >= 0) || (mKeyword.indexOf('?') >= 0)) {
+            QDictions.showHtmlContent(getResources().getString(R.string.pattern_query_prompt), mDictContentView);
+        } else {
+            makeDictContent(mKeyword);
+        }
+        if (!mBackClick) {
+            mCurrentHisIndex = 0;
+        }
+        mBackClick = false;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.layout_search, container, false);
+        mDictBackBtn = (ImageButton)root.findViewById(R.id.back_word);
+        mTvKeyword = (TextView)root.findViewById(R.id.tv_title);
+        mSpeakBtn = (ImageButton)root.findViewById(R.id.action_speak);
+        mDictContentView = (WebView)root.findViewById(R.id.dictContentView);
+        DictWebViewClient webclient = new DictWebViewClient(getActivity().getApplicationContext(),
+                new MyWebViewClientCallback());
+        mDictContentView.setWebViewClient(webclient);
+        WebSettings webSettings = mDictContentView.getSettings();
+        webSettings.setLayoutAlgorithm(Utils.getLayoutAlgorithm(true));
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDefaultTextEncodingName("UTF-8");
+        // webSettings.setSupportZoom(true);
+        // webSettings.setBuiltInZoomControls(true);
+        setHasOptionsMenu(true);
+
+        // /
+        mDictBackBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mCurrentHisIndex++;
+                String text = mWordsFileUtilsHis.getBeforeWord(mCurrentHisIndex);
+                if (!TextUtils.isEmpty(text)) {
+                    mBackClick = true;
+                    mKeyword = text;
+                    mTvKeyword.setText(mKeyword);
+                    if (mMenu != null) {
+                        onCreateOptionsMenu(mMenu, mMenuInflater);
+                        if (Build.VERSION.SDK_INT > 10)
+                            getActivity().invalidateOptionsMenu();
+                    }
+                    showSearchContent();
+                }
+                if (!mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
+                    mDictBackBtn.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mSpeakBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mSpeechEng.speak(mKeyword.toString().trim());
+            }
+        });
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mSharedPreferences = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
+
+        if (mDictions == null && MainActivity.hasStoragePermission) {
+            mDictions = new QDictions(getActivity());
+            mDictions.initDicts();
+        }
+        if (mSpeechEng == null) {
+            mSpeechEng = DictSpeechEng.getInstance(getActivity().getApplicationContext());
+        }
+        mTts = mSharedPreferences.getBoolean(getResources().getString(R.string.prefs_key_using_tts), true)
+                && mSpeechEng.isCanSpeak();
+        mWordsFileUtilsHis = new WordsFileUtils(mSharedPreferences, Def.TYPE_RECENTWORDS);
+        mWordsFileUtilsFavotire = new WordsFileUtils(mSharedPreferences, Def.TYPE_FAVORITEWORDS);
+        mTvKeyword.setText(mKeyword);
+        mReadmeHtml = QDictions.getReadmeHtml(getActivity(), mSharedPreferences);
+        if (mIsSearch) {
+            showSearchContent();
+        } else {
+            QDictions.showHtmlContent(mReadmeHtml, mDictContentView);
+            mDictBackBtn.setVisibility(View.INVISIBLE);
+            mSpeakBtn.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCurrentHisIndex = 0;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.search_menu, menu);
+        mMenu = menu;
+        mMenuInflater = inflater;
+        if (!mIsSearch) {
+            menu.removeItem(R.id.action_favorite);
+        } else if (mWordsFileUtilsFavotire.contains(mKeyword)) {
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.unfavorite);
+        } else {
+            menu.findItem(R.id.action_favorite).setIcon(Utils.getDrawable(getActivity(), R.attr.icon_actionFavorite));
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_favorite) {
+            if (!mWordsFileUtilsFavotire.contains(mKeyword)) {
+                mWordsFileUtilsFavotire.addWord(mKeyword);
+                item.setIcon(R.drawable.unfavorite);
+                return true;
+            } else {
+                if (mWordsFileUtilsFavotire.remove(mKeyword)) {
+                    item.setIcon(Utils.getDrawable(getActivity(), R.attr.icon_actionFavorite));
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        mWordsFileUtilsFavotire.save();
+        mWordsFileUtilsHis.save();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mWordsFileUtilsFavotire.save();
+        mWordsFileUtilsFavotire = null;
+        mWordsFileUtilsHis.save();
+        mWordsFileUtilsHis = null;
+        super.onDestroyView();
+    }
 }

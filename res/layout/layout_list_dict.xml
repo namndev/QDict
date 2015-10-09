@@ -23,7 +23,7 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_back_white" />
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_dict_count"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@color/mmt_white"
             android:textStyle="italic" />
 
-        <Button
+        <com.mmt.widget.QButton
             android:id="@+id/goto_ftp_server"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

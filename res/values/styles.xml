@@ -5,12 +5,14 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppOrangeTheme" parent="Theme.AppCompat">
+    <style name="AppOrangeTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/mmt_orange_500</item>
-        <item name="colorPrimaryDark">@color/mmt_orange_900</item>
-        <item name="actionModeBackground">@color/mmt_orange_900</item>
+        <item name="colorPrimaryDark">@color/mmt_orange_700</item>
+        <item name="android:statusBarColor">@color/mmt_orange_700</item>
+        <item name="actionModeBackground">@color/mmt_orange_700</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="navigationIcon">@drawable/ic_menu_orange</item>
         <item name="icon_actionRemove">@drawable/ic_recycle_orange</item>
@@ -19,8 +21,12 @@
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
         <item name="icon_actionBack">@drawable/ic_back_orange</item>
         <item name="icon_actionSpeak">@drawable/ic_speak_orange</item>
+        <item name="android:toolbarStyle">@style/ToolbarStyle</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="icon_actionWordsList">@drawable/ic_wordslist_orange</item>
         <item name="android:alertDialogTheme">@style/AppOrange.AlertDialog</item>
+        <item name="android:windowIsFloating">false</item>
+
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -28,15 +34,19 @@
         -->
     </style>
 
-    <style name="AppBlueLightTheme" parent="Theme.AppCompat">
+    <style name="AppBlueLightTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/mmt_light_blue_500</item>
-        <item name="colorPrimaryDark">@color/mmt_light_blue_900</item>
-        <item name="actionModeBackground">@color/mmt_light_blue_900</item>
+        <item name="colorPrimaryDark">@color/mmt_light_blue_700</item>
+        <item name="android:statusBarColor">@color/mmt_light_blue_700</item>
+        <item name="actionModeBackground">@color/mmt_light_blue_700</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="navigationIcon">@drawable/ic_menu</item>
         <item name="icon_actionRemove">@drawable/ic_recycle</item>
+        <item name="android:toolbarStyle">@style/ToolbarStyle</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="icon_actionFavorite">@drawable/favorite</item>
         <item name="icon_actionVoice">@drawable/ic_voice</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
@@ -44,6 +54,7 @@
         <item name="icon_actionSpeak">@drawable/ic_speak</item>
         <item name="icon_actionWordsList">@drawable/ic_wordslist</item>
         <item name="android:alertDialogTheme">@style/AppBlueLight.AlertDialog</item>
+        <item name="android:windowIsFloating">false</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -51,11 +62,17 @@
         -->
     </style>
 
+    <style name="ToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:contentInsetStart">0dp</item>
+    </style>
+
     <style name="AppOrangeThemeWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/mmt_orange_500</item>
-        <item name="colorPrimaryDark">@color/mmt_orange_900</item>
+        <item name="colorPrimaryDark">@color/mmt_orange_700</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
-
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@color/mmt_orange_700</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -65,8 +82,10 @@
 
     <style name="AppBlueLightThemeWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/mmt_light_blue_500</item>
-        <item name="colorPrimaryDark">@color/mmt_light_blue_900</item>
+        <item name="colorPrimaryDark">@color/mmt_light_blue_700</item>
+        <item name="android:statusBarColor">@color/mmt_light_blue_700</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+        <item name="android:windowIsFloating">false</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -77,21 +96,21 @@
     <style name="AppOrange.AlertDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimary">@color/mmt_orange_500</item>
-        <item name="colorPrimaryDark">@color/mmt_orange_900</item>
+        <item name="colorPrimaryDark">@color/mmt_orange_700</item>
         <item name="android:textColor">@color/mmt_orange_500</item>
         <!-- copy/paste colors -->
-        <item name="colorAccent">@color/mmt_orange_900</item>
+        <item name="colorAccent">@color/mmt_orange_700</item>
         <item name="android:windowIsFloating">true</item>
     </style>
 
     <style name="AppBlueLight.AlertDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimary">@color/mmt_light_blue_500</item>
-        <item name="colorPrimaryDark">@color/mmt_light_blue_900</item>
+        <item name="colorPrimaryDark">@color/mmt_light_blue_700</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:textColor">@color/mmt_light_blue_500</item>
         <!-- copy/paste colors -->
-        <item name="colorAccent">@color/mmt_light_blue_900</item>
+        <item name="colorAccent">@color/mmt_light_blue_700</item>
     </style>
 
     <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">

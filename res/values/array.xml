@@ -17,6 +17,7 @@
         <item>AWL Unicode</item>
         <item>Comic Sans MS</item>
         <item>Roboto (Default)</item>
+        <item>San Francisco</item>
         <item>Times New Roman</item>
         <item>Lingoes Unicode</item>
     </string-array>
@@ -25,6 +26,7 @@
         <item>AWLPhonetics3U.TTF</item>
         <item>ComicSansMS.ttf</item>
         <item>Roboto.ttf</item>
+        <item>SanFranciscoRegular.ttf</item>
         <item>TimesNewRoman.ttf</item>
         <item>Unicode.ttf</item>
     </string-array>
@@ -40,6 +42,7 @@
         <item>100</item>
         <item>200</item>
         <item>300</item>
+        <item>500</item>
     </string-array>
 
 </resources>

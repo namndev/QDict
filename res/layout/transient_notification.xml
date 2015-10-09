@@ -5,7 +5,7 @@
     android:background="@drawable/background_toast"
     android:orientation="vertical" >
 
-    <TextView
+    <com.mmt.widget.QTextView
         android:id="@android:id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

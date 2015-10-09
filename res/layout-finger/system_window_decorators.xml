@@ -24,7 +24,7 @@
             android:scaleType="center"
             android:src="@drawable/ic_menu" />
 
-        <EditText
+        <com.mmt.widget.QEditText
             android:id="@+id/search_edt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

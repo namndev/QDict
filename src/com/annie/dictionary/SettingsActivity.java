@@ -19,11 +19,11 @@ public class SettingsActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		mSharedPreferences = getSharedPreferences(Def.APP_NAME,
 				Context.MODE_PRIVATE);
 		int themeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
 		Utils.onActivityCreateSetTheme(this, themeIndex, false);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_settings);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);

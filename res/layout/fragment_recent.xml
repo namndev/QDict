@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/second_bar_height" >
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:textColor="@color/mmt_black"
             android:textSize="28.0sp" />
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_title" >
 
-        <TextView
+        <com.mmt.widget.QTextView
             android:id="@+id/tv_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
