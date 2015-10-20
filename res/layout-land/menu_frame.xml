@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/img_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/navi_header_height"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/app_name"

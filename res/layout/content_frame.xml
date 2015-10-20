@@ -27,9 +27,10 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:fitsSystemWindows="true"
                 android:background="@color/mmt_white"
-                mmt:theme="@style/ActionBar" />
+                android:fitsSystemWindows="true"
+                mmt:theme="@style/ActionBar" >
+            </android.support.v7.widget.Toolbar>
 
             <FrameLayout
                 android:id="@+id/content_frame"

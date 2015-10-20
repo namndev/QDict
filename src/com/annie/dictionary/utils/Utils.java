@@ -29,7 +29,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
@@ -78,6 +77,8 @@ public class Utils {
         public static final int RUN_SERVICE = 1009;
 
         public static final int CHANGE_FONT = 1011;
+
+        public static final int CHANGE_FRAG = 1013;
     }
 
     /**
@@ -235,7 +236,12 @@ public class Utils {
 
     public static Dialog createAboutDialog(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.QDialog);
+        AlertDialog.Builder builder = null;
+        if (Utils.hasHcAbove()) {
+            builder = new AlertDialog.Builder(context, R.style.QDialog);
+        } else {
+            builder = new AlertDialog.Builder(context);
+        }
         builder.setView(inflater.inflate(R.layout.about, null));
         builder.setTitle(R.string.about_lable);
         builder.setNeutralButton(R.string.btn_more_apps, new DialogInterface.OnClickListener() {
@@ -255,7 +261,12 @@ public class Utils {
     }
 
     public static Dialog createWhatsNewDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.QDialog);
+        AlertDialog.Builder builder = null;
+        if (Utils.hasHcAbove()) {
+            builder = new AlertDialog.Builder(context, R.style.QDialog);
+        } else {
+            builder = new AlertDialog.Builder(context);
+        }
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle(R.string.prefs_title_whatsnew);
         builder.setMessage(getTextFromAssets(context, "whatsnew.txt"));
@@ -579,6 +590,14 @@ public class Utils {
      */
     public static boolean hasKkAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    /**
+     * Uses static final constants to detect if the device's platform version is
+     * Kitkat or later.
+     */
+    public static boolean hasHcAbove() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     /**

@@ -452,6 +452,8 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 mDictions.initDicts();
             } else if (id == RECV_UI.RUN_SERVICE) {
                 startService();
+            } else if (id == RECV_UI.CHANGE_FRAG) {
+                mCurrentNavPosition = intent.getIntExtra("receiver_frag_position", NAVIG.RECENT);
             }
         }
     };

@@ -17,6 +17,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="@dimen/super_padding"
             android:gravity="left|center_vertical"
+            android:text="@string/recent_lable"
             android:textColor="@color/mmt_black"
             android:textSize="28.0sp" />
 

@@ -39,10 +39,6 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    private static String ALERT_WINDOW_PERMISSIONS[] = new String[] {
-            Manifest.permission.SYSTEM_ALERT_WINDOW
-    };
-
     public final static int REQUEST_STORAGE_CODE = 1001;
 
     public final static int REQUEST_ALERT_WINDOW_CODE = 1003;
@@ -114,11 +110,9 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         }
         // set the Behind View
         setBehindContentView(R.layout.menu_frame);
-        float density = getResources().getDisplayMetrics().density;
-        if (density <= 1.5f) {
-            // hdpi = 1.5
-            findViewById(R.id.img_header).setVisibility(View.GONE);
-        }
+        // float density = getResources().getDisplayMetrics().density;
+        boolean headerShow = getResources().getBoolean(R.bool.header_menu_visiable);
+        findViewById(R.id.img_header).setVisibility(headerShow ? View.VISIBLE : View.GONE);
         if (savedInstanceState == null) {
             FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
             mFrag = new NavigatorFragment();

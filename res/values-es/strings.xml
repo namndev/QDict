@@ -30,15 +30,15 @@
         <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> coincidencias</item>
     </plurals>
     <plurals name="words_count">
-        <item quantity="one">1 keyword</item>
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> palabras clave</item>
+        <item quantity="one">1 palabra</item>
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> palabras</item>
     </plurals>
     <plurals name="items_count">
-        <item quantity="one">1 item</item>
+        <item quantity="one">1 ítem</item>
         <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> ítems</item>
     </plurals>
 
-    <string name="recent_lable">Plabras recientes</string>
+    <string name="recent_lable">Recientes</string>
     <string name="favorite_lable">Favoritas</string>
     <string name="settings_lable">Ajustes</string>
     <string name="guide_lable">Guía</string>

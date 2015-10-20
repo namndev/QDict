@@ -205,7 +205,12 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
 
     @SuppressWarnings("unused")
     private void questionResetDlg() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alertDialogBuilder = null;
+        if (Utils.hasHcAbove()) {
+            alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
+        } else {
+            alertDialogBuilder = new AlertDialog.Builder(activity);
+        }
         alertDialogBuilder.setMessage(R.string.app_name);
         alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 

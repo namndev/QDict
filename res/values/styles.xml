@@ -16,6 +16,7 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="navigationIcon">@drawable/ic_menu_orange</item>
         <item name="icon_actionRemove">@drawable/ic_recycle_orange</item>
+        <item name="icon_actionRotate">@drawable/ic_rotate_orange</item>
         <item name="icon_actionFavorite">@drawable/favorite_orange</item>
         <item name="icon_actionVoice">@drawable/ic_voice_orange</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
@@ -48,6 +49,7 @@
         <item name="android:toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="icon_actionFavorite">@drawable/favorite</item>
+        <item name="icon_actionRotate">@drawable/ic_rotate_blue</item>
         <item name="icon_actionVoice">@drawable/ic_voice</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
         <item name="icon_actionBack">@drawable/ic_back</item>
