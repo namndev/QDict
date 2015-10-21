@@ -29,6 +29,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
 
     private Preference mPrefSource;
 
-    private ListPreference mFontPreference, mThemePreference, mMaxFavPreference;
+    private ListPreference mFontPreference, mThemePreference, mMaxFavPreference, mLangPreference;
 
     private CheckBoxPreference mTTSPref, mNotifPref, mUseCapture;
 
@@ -48,6 +49,10 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
     private int mCurrentFontIndex = 0;
 
     private int mCurrentThemeIndex = 0;
+
+    String mCurrentLang;
+
+    String[] mLangValues;
 
     public SettingFragment() {
         // default constructor
@@ -85,11 +90,14 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         mMaxFavPreference.setOnPreferenceChangeListener(this);
         mTTSPref = (CheckBoxPreference)findPreference(getResources().getString(R.string.prefs_key_using_tts));
         mTTSPref.setOnPreferenceChangeListener(this);
+        mLangPreference = (ListPreference)findPreference(getString(R.string.prefs_key_languages));
+        mLangPreference.setOnPreferenceChangeListener(this);
         mNotifPref = (CheckBoxPreference)findPreference(
                 getResources().getString(R.string.prefs_key_capture_notification));
         mNotifPref.setOnPreferenceChangeListener(this);
         mUseCapture = (CheckBoxPreference)findPreference(getString(R.string.prefs_key_using_capture));
         mUseCapture.setOnPreferenceChangeListener(this);
+        mLangValues = getResources().getStringArray(R.array.language_values);
         initInfo();
     }
 
@@ -99,7 +107,6 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         String s = mSharedPreferences.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT);
         mFont = Utils.getFont(activity, s);
         mCurrentFontIndex = mFontPreference.findIndexOfValue(s);
-
         mCurrentThemeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
         applyFont(mFont);
         return view;
@@ -109,6 +116,7 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         convertPreferenceToUseCustomFont(mPrefSource);
         convertPreferenceToUseCustomFont(mFontPreference);
         convertPreferenceToUseCustomFont(mThemePreference);
+        convertPreferenceToUseCustomFont(mLangPreference);
         convertPreferenceToUseCustomFont(mTTSPref);
         convertPreferenceToUseCustomFont(mNotifPref);
         convertPreferenceToUseCustomFont(mUseCapture);
@@ -137,9 +145,28 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         mThemePreference.setSummary(mThemePreference.getEntry());
         mMaxFavPreference.setSummary(
                 getString(R.string.prefs_title_max_favorite_word_summary, mMaxFavPreference.getEntry().toString()));
+        if (TextUtils.isEmpty(mLangPreference.getEntry())) {
+            String language = mSharedPreferences.getString("prefs_key_languages", "");
+            Log.e("NAMND", "language = " + language + ", index = " + getLanguageIndex(language));
+            mLangPreference.setValueIndex(getLanguageIndex(language));
+        }
+        mCurrentLang = mLangPreference.getEntry().toString();
+        mLangPreference.setSummary(mLangPreference.getEntry().toString());
+        // mLangPreference
         // service
         mUseCapture.setChecked(mSharedPreferences.getBoolean(getString(R.string.prefs_key_using_capture), false));
 
+    }
+
+    private int getLanguageIndex(String language) {
+        int index = 0;
+        for (String lang : mLangValues) {
+            if (lang.equalsIgnoreCase(language)) {
+                return index;
+            }
+            index++;
+        }
+        return 0;
     }
 
     @Override
@@ -197,6 +224,27 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
                 Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
                 intent.putExtra("receiver_update_ui", RECV_UI.RUN_SERVICE);
                 getActivity().sendBroadcast(intent);
+            }
+            return true;
+        } else if (preference == mLangPreference) {
+            int index = mLangPreference.findIndexOfValue(newValue.toString());
+            CharSequence[] entrieValues = mLangPreference.getEntryValues();
+            CharSequence[] entries = mLangPreference.getEntries();
+            String lang = entrieValues[index].toString();
+            if (!mCurrentLang.equalsIgnoreCase(lang)) {
+                mSharedPreferences.edit().putString("prefs_key_languages", lang).apply();
+                mLangPreference.setSummary(entries[index].toString());
+                if (lang.contains("_")) {
+                    String[] s = lang.split("_");
+                    Utils.changeLocale(getResources(), s[0], s[1]);
+                } else {
+                    Utils.changeLocale(getResources(), lang);
+                }
+
+                Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
+                intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.CHANGE_FONT);
+                activity.sendBroadcast(intent);
+                activity.finish();
             }
             return true;
         }

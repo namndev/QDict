@@ -1,6 +1,11 @@
 
 package com.annie.dictionary;
 
+import com.annie.dictionary.frags.SettingFragment;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.mmt.app.SystemBarTintManager;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,11 +16,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-
-import com.annie.dictionary.frags.SettingFragment;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.mmt.app.SystemBarTintManager;
 
 public class SettingsActivity extends ActionBarActivity {
 
@@ -30,6 +30,7 @@ public class SettingsActivity extends ActionBarActivity {
         Utils.onActivityCreateSetTheme(this, themeIndex, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_settings);
+        setTitle(R.string.settings_lable);
         if (Utils.hasKk()) {
             setTranslucentStatus(true);
             SystemBarTintManager tintManager = new SystemBarTintManager(this);

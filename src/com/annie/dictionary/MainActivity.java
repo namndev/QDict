@@ -157,14 +157,12 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mLayout.setPanelState(PanelState.HIDDEN);
         mLayout.setTouchEnabled(false);
         mFragmentManager = getSupportFragmentManager();
-
         //
         SlidingMenu sm = getSlidingMenu();
         setSlidingActionBarEnabled(true);
         sm.setBehindScrollScale(0.0f);
         sm.setBehindCanvasTransformer(mTransformer);
         // layout_drag
-
         mActionMenu = (ImageButton)findViewById(R.id.action_menu);
         mActionVoice = (ImageButton)findViewById(R.id.action_voice);
         mActionWordsList = (ImageButton)findViewById(R.id.action_wordslist);
@@ -193,7 +191,6 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                     ? ((isSearch) ? keyword : getResources().getString(R.string.guide_lable)) : "";
             setFragment(title, (mCurrentNavPosition != -1) ? mCurrentNavPosition : NAVIG.RECENT);
         }
-
         mShowKeyboardHander = new Handler();
         mProgressCBHandler = new Handler() {
             @Override

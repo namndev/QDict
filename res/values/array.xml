@@ -44,5 +44,19 @@
         <item>300</item>
         <item>500</item>
     </string-array>
+    <string-array name="language_values" translatable="false">
+        <item>en</item>
+        <item>es</item>
+        <item>vi</item>
+        <item>zh_CN</item>
+        <item>zh_TW</item>
+    </string-array>
+    <string-array name="languages" translatable="false">
+        <item>English</item>
+        <item>Español</item>
+        <item>Tiếng Việt</item>
+        <item>中文</item>
+        <item>台灣</item>
+    </string-array>
 
 </resources>

@@ -38,9 +38,11 @@
             android:background="@drawable/action_bacground"
             android:drawableLeft="@drawable/ic_about_white"
             android:drawablePadding="@dimen/large_padding"
+            android:ellipsize="end"
             android:gravity="center_vertical"
             android:onClick="onClick"
             android:paddingLeft="@dimen/super_padding"
+            android:singleLine="true"
             android:text="@string/about_lable"
             android:textColor="@color/mmt_white" />
 
@@ -57,9 +59,11 @@
             android:background="@drawable/action_bacground"
             android:drawableLeft="@drawable/ic_share"
             android:drawablePadding="@dimen/large_padding"
+            android:ellipsize="end"
             android:gravity="center_vertical"
             android:onClick="onClick"
             android:paddingLeft="@dimen/super_padding"
+            android:singleLine="true"
             android:text="@string/share_lable"
             android:textColor="@color/mmt_white" />
     </LinearLayout>

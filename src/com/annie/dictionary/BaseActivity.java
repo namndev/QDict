@@ -1,6 +1,8 @@
 
 package com.annie.dictionary;
 
+import java.util.Locale;
+
 import com.annie.dictionary.frags.ListDictFragment;
 import com.annie.dictionary.frags.NavigatorFragment;
 import com.annie.dictionary.utils.Utils;
@@ -14,11 +16,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +35,8 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     protected SharedPreferences mSharedPreferences;
 
     protected int mThemeIndex;
+
+    String mCurrentLanguage;
 
     /**
      * Read and write permission for storage listed here.
@@ -98,6 +104,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mSharedPreferences = getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
+        setLanguage();
         mThemeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
         Utils.onActivityCreateSetTheme(this, mThemeIndex, true);
         super.onCreate(savedInstanceState);
@@ -128,6 +135,37 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+    }
+
+    private void setLanguage() {
+        String language = mSharedPreferences.getString("prefs_key_languages", "");
+        Configuration configuration = getResources().getConfiguration();
+        String lang = configuration.locale.getLanguage();
+        if (TextUtils.isEmpty(language)) {
+            if (lang.equalsIgnoreCase("zh")) {
+                String country = configuration.locale.getCountry();
+                lang += "_" + country.toUpperCase(Locale.US);
+            }
+            language = lang;
+            if (Utils.checkLanguageSupport(language)) {
+                mSharedPreferences.edit().putString("prefs_key_languages", language).apply();
+                if (language.contains("_")) {
+                    String[] s = language.split("_");
+                    Utils.changeLocale(getResources(), s[0], s[1]);
+                } else {
+                    Utils.changeLocale(getResources(), language);
+                }
+
+            }
+        } else if (!language.contains(lang)) {
+            if (language.contains("_")) {
+                String[] s = language.split("_");
+                Utils.changeLocale(getResources(), s[0], s[1]);
+            } else {
+                Utils.changeLocale(getResources(), language);
+            }
+        }
+        mCurrentLanguage = language;
     }
 
     @TargetApi(19)

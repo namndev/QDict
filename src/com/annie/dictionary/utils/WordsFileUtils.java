@@ -11,10 +11,10 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.annie.dictionary.utils.Utils.Def;
+
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.annie.dictionary.utils.Utils.Def;
 
 public class WordsFileUtils {
 
@@ -112,7 +112,6 @@ public class WordsFileUtils {
 			}
 		}
 		mChanged = mWordsArrayList.remove(checkWord);
-		Log.e("NAmND", "remove :" + word + " === " + mChanged);
 		return mChanged;
 	}
 

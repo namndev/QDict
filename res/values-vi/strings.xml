@@ -65,7 +65,7 @@
     <string name="prefs_title_max_favorite_word">Từ yêu thích</string>
     <string name="prefs_title_max_favorite_word_summary">Số từ tối đa: %1$s</string>
     <string name="msg_do_not_show_popup">Không thể hiển thị cửa sổ từ điển từ clipboard</string>
-
+	<string name="prefs_title_languages">Ngôn ngữ</string>
     <!-- about -->
     <string name="app_license">Apache, phiên bản 2.0</string>
     <string name="app_version_label">Phiên bản: </string>

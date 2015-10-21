@@ -1,5 +1,8 @@
 package com.mmt.app;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.slidemenu.SlidingMenu;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,9 +10,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.SlidingMenu;
 
 public class SlidingActivityHelper {
 

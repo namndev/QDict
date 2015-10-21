@@ -3,10 +3,15 @@ package com.mmt.widget.slidemenu;
 
 import java.lang.reflect.Method;
 
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils;
+import com.mmt.widget.slidemenu.CustomViewAbove.OnPageChangeListener;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -27,9 +32,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.CustomViewAbove.OnPageChangeListener;
 
 public class SlidingMenu extends RelativeLayout {
 
@@ -1034,9 +1036,16 @@ public class SlidingMenu extends RelativeLayout {
         int rightPadding = insets.right;
         int topPadding = insets.top;
         int bottomPadding = insets.bottom;
-        if (Build.VERSION.SDK_INT >= 21) {
+        String brand = android.os.Build.BRAND;
+        if (Utils.hasLlAbove() && !brand.equalsIgnoreCase("Bkav")) {
             Resources resources = getContent().getResources();
-            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            int orientation = resources.getConfiguration().orientation;
+            int resourceId = 0;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+            } else {
+                resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            }
             if (resourceId > 0) {
                 bottomPadding += resources.getDimensionPixelSize(resourceId);
             }
@@ -1051,7 +1060,7 @@ public class SlidingMenu extends RelativeLayout {
 
     @TargetApi(11)
     public void manageLayers(float percentOpen) {
-        if (Build.VERSION.SDK_INT < 11)
+        if (!Utils.hasHcAbove())
             return;
 
         boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;

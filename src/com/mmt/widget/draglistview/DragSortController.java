@@ -1,5 +1,7 @@
 package com.mmt.widget.draglistview;
 
+import com.mmt.widget.DragSortListView;
+
 import android.graphics.Point;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
@@ -7,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
-
-import com.mmt.widget.DragSortListView;
 
 /**
  * Class that starts and stops item drags on a {@link DragSortListView} based on

@@ -1,5 +1,7 @@
 package com.mmt.widget;
 
+import com.annie.dictionary.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -9,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.annie.dictionary.R;
 
 public class M2tToast extends Toast {
 

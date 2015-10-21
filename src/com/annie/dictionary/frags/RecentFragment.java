@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -88,11 +89,16 @@ public class RecentFragment extends ListFragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.recent_menu, menu);
+        mMenu = menu;
+        mMenuInflater = inflater;
+        if (mWordsArrayList == null || mWordsArrayList.isEmpty()) {
+            menu.removeItem(R.id.action_delete);
+        }
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_delete) {
+        if (id == R.id.action_delete && !mWordsArrayList.isEmpty()) {
             questionDeleteAllDlg(mIsFavorite);
         } else if (id == R.id.action_rotate) {
             mIsFavorite = !mIsFavorite;
@@ -211,6 +217,11 @@ public class RecentFragment extends ListFragment {
         }
         int count = mWordsArrayList.size();
         mTvCount.setText(getResources().getQuantityString(R.plurals.words_count, count, count));
+        if (mMenu != null) {
+            onCreateOptionsMenu(mMenu, mMenuInflater);
+            if (Build.VERSION.SDK_INT > 10)
+                getActivity().invalidateOptionsMenu();
+        }
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -369,6 +380,10 @@ public class RecentFragment extends ListFragment {
     private TextView mEmpty, mTvRecentTitle, mTvCount;
 
     private boolean mIsFavorite = false;
+
+    private Menu mMenu;
+
+    private MenuInflater mMenuInflater;
 
     private List<String> mWordsArrayList = null;
 

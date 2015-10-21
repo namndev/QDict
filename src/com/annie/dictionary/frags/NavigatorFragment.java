@@ -1,5 +1,8 @@
 package com.annie.dictionary.frags;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.M2tListView;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,9 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.M2tListView;
 
 public class NavigatorFragment extends Fragment implements OnItemClickListener {
 

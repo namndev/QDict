@@ -56,11 +56,12 @@
     <string name="prefs_title_theme">主题</string>
     <string name="prefs_title_max_favorite_word">最喜欢的话</string>
     <string name="prefs_title_max_favorite_word_summary">马克斯算的话: %1$s</string>
+    <string name="prefs_title_languages">语言</string>
 
     <plurals name="words_count">
         <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 关键词</item>
     </plurals>
-       <plurals name="items_count">
+    <plurals name="items_count">
         <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 项目</item>
     </plurals>
     <!-- about -->

@@ -2,6 +2,6 @@
 <resources>
 
     <dimen name="second_bar_height">40dp</dimen>
-    <dimen name="slidingmenu_offset">50dp</dimen>
+    <dimen name="slidingmenu_offset">300dp</dimen>
 
 </resources>

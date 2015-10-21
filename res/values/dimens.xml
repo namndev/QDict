@@ -16,13 +16,14 @@
 
 <resources>
 
-    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="slidingmenu_offset">75dp</dimen>
     <dimen name="about_padding">40dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
     <!-- cover image -->
     <dimen name="navi_header_height">110dp</dimen>
     <dimen name="navi_menu_height">48dp</dimen>
 
+    <dimen name="list_dict_padding">60dp</dimen>
     <!-- dimen padding -->
     <dimen name="small_padding">8dp</dimen>
     <dimen name="medium_padding">12dp</dimen>

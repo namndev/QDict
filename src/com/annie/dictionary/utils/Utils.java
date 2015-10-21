@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,12 +33,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.webkit.WebSettings;
 
 public class Utils {
     private static final String TAG = "Utils";
+
+    private static String[] LANGUAGE_SUPPORTS = new String[] {
+            "en", "es", "vi", "zh"
+    };
 
     /**
      * const::control navigation
@@ -609,4 +616,28 @@ public class Utils {
         return v >= Build.VERSION_CODES.KITKAT && v < Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public static void changeLocale(Resources resources, String language) {
+        changeLocale(resources, language, null);
+    }
+
+    public static void changeLocale(Resources resources, String language, String country) {
+        Locale locale = null;
+        if (TextUtils.isEmpty(country)) {
+            locale = new Locale(language);
+        } else {
+            locale = new Locale(language, country);
+        }
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    public static boolean checkLanguageSupport(String language) {
+        for (String lang : LANGUAGE_SUPPORTS) {
+            if (language.contains(lang))
+                return true;
+        }
+        return false;
+    }
 }

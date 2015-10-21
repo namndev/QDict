@@ -3,6 +3,9 @@ package com.mmt.widget.slidemenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mmt.widget.slidemenu.SlidingMenu.OnClosedListener;
+import com.mmt.widget.slidemenu.SlidingMenu.OnOpenedListener;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -24,9 +27,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
-
-import com.mmt.widget.slidemenu.SlidingMenu.OnClosedListener;
-import com.mmt.widget.slidemenu.SlidingMenu.OnOpenedListener;
 
 public class CustomViewAbove extends ViewGroup {
 

@@ -1,15 +1,15 @@
 package com.annie.dictionary;
 
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.WebViewClientCallback;
+import com.mmt.widget.M2tToast;
+
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.WebViewClientCallback;
-import com.mmt.widget.M2tToast;
 
 public class DictWebViewClient extends WebViewClient {
 

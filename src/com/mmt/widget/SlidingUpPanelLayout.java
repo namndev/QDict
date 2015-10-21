@@ -1,5 +1,9 @@
 package com.mmt.widget;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.slidemenu.SlidingMenu;
+import com.nineoldandroids.view.animation.AnimatorProxy;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,10 +23,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.SlidingMenu;
-import com.nineoldandroids.view.animation.AnimatorProxy;
 
 public class SlidingUpPanelLayout extends ViewGroup {
 

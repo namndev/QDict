@@ -1,9 +1,9 @@
 package com.mmt.widget.slidemenu;
 
+import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
+
 import android.graphics.Canvas;
 import android.view.animation.Interpolator;
-
-import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
 
 public class CanvasTransformerBuilder {
 

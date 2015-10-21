@@ -26,6 +26,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.draglistview.DragSortController;
+import com.mmt.widget.draglistview.DragSortItemView;
+import com.mmt.widget.draglistview.DragSortItemViewCheckable;
+import com.mmt.widget.draglistview.SimpleFloatViewManager;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -48,12 +54,6 @@ import android.widget.BaseAdapter;
 import android.widget.Checkable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.draglistview.DragSortController;
-import com.mmt.widget.draglistview.DragSortItemView;
-import com.mmt.widget.draglistview.DragSortItemViewCheckable;
-import com.mmt.widget.draglistview.SimpleFloatViewManager;
 
 /**
  * ListView subclass that mediates drag and drop resorting of items.

@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.QDictions;
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.RECV_UI;
+import com.mmt.widget.DragSortListView;
+import com.mmt.widget.draglistview.DragSortController;
+
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -23,15 +32,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.QDictions;
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-import com.mmt.widget.DragSortListView;
-import com.mmt.widget.draglistview.DragSortController;
 
 public class ListDictFragment extends ListFragment implements Def,
 		OnItemClickListener {
@@ -293,13 +293,6 @@ public class ListDictFragment extends ListFragment implements Def,
 				R.plurals.items_count, checkCount, checkCount));
 		return (checkCount == count);
 	}
-
-	//
-	// @Override
-	// public void onBackPressed() {
-	// super.onBackPressed();
-	// finish();
-	// }
 
 	private class MyDSController extends DragSortController {
 

@@ -3,6 +3,9 @@ package com.annie.dictionary.standout;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.annie.dictionary.R;
+import com.annie.dictionary.standout.StandOutWindow.StandOutLayoutParams;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,9 +21,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-
-import com.annie.dictionary.R;
-import com.annie.dictionary.standout.StandOutWindow.StandOutLayoutParams;
 
 /**
  * Special view that represents a floating window.

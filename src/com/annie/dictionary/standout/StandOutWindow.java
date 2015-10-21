@@ -6,6 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils.Def;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,10 +42,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils.Def;
 
 /**
  * Extend this class to easily create and manage floating StandOut windows.

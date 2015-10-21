@@ -8,6 +8,13 @@
             android:summary="@string/prefs_summary_source"
             android:title="@string/prefs_title_source" />
 
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/languages"
+            android:entryValues="@array/language_values"
+            android:key="@string/prefs_key_languages"
+            android:title="@string/prefs_title_languages" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_using_tts"

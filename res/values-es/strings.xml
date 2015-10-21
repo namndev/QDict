@@ -74,7 +74,7 @@
     <string name="prefs_title_max_favorite_word">Palabras favoritas</string>
     <string name="prefs_title_max_favorite_word_summary">Cuentan palabras max: %1$s</string>
     <string name="prefs_title_theme">Temas</string>
-
+    <string name="prefs_title_languages">Idioma</string>
     <!-- about -->
     <string name="app_license">Apache, Versión 2.0</string>
     <string name="app_version_label">Versión: </string>

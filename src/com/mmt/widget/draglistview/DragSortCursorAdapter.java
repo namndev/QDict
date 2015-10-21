@@ -2,6 +2,9 @@ package com.mmt.widget.draglistview;
 
 import java.util.ArrayList;
 
+import com.mmt.widget.DragSortListView;
+import com.mmt.widget.DragSortListView.DragSortListener;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -9,9 +12,6 @@ import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
-
-import com.mmt.widget.DragSortListView;
-import com.mmt.widget.DragSortListView.DragSortListener;
 
 /**
  * A subclass of {@link android.widget.CursorAdapter} that provides reordering

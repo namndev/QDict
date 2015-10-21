@@ -1,9 +1,9 @@
 package com.mmt.app;
 
+import com.mmt.widget.slidemenu.SlidingMenu;
+
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
-import com.mmt.widget.slidemenu.SlidingMenu;
 
 public interface SlidingActivityBase {
 

@@ -63,7 +63,7 @@
     <string name="prefs_title_theme">主題</string>
     <string name="prefs_title_max_favorite_word">喜歡的語言</string>
     <string name="prefs_title_max_favorite_word_summary">最多算的話: %1$s</string>
-
+    <string name="prefs_title_languages">語言</string>
     <!-- about -->
     <string name="app_license">Apache, 版本 2.0</string>
     <string name="app_version_label">版本: </string>

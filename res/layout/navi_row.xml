@@ -19,6 +19,8 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:padding="10dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/mmt_white" />
 

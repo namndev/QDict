@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|center_horizontal"
-            android:paddingTop="@dimen/slidingmenu_offset"
+            android:paddingTop="@dimen/list_dict_padding"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/mmt_white"
             android:textStyle="italic" />

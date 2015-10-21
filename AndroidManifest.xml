@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.annie.dictionary"
-    android:versionCode="20151021"
+    android:versionCode="20151023"
     android:versionName="@string/app_version" >
 
     <uses-sdk

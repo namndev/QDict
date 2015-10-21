@@ -1,5 +1,8 @@
 package com.mmt.widget.slidemenu;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,9 +15,6 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
 
 public class CustomViewBehind extends ViewGroup {
 
