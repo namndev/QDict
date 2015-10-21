@@ -88,7 +88,7 @@
     <string name="app_version_label">Version: </string>
     <string name="app_author_label">Author: </string>
     <string name="app_email_label">Email: </string>
-    <string name="app_author" translatable="false">MMT Inc</string>
+    <string name="app_author" translatable="false">MADMAN Team</string>
     <string name="app_license_label">License: </string>
     <string name="app_website_label" translatable="false">Website: </string>
     <string name="copyright" translatable="false">&lt;font color=&quot;#478047&quot;&gt;© Madman Team&lt;/font&gt;</string>

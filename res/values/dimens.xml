@@ -21,7 +21,7 @@
     <dimen name="shadow_width">15dp</dimen>
     <!-- cover image -->
     <dimen name="navi_header_height">110dp</dimen>
-    <dimen name="navi_menu_height">50dp</dimen>
+    <dimen name="navi_menu_height">48dp</dimen>
 
     <!-- dimen padding -->
     <dimen name="small_padding">8dp</dimen>

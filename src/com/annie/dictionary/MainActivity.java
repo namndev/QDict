@@ -453,7 +453,11 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             } else if (id == RECV_UI.RUN_SERVICE) {
                 startService();
             } else if (id == RECV_UI.CHANGE_FRAG) {
-                mCurrentNavPosition = intent.getIntExtra("receiver_frag_position", NAVIG.RECENT);
+                int pos = intent.getIntExtra("receiver_frag_position", NAVIG.RECENT);
+                if (mCurrentNavPosition == NAVIG.SEARCH) {
+                    setFragment("", pos);
+                }
+                mCurrentNavPosition = pos;
             }
         }
     };
@@ -477,10 +481,13 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             sFrag.setKeyword(keyword);
             mCurrentNavPosition = NAVIG.SEARCH;
         } else {
-            mTransaction = mFragmentManager.beginTransaction();
-            Fragment searchFrag = new SearchFragment(mSpeechEng, mDictions, keyword, true);
-            mTransaction.replace(R.id.content_frame, searchFrag).commit();
-            mCurrentNavPosition = NAVIG.SEARCH;
+            try {
+                mTransaction = mFragmentManager.beginTransaction();
+                Fragment searchFrag = new SearchFragment(mSpeechEng, mDictions, keyword, true);
+                mTransaction.replace(R.id.content_frame, searchFrag).commit();
+                mCurrentNavPosition = NAVIG.SEARCH;
+            } catch (IllegalStateException ex) {
+            }
         }
 
         if (mLayout != null && (mLayout.getPanelState() != PanelState.HIDDEN)) {
@@ -737,7 +744,13 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 String keyword = results.get(0);
                 if (!TextUtils.isEmpty(keyword)) {
                     mDictKeywordView.setText(keyword);
-                    showSearchContent();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showSearchContent();
+                        }
+                    });
+
                 }
             }
         }

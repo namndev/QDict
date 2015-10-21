@@ -8,10 +8,13 @@ import com.annie.dictionary.QDictions;
 import com.annie.dictionary.R;
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.NAVIG;
+import com.annie.dictionary.utils.Utils.RECV_UI;
 import com.annie.dictionary.utils.WebViewClientCallback;
 import com.annie.dictionary.utils.WordsFileUtils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -242,6 +245,7 @@ public class SearchFragment extends Fragment {
         mMenuInflater = inflater;
         if (!mIsSearch) {
             menu.removeItem(R.id.action_favorite);
+            menu.removeItem(R.id.action_recent);
         } else if (mWordsFileUtilsFavotire.contains(mKeyword)) {
             menu.findItem(R.id.action_favorite).setIcon(R.drawable.unfavorite);
         } else {
@@ -251,7 +255,8 @@ public class SearchFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_favorite) {
+        int id = item.getItemId();
+        if (id == R.id.action_favorite) {
             if (!mWordsFileUtilsFavotire.contains(mKeyword)) {
                 mWordsFileUtilsFavotire.addWord(mKeyword);
                 item.setIcon(R.drawable.unfavorite);
@@ -262,6 +267,12 @@ public class SearchFragment extends Fragment {
                 }
                 return true;
             }
+        } else if (id == R.id.action_recent) {
+            Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
+            intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.CHANGE_FRAG);
+            intent.putExtra("receiver_frag_position", NAVIG.RECENT);
+            getActivity().sendBroadcast(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
