@@ -10,6 +10,7 @@ import com.annie.dictionary.utils.Utils.Def;
 import com.mmt.app.SlidingFragmentActivity;
 import com.mmt.app.SystemBarTintManager;
 import com.mmt.widget.slidemenu.SlidingMenu;
+import com.mmt.widget.slidemenu.SlidingMenu.OnClosedListener;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -41,7 +42,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     /**
      * Read and write permission for storage listed here.
      */
-    private static String STORAGE_PERMISSIONS[] = new String[] {
+    public static String STORAGE_PERMISSIONS[] = new String[] {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
@@ -135,7 +136,18 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        sm.setOnClosedListener(mOnClosedListener);
     }
+
+    OnClosedListener mOnClosedListener = new OnClosedListener() {
+
+        @Override
+        public void onClosed() {
+            onMenuClose();
+        }
+    };
+
+    public abstract void onMenuClose();
 
     private void setLanguage() {
         String language = mSharedPreferences.getString("prefs_key_languages", "");

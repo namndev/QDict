@@ -341,7 +341,7 @@ public abstract class StandOutWindow extends Service {
         startedForeground = false;
     }
 
-    public abstract void initService();
+    public abstract void initClipboardService();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

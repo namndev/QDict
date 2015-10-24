@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.annie.dictionary"
-    android:versionCode="20151023"
+    android:versionCode="20151025"
     android:versionName="@string/app_version" >
 
     <uses-sdk
@@ -20,6 +20,7 @@
         android:theme="@style/AppOrangeTheme" >
         <activity
             android:name=".MainActivity"
+            android:hardwareAccelerated="true"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,18 +31,22 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
+            android:hardwareAccelerated="true"
             android:label="@string/settings_lable"
             android:launchMode="singleTop" />
 
-        <service android:name=".service.QDictService" >
+        <service
+            android:name=".service.QDictService"
+            android:enabled="true" >
         </service>
 
         <receiver
-            android:name=".service.QDictReceiver"
-            android:enabled="true"
-            android:exported="true" >
+            android:name=".service.QDictBootReceiver"
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
     </application>

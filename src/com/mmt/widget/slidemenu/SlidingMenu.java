@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -81,7 +82,7 @@ public class SlidingMenu extends RelativeLayout {
 
     private CustomViewAbove mViewAbove;
 
-    private CustomViewBehind mViewBehind;
+    public CustomViewBehind mViewBehind;
 
     private OnOpenListener mOpenListener;
 
@@ -547,8 +548,8 @@ public class SlidingMenu extends RelativeLayout {
     /**
      * Toggle the SlidingMenu. If it is open, it will be closed, and vice versa.
      */
-    public void toggle() {
-        toggle(true);
+    public boolean toggle() {
+        return toggle(true);
     }
 
     /**
@@ -556,11 +557,13 @@ public class SlidingMenu extends RelativeLayout {
      * 
      * @param animate true to animate the transition, false to ignore animation
      */
-    public void toggle(boolean animate) {
+    public boolean toggle(boolean animate) {
         if (isMenuShowing()) {
             showContent(animate);
+            return true;
         } else {
             showMenu(animate);
+            return false;
         }
     }
 
@@ -1039,7 +1042,9 @@ public class SlidingMenu extends RelativeLayout {
         String brand = android.os.Build.BRAND;
         if (Utils.hasLlAbove() && !brand.equalsIgnoreCase("Bkav")) {
             Resources resources = getContent().getResources();
-            int orientation = resources.getConfiguration().orientation;
+            boolean isBottom = isSystemBarOnBottom(resources);
+            Configuration cfg = resources.getConfiguration();
+            int orientation = cfg.orientation;
             int resourceId = 0;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
@@ -1047,7 +1052,11 @@ public class SlidingMenu extends RelativeLayout {
                 resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
             }
             if (resourceId > 0) {
-                bottomPadding += resources.getDimensionPixelSize(resourceId);
+                if (isBottom)
+                    bottomPadding += resources.getDimensionPixelSize(resourceId);
+                else {
+                    rightPadding += resources.getDimensionPixelSize(resourceId);
+                }
             }
         }
 
@@ -1056,6 +1065,14 @@ public class SlidingMenu extends RelativeLayout {
             setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
         }
         return true;
+    }
+
+    private boolean isSystemBarOnBottom(Resources res) {
+        Configuration cfg = res.getConfiguration();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        boolean canMove = (dm.widthPixels != dm.heightPixels && cfg.smallestScreenWidthDp < 600);
+
+        return (!canMove || dm.widthPixels < dm.heightPixels);
     }
 
     @TargetApi(11)

@@ -42,6 +42,8 @@ import android.widget.TextView;
 
 public class RecentFragment extends ListFragment {
 
+    public static final String TAG = "RecentFragment";
+
     public RecentFragment() {
         // default constructor
     }
@@ -63,9 +65,16 @@ public class RecentFragment extends ListFragment {
         return root;
     }
 
+    public void setFavorite(boolean favorite) {
+        mIsFavorite = favorite;
+        setState();
+    }
+
     private void setState() {
         mTvRecentTitle.setText(mIsFavorite ? R.string.favorite_lable : R.string.recent_lable);
         mEmpty.setText(mIsFavorite ? R.string.favorites_no_word : R.string.recent_no_word);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0,
+                mIsFavorite ? R.drawable.ic_favorite_empty : R.drawable.ic_recent_empty, 0, 0);
         mHistoryFileUtils = new WordsFileUtils(mShares, mIsFavorite ? Def.TYPE_FAVORITEWORDS : Def.TYPE_RECENTWORDS);
         mWordsArrayList = mHistoryFileUtils.getArrayList();
         setTyeView();

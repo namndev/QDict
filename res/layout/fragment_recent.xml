@@ -34,20 +34,24 @@
             android:textStyle="italic" />
     </RelativeLayout>
 
+    <com.mmt.widget.QTextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/small_padding"
+        android:drawableTop="@drawable/ic_recent_empty"
+        android:gravity="center"
+        android:paddingBottom="?attr/actionBarSize"
+        android:text="@string/recent_no_word"
+        android:textColor="@color/mmt_black"
+        android:textSize="16.0sp"
+        android:textStyle="italic" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_title" >
-
-        <com.mmt.widget.QTextView
-            android:id="@+id/tv_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/recent_no_word"
-            android:textColor="@color/empty_list"
-            android:textSize="20.0sp"
-            android:textStyle="italic" />
 
         <ListView
             android:id="@android:id/list"

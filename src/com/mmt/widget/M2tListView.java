@@ -1,3 +1,4 @@
+
 package com.mmt.widget;
 
 import android.content.Context;
@@ -7,43 +8,42 @@ import android.widget.ListView;
 
 public class M2tListView extends ListView {
 
-	boolean expanded = false;
+    boolean expanded = false;
 
-	public M2tListView(Context context) {
-		super(context);
-	}
+    public M2tListView(Context context) {
+        super(context);
+    }
 
-	public M2tListView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public M2tListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public M2tListView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public M2tListView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	public boolean isExpanded() {
-		return expanded;
-	}
+    public boolean isExpanded() {
+        return expanded;
+    }
 
-	@Override
-	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// HACK! TAKE THAT ANDROID!
-		if (isExpanded()) {
-			// Calculate entire height by providing a very large height hint.
-			// But do not use the highest 2 bits of this integer; those are
-			// reserved for the MeasureSpec mode.
-			int expandSpec = MeasureSpec.makeMeasureSpec(
-					Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
-			super.onMeasure(widthMeasureSpec, expandSpec);
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // HACK! TAKE THAT ANDROID!
+        if (isExpanded()) {
+            // Calculate entire height by providing a very large height hint.
+            // But do not use the highest 2 bits of this integer; those are
+            // reserved for the MeasureSpec mode.
+            int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+            super.onMeasure(widthMeasureSpec, expandSpec);
 
-			ViewGroup.LayoutParams params = getLayoutParams();
-			params.height = getMeasuredHeight();
-		} else {
-			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		}
-	}
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.height = getMeasuredHeight();
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
 
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
 }

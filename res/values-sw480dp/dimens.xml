@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="second_bar_height">56dp</dimen>
+    <dimen name="second_bar_height">50dp</dimen>
     <dimen name="navi_menu_height">50dp</dimen>
 	<dimen name="slidingmenu_offset">200dp</dimen>
 </resources>

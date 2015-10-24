@@ -55,8 +55,8 @@
     <string name="about_lable">About</string>
     <string name="ftp_server">Go to Mini-FTPServer</string>
     <string name="keywords_null">No matched words</string>
-    <string name="favorites_no_word">No words added to favorite list.</string>
-    <string name="recent_no_word">No recent word look-up.</string>
+    <string name="favorites_no_word">Don\'t have any favorite word</string>
+    <string name="recent_no_word">Don\'t have any recent word</string>
     <string name="dict_not_found">No dictionary available.\n\nPlease add dictionary into \'%1$s\' directory.\n\nYou can use the Mini-FTPServer software to push data dictionary to your device.</string>
     <!-- seaching -->
     <string name="keywords_search">Searching&#8230;</string>

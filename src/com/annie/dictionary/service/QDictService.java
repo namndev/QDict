@@ -1,6 +1,10 @@
 
 package com.annie.dictionary.service;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.annie.dictionary.BaseActivity;
 import com.annie.dictionary.MainActivity;
 import com.annie.dictionary.QDictions;
 import com.annie.dictionary.R;
@@ -11,8 +15,10 @@ import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
 import com.annie.dictionary.utils.Utils.RECV_UI;
 import com.annie.dictionary.utils.WebViewClientCallback;
+import com.annie.dictionary.utils.WordsFileUtils;
 
 import android.content.ClipboardManager;
+import android.content.ClipboardManager.OnPrimaryClipChangedListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -21,6 +27,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +40,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class QDictService extends StandOutWindow {
+
+    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
+        public void onPrimaryClipChanged() {
+            clipboardCheck();
+        }
+    };
 
     private static final int CLOSED = 0, OPENED = 1;
 
@@ -64,9 +77,12 @@ public class QDictService extends StandOutWindow {
 
     private boolean bHasLoadDict = false;
 
-    private Handler mHandler = null;
+    private Handler mHandler = new Handler();
 
+    // for android API <= 10
     private Runnable mClipboardTask = null;
+
+    private Runnable mInitServiceTask = null;
 
     private String mClipboardText = "";
 
@@ -74,6 +90,8 @@ public class QDictService extends StandOutWindow {
 
     @SuppressWarnings("deprecation")
     private android.text.ClipboardManager mClipboardManagerGINGER = null;
+
+    private ExecutorService mThreadPool = Executors.newSingleThreadExecutor();
 
     public class ServiceWebViewClientCallback extends WebViewClientCallback {
 
@@ -114,13 +132,18 @@ public class QDictService extends StandOutWindow {
     @SuppressWarnings("deprecation")
     private void clipboardCheck() {
         String clipboardText = "";
-        if (Build.VERSION.SDK_INT > 10) {
+        CharSequence s = null;
+        if (Utils.hasHcAbove()) {
             if (mClipboardManager.hasPrimaryClip()) {
-                clipboardText = mClipboardManager.getPrimaryClip().getItemAt(0).getText().toString().trim();
+                s = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
             }
         } else {
-            clipboardText = mClipboardManagerGINGER.getText().toString().trim();
+            s = mClipboardManagerGINGER.getText();
         }
+        if (TextUtils.isEmpty(s)) {
+            return;
+        }
+        clipboardText = s.toString().trim();
         if (clipboardText.length() > Def.LIMIT_TRANSLATE_CHAR)
             clipboardText = clipboardText.substring(0, Def.LIMIT_TRANSLATE_CHAR);
         if (mClipboardText.equalsIgnoreCase(clipboardText))
@@ -129,6 +152,8 @@ public class QDictService extends StandOutWindow {
             mClipboardText = clipboardText;
             if (!MainActivity.active) {
                 showCaptureWindow();
+                if (Utils.isSdCardWrittenable())
+                    mThreadPool.execute(new WriteHistoryRunnable(mClipboardText));
             } else {
                 Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
                 intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.SEARCH_WORD);
@@ -148,12 +173,11 @@ public class QDictService extends StandOutWindow {
 
     @Override
     public void onCreate() {
-        if (MainActivity.hasStoragePermission) {
+        if (Utils.hasSelfPermission(this, BaseActivity.STORAGE_PERMISSIONS)) {
             mQDictions = new QDictions(this);
         } else {
             stopSelf();
         }
-        mHandler = new Handler();
         float densityDpi = getResources().getDisplayMetrics().densityDpi + 0.1f;
         float scale = (densityDpi / DisplayMetrics.DENSITY_XXHIGH);
         CLOSED_WIDTH = (int)(500 * scale);
@@ -161,34 +185,35 @@ public class QDictService extends StandOutWindow {
 
         OPENED_WIDTH = (int)(880 * scale);
         OPENED_HEIGHT = (int)(960 * scale);
-        mClipboardTask = new Runnable() {
+        if (!Utils.hasHcAbove())
+            mClipboardTask = new Runnable() {
+                @Override
+                public void run() {
+                    clipboardCheck();
+                    mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
+                    Log.e("NAMND", "mClipboardTask");
+                }
+            };
+        mInitServiceTask = new Runnable() {
             @Override
             public void run() {
-                clipboardCheck();
-                mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
+                initClipboardService();
+                if (!Utils.hasHcAbove())
+                    mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
+                Log.e("NAMND", "mInitServiceTask");
             }
         };
-        Runnable initServiceTask = new Runnable() {
-            @Override
-            public void run() {
-                initService();
-                mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
-            }
-        };
-        mHandler.postDelayed(initServiceTask, Def.CLIPBOARD_TIMER);
+        mHandler.postDelayed(mInitServiceTask, Def.CLIPBOARD_TIMER);
         super.onCreate();
         RUNNING = true;
-        Log.e("NAMND", "service start");
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void initService() {
+    public void initClipboardService() {
         if (Build.VERSION.SDK_INT > 10) {
             mClipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-            if (mClipboardManager.hasPrimaryClip()) {
-                mClipboardText = mClipboardManager.getPrimaryClip().getItemAt(0).getText().toString().trim();
-            }
+            mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
         } else {
             mClipboardManagerGINGER = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
             if (mClipboardManagerGINGER.hasText())
@@ -198,9 +223,17 @@ public class QDictService extends StandOutWindow {
 
     @Override
     public void onDestroy() {
-        mHandler.removeCallbacks(mClipboardTask);
-        mHandler = null;
-        mClipboardTask = null;
+        if (mClipboardTask != null) {
+            mHandler.removeCallbacks(mClipboardTask);
+            mClipboardTask = null;
+        }
+        if (mClipboardManager != null) {
+            mClipboardManager.removePrimaryClipChangedListener(mClipboardListener);
+        }
+        if (mInitServiceTask != null) {
+            mHandler.removeCallbacks(mInitServiceTask);
+            mInitServiceTask = null;
+        }
         if (mQDictions != null)
             mQDictions.destroy();
         if (mDictViewContent != null) {
@@ -296,11 +329,8 @@ public class QDictService extends StandOutWindow {
     private void transition(int id, int state) {
 
         synchronizePositions(id, closedParams, openedParams);
-
         windowState = state;
-
         updateViewLayout(id, getParams(id));
-        Log.e("NAMND", "service transition = " + state);
     }
 
     private void synchronizePositions(int id, StandOutLayoutParams... params) {
@@ -347,5 +377,27 @@ public class QDictService extends StandOutWindow {
             openedParams.minHeight = OPENED_HEIGHT;
         }
         return openedParams;
+    }
+
+    private class WriteHistoryRunnable implements Runnable {
+        private WordsFileUtils mWordsFileUtilsHis;
+
+        private final CharSequence mTextToWrite;
+
+        public WriteHistoryRunnable(CharSequence text) {
+            mWordsFileUtilsHis = new WordsFileUtils(mSharedPreferences, Def.TYPE_RECENTWORDS);
+            mTextToWrite = text;
+        }
+
+        @Override
+        public void run() {
+            if (TextUtils.isEmpty(mTextToWrite) || mWordsFileUtilsHis == null) {
+                return;
+            }
+            mWordsFileUtilsHis.addWord(mTextToWrite.toString().trim());
+            mWordsFileUtilsHis.save();
+            mWordsFileUtilsHis = null;
+        }
+
     }
 }

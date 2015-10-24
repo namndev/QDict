@@ -1,72 +1,77 @@
+
 package com.annie.dictionary;
 
 public class QDictEng {
-	private final String TAG = "QDictEng";
+    private final String TAG = "QDictEng";
 
-	public static String[] sDictPaths = null;
-	public static String[] sDictNames = null;
-	public static int[] sDictTypes = null;
-	private static int mReferenct = 0;
-	private static QDictEng mQDictEng = null;
+    public static String[] sDictPaths = null;
 
-	public QDictEng() {
-	}
+    public static String[] sDictNames = null;
 
-	public static QDictEng createQDictEng() {
-		if (null == mQDictEng)
-			mQDictEng = new QDictEng();
-		mReferenct++;
-		return mQDictEng;
-	}
+    public static int[] sDictTypes = null;
 
-	public void releaseQDictEng() {
-		mReferenct--;
-		if (0 == mReferenct) {
-			mQDictEng = null;
-			UnloadDicts();
-		}
-	}
+    private static int mReferenct = 0;
 
-	// This function is called in JNI C code, it must be 'static' function.
-	private static void lookupProgressCB(int progress) {
-		MainActivity.lookupProgressCB(progress);
-	}
+    private static QDictEng mQDictEng = null;
 
-	// -----------------------------------------------------------------------------------------------------//
+    public QDictEng() {
+    }
 
-	// Native function in QDictEng.c
-	public native void CancelLookup();
+    public static QDictEng createQDictEng() {
+        if (null == mQDictEng)
+            mQDictEng = new QDictEng();
+        mReferenct++;
+        return mQDictEng;
+    }
 
-	public native String[] Lookup(String word, int type); // This function for
-															// DICT_TYPE_INDEX,
-															// DICT_TYPE_CAPTURE
-															// and
-															// DICT_TYPE_MEMORIZE.
+    public void releaseQDictEng() {
+        mReferenct--;
+        if (0 == mReferenct) {
+            mQDictEng = null;
+            UnloadDicts();
+        }
+    }
 
-	public native String[] ListWords(String word); // This function is only for
-													// the type DICT_TYPE_INDEX.
+    // This function is called in JNI C code, it must be 'static' function.
+    private static void lookupProgressCB(int progress) {
+        MainActivity.lookupProgressCB(progress);
+    }
 
-	public native String[] FuzzyListWords(String word); // This function is only
-														// for the type
-														// DICT_TYPE_INDEX.
+    // -----------------------------------------------------------------------------------------------------//
 
-	public native String[] PatternListWords(String word); // This function is
-															// only for the type
-															// DICT_TYPE_INDEX.
+    // Native function in QDictEng.c
+    public native void CancelLookup();
 
-	public native String[] FullTextListWords(String word); // This function is
-															// only for the type
-															// DICT_TYPE_INDEX.
+    public native String[] Lookup(String word, int type); // This function for
+                                                          // DICT_TYPE_INDEX,
+                                                          // DICT_TYPE_CAPTURE
+                                                          // and
+                                                          // DICT_TYPE_MEMORIZE.
 
-	public native String GetBookName(String ifoPath);
+    public native String[] ListWords(String word); // This function is only for
+                                                   // the type DICT_TYPE_INDEX.
 
-	public native String[] GetInfo(String ifoPath);
+    public native String[] FuzzyListWords(String word); // This function is only
+                                                        // for the type
+                                                        // DICT_TYPE_INDEX.
 
-	public native boolean LoadDicts(String[] paths, String[] names, int[] types);
+    public native String[] PatternListWords(String word); // This function is
+                                                          // only for the type
+                                                          // DICT_TYPE_INDEX.
 
-	public native void UnloadDicts();
+    public native String[] FullTextListWords(String word); // This function is
+                                                           // only for the type
+                                                           // DICT_TYPE_INDEX.
 
-	static {
-		System.loadLibrary("qdicteng");
-	}
+    public native String GetBookName(String ifoPath);
+
+    public native String[] GetInfo(String ifoPath);
+
+    public native boolean LoadDicts(String[] paths, String[] names, int[] types);
+
+    public native void UnloadDicts();
+
+    static {
+        System.loadLibrary("qdicteng");
+    }
 }

@@ -517,51 +517,61 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     }
 
     @Override
-    public void onNavigationItemSelected(String title, int position) {
+    public void onNavigationItemSelected(final String title, final int position) {
         if (position == NAVIG.SELECT_DICT) {
             Fragment fragment = new ListDictFragment(mDictions);
             setMenuFragment(fragment);
-        } else if (position == NAVIG.SETTINGS) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            toggle();
-        } else if (position == NAVIG.JOIN_US) {
-            Intent intent = Utils.getOpenPageFBIntent(getApplicationContext());
-            startActivity(intent);
-            toggle();
         } else {
+            onNavig = true;
+            tempKeyword = title;
+            tempPos = position;
             toggle();
-            if (mLayout != null && (mLayout.getPanelState() == PanelState.EXPANDED
-                    || mLayout.getPanelState() == PanelState.ANCHORED)) {
-                mLayout.setPanelState(PanelState.HIDDEN);
-            }
-            if (mCurrentNavPosition != position)
-                setFragment(title, position);
         }
     }
+
+    @Override
+    public void onMenuClose() {
+        if (onNavig) {
+            if (tempPos == NAVIG.SETTINGS) {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            } else if (tempPos == NAVIG.JOIN_US) {
+                Intent intent = Utils.getOpenPageFBIntent(getApplicationContext());
+                startActivity(intent);
+            } else {
+                if (mLayout != null && (mLayout.getPanelState() == PanelState.EXPANDED
+                        || mLayout.getPanelState() == PanelState.ANCHORED)) {
+                    mLayout.setPanelState(PanelState.HIDDEN);
+                }
+                if (mCurrentNavPosition != tempPos)
+                    setFragment(tempKeyword, tempPos);
+            }
+            onNavig = false;
+        }
+    }
+
+    String tempKeyword;
+
+    int tempPos;
+
+    boolean onNavig = false;
 
     public void setFragment(String keyword, int position) {
         mTransaction = mFragmentManager.beginTransaction();
         Fragment fragment;
         switch (position) {
             case NAVIG.HOME:
-                fragment = new SearchFragment(mSpeechEng, mDictions, keyword, false);
-                break;
             case NAVIG.SEARCH:
-                fragment = new SearchFragment(mSpeechEng, mDictions, keyword, true);
+                fragment = new SearchFragment(mSpeechEng, mDictions, keyword, position == NAVIG.SEARCH);
                 break;
             case NAVIG.RECENT:
+            case NAVIG.FAVORITE:
+                boolean favorite = (position == NAVIG.FAVORITE);
                 fragment = new RecentFragment();
                 Bundle b = new Bundle();
-                b.putBoolean("qdict_is_favorite", false);
+                b.putBoolean("qdict_is_favorite", favorite);
                 fragment.setArguments(b);
-                break;
-            case NAVIG.FAVORITE:
-                fragment = new RecentFragment();
-                Bundle b2 = new Bundle();
-                b2.putBoolean("qdict_is_favorite", true);
-                fragment.setArguments(b2);
                 break;
             default:
                 fragment = null;
@@ -762,7 +772,6 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 toggle();
                 break;
             case R.id.action_voice:
-                // checkPermission(REQUEST_MICRO_CODE);
                 startVoiceRecognition();
                 break;
             case R.id.action_wordslist:

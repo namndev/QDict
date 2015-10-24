@@ -1,3 +1,4 @@
+
 package com.mmt.widget;
 
 import android.content.Context;
@@ -7,32 +8,33 @@ import android.widget.LinearLayout;
 
 public class CheckableLinearLayout extends LinearLayout implements Checkable {
 
-	private static final int CHECKABLE_CHILD_INDEX = 1;
-	private Checkable child;
+    private static final int CHECKABLE_CHILD_INDEX = 1;
 
-	public CheckableLinearLayout(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    private Checkable child;
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-		child = (Checkable) getChildAt(CHECKABLE_CHILD_INDEX);
-	}
+    public CheckableLinearLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	public boolean isChecked() {
-		return child.isChecked();
-	}
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        child = (Checkable)getChildAt(CHECKABLE_CHILD_INDEX);
+    }
 
-	@Override
-	public void setChecked(boolean checked) {
-		child.setChecked(checked);
-	}
+    @Override
+    public boolean isChecked() {
+        return child.isChecked();
+    }
 
-	@Override
-	public void toggle() {
-		child.toggle();
-	}
+    @Override
+    public void setChecked(boolean checked) {
+        child.setChecked(checked);
+    }
+
+    @Override
+    public void toggle() {
+        child.toggle();
+    }
 
 }

@@ -42,14 +42,14 @@
     <string name="favorite_lable">Favoritas</string>
     <string name="settings_lable">Ajustes</string>
     <string name="guide_lable">Guía</string>
-    <string name="select_dictionary">Selecionar diccionario</string>
+    <string name="select_dictionary">Elegir diccionario</string>
     <string name="join_us">Únete a nosotros!</string>
     <string name="share_lable">Compartir</string>
     <string name="about_lable">Sobre</string>
     <string name="ftp_server">Ir a Mini-FTPServer</string>
     <string name="keywords_null">No palabra emparejada</string>
-    <string name="favorites_no_word">No hay palabras que añaden a la lista de favoritos.</string>
-    <string name="recent_no_word">No palabra reciente</string>
+    <string name="favorites_no_word">No tengo ninguna palabra favorita</string>
+    <string name="recent_no_word">No tengo ninguna palabra reciente</string>
     <string name="dict_not_found">No diccionario disponible.\n\nPor favor, añade los diccionarios a \'%1$s\' directorio.\n\nPuedes usar el Mini-FTPServer para copiar los diccionarios a tu dispositivo.</string>
     <!-- seaching -->
     <string name="keywords_search">Búsqueda&#8230;</string>

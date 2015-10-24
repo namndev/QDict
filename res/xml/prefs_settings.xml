@@ -21,7 +21,7 @@
             android:summary="@string/prefs_title_tts_summary"
             android:title="@string/prefs_title_tts" />
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/prefs_key_capture_notification"
             android:summary="@string/prefs_title_notification_summary"
             android:title="@string/prefs_title_notification" />

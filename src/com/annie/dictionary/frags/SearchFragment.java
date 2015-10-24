@@ -166,8 +166,6 @@ public class SearchFragment extends Fragment {
         webSettings.setLayoutAlgorithm(Utils.getLayoutAlgorithm(true));
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("UTF-8");
-        // webSettings.setSupportZoom(true);
-        // webSettings.setBuiltInZoomControls(true);
         setHasOptionsMenu(true);
 
         // /

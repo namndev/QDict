@@ -31,7 +31,7 @@
     <string name="about_lable">关于</string>
     <string name="keywords_null">没有找到任何单词。</string>
     <string name="favorites_no_word">没有的话添加到收藏夹列表</string>
-    <string name="recent_no_word">最近没有字查找起来.</string>
+    <string name="recent_no_word">最近没有字查找起来</string>
     <string name="notification_message">点击这里打开QDict</string>
     <string name="notification_title">%1$s 正在运行</string>
     <string name="delete_all_recent_summary">你想删除所有近期的话？</string>

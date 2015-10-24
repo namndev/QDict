@@ -39,8 +39,8 @@
     <string name="share_lable">Chia sẽ</string>
     <string name="about_lable">Thông tin</string>
     <string name="keywords_null">Không tìm thấy kết quả</string>
-    <string name="favorites_no_word">Không có từ yêu thích</string>
-    <string name="recent_no_word">Chưa tra từ nào gần đây</string>
+    <string name="favorites_no_word">Không có từ yêu thích nào</string>
+    <string name="recent_no_word">Không có từ tra gần đây nào</string>
     <string name="notification_message">Chạm vào để mở QDict</string>
     <string name="notification_title">%1$s đang chạy</string>
 
