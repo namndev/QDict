@@ -81,12 +81,15 @@ public class RecentFragment extends BaseListFragment {
     }
 
     private void setState() {
-        mTvRecentTitle.setText(mIsFavorite ? R.string.favorite_lable : R.string.recent_lable);
-        mEmpty.setText(mIsFavorite ? R.string.favorites_no_word : R.string.recent_no_word);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0,
-                mIsFavorite ? R.drawable.ic_favorite_empty : R.drawable.ic_recent_empty, 0, 0);
-        mHistoryFileUtils = new WordsFileUtils(mShares, mIsFavorite ? Def.TYPE_FAVORITEWORDS : Def.TYPE_RECENTWORDS);
-        setTypeView();
+        if (rootView != null) {
+            mTvRecentTitle.setText(mIsFavorite ? R.string.favorite_lable : R.string.recent_lable);
+            mEmpty.setText(mIsFavorite ? R.string.favorites_no_word : R.string.recent_no_word);
+            mEmpty.setCompoundDrawablesWithIntrinsicBounds(0,
+                    mIsFavorite ? R.drawable.ic_favorite_empty : R.drawable.ic_recent_empty, 0, 0);
+            mHistoryFileUtils = new WordsFileUtils(mShares,
+                    mIsFavorite ? Def.TYPE_FAVORITEWORDS : Def.TYPE_RECENTWORDS);
+            setTypeView();
+        }
     }
 
     @Override
@@ -294,6 +297,7 @@ public class RecentFragment extends BaseListFragment {
     }
 
     public void onPause() {
+        mShares.edit().putBoolean("qdict_is_favorite", mIsFavorite).apply();
         mHistoryFileUtils.save();
         mHistoryFileUtils = null;
         mWordsArrayList = null;
