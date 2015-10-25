@@ -22,10 +22,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.ActionMode;
@@ -40,29 +38,41 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class RecentFragment extends ListFragment {
-
-    public static final String TAG = "RecentFragment";
+public class RecentFragment extends BaseListFragment {
 
     public RecentFragment() {
         // default constructor
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_recent, container, false);
+        return getPersistentView(inflater, container, savedInstanceState, R.layout.fragment_recent);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void doInitialSetUpOfUI() {
         Bundle b = getArguments();
         if (b != null)
             mIsFavorite = b.getBoolean("qdict_is_favorite", false);
         activity = (ActionBarActivity)getActivity();
-        mTvRecentTitle = (TextView)root.findViewById(R.id.tv_title);
-        mTvCount = (TextView)root.findViewById(R.id.tv_count);
-        mEmpty = (TextView)root.findViewById(R.id.tv_empty);
+        mTvRecentTitle = (TextView)rootView.findViewById(R.id.tv_title);
+        mTvCount = (TextView)rootView.findViewById(R.id.tv_count);
+        mEmpty = (TextView)rootView.findViewById(R.id.tv_empty);
         mShares = activity.getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         mCheckedColor = getResources().getColor(R.color.mmt_grey_500);
-        return root;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     public void setFavorite(boolean favorite) {
@@ -76,15 +86,7 @@ public class RecentFragment extends ListFragment {
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0,
                 mIsFavorite ? R.drawable.ic_favorite_empty : R.drawable.ic_recent_empty, 0, 0);
         mHistoryFileUtils = new WordsFileUtils(mShares, mIsFavorite ? Def.TYPE_FAVORITEWORDS : Def.TYPE_RECENTWORDS);
-        mWordsArrayList = mHistoryFileUtils.getArrayList();
-        setTyeView();
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        setHasOptionsMenu(true);
+        setTypeView();
     }
 
     @Override
@@ -98,8 +100,6 @@ public class RecentFragment extends ListFragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.recent_menu, menu);
-        mMenu = menu;
-        mMenuInflater = inflater;
         if (mWordsArrayList == null || mWordsArrayList.isEmpty()) {
             menu.removeItem(R.id.action_delete);
         }
@@ -147,6 +147,7 @@ public class RecentFragment extends ListFragment {
                 mWordsArrayList.clear();
                 mAdapter.notifyDataSetChanged();
                 mEmpty.setVisibility(View.VISIBLE);
+                activity.invalidateOptionsMenu();
                 dialog.dismiss();
             }
         });
@@ -195,12 +196,11 @@ public class RecentFragment extends ListFragment {
         alertDialogBuilder.show();
     }
 
-    public void setTyeView() {
+    public void setTypeView() {
         mWordsArrayList = mHistoryFileUtils.getArrayList();
         mAdapter = new WordsListAdapter(mWordsArrayList);
         setListAdapter(mAdapter);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
             @Override
             public boolean onItemLongClick(AdapterView<?> listview, View item, int position, long id) {
                 getListView().setItemChecked(position, true);
@@ -219,18 +219,15 @@ public class RecentFragment extends ListFragment {
     }
 
     private void checkUIInfor() {
-        if (!mWordsArrayList.isEmpty()) {
+        int count = mWordsArrayList.size();
+        if (count > 0) {
             mEmpty.setVisibility(View.GONE);
         } else {
             mEmpty.setVisibility(View.VISIBLE);
         }
-        int count = mWordsArrayList.size();
         mTvCount.setText(getResources().getQuantityString(R.plurals.words_count, count, count));
-        if (mMenu != null) {
-            onCreateOptionsMenu(mMenu, mMenuInflater);
-            if (Build.VERSION.SDK_INT > 10)
-                getActivity().invalidateOptionsMenu();
-        }
+        if (Utils.hasHcAbove())
+            activity.invalidateOptionsMenu();
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -389,10 +386,6 @@ public class RecentFragment extends ListFragment {
     private TextView mEmpty, mTvRecentTitle, mTvCount;
 
     private boolean mIsFavorite = false;
-
-    private Menu mMenu;
-
-    private MenuInflater mMenuInflater;
 
     private List<String> mWordsArrayList = null;
 

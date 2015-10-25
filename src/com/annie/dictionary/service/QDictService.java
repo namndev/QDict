@@ -211,7 +211,7 @@ public class QDictService extends StandOutWindow {
     @SuppressWarnings("deprecation")
     @Override
     public void initClipboardService() {
-        if (Build.VERSION.SDK_INT > 10) {
+        if (Utils.hasHcAbove()) {
             mClipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
             mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
         } else {

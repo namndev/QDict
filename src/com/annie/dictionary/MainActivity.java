@@ -25,6 +25,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ClipboardManager;
+import android.content.ClipboardManager.OnPrimaryClipChangedListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -138,6 +140,55 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     private boolean mIsTaskRunning = false;
 
     int mCurrentNavPosition = -1;
+
+    private ClipboardManager mClipboardManager = null;
+
+    private String mClipboardText = "";
+
+    public void initClipboard() {
+        if (Utils.hasHcAbove()) {
+            if (mClipboardManager == null) {
+                mClipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
+            }
+        }
+    }
+
+    public void releaseClipboard() {
+        if (Utils.hasHcAbove()) {
+            if (mClipboardManager != null) {
+                mClipboardManager.removePrimaryClipChangedListener(mClipboardListener);
+            }
+            mClipboardManager = null;
+        }
+    }
+
+    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
+        public void onPrimaryClipChanged() {
+            clipboardCheck();
+        }
+    };
+
+    private void clipboardCheck() {
+        String clipboardText = "";
+        CharSequence s = null;
+        if (mClipboardManager != null && mClipboardManager.hasPrimaryClip()) {
+            s = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
+        }
+        if (TextUtils.isEmpty(s)) {
+            return;
+        }
+        clipboardText = s.toString().trim();
+        if (clipboardText.length() > Def.LIMIT_TRANSLATE_CHAR)
+            clipboardText = clipboardText.substring(0, Def.LIMIT_TRANSLATE_CHAR);
+        if (mClipboardText.equalsIgnoreCase(clipboardText))
+            return;
+        if (clipboardText.length() > 0) {
+            mClipboardText = clipboardText;
+            mDictKeywordView.setText(mClipboardText);
+            showSearchContent();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -306,12 +357,22 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             if (QDictService.RUNNING)
                 StandOutWindow.closeAll(this, QDictService.class);
         }
+        checkUseClipboard();
+    }
+
+    private void checkUseClipboard() {
+        if (!QDictService.RUNNING) {
+            initClipboard();
+        } else {
+            releaseClipboard();
+        }
     }
 
     private void stopService() {
         if (QDictService.RUNNING) {
             StandOutWindow.closeAll(this, QDictService.class);
         }
+        checkUseClipboard();
     }
 
     @Override
@@ -408,6 +469,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mShowKeyboardHander.removeCallbacks(mShowKeyboarRunable);
         mShowKeyboarRunable = null;
         mPopupWordsListRunnable = null;
+        releaseClipboard();
     }
 
     @Override
@@ -559,7 +621,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
 
     public void setFragment(String keyword, int position) {
         mTransaction = mFragmentManager.beginTransaction();
-        Fragment fragment;
+        Fragment fragment = null;
         switch (position) {
             case NAVIG.HOME:
             case NAVIG.SEARCH:
@@ -567,11 +629,16 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 break;
             case NAVIG.RECENT:
             case NAVIG.FAVORITE:
+                fragment = this.getSupportFragmentManager().findFragmentById(R.id.content_frame);
                 boolean favorite = (position == NAVIG.FAVORITE);
-                fragment = new RecentFragment();
-                Bundle b = new Bundle();
-                b.putBoolean("qdict_is_favorite", favorite);
-                fragment.setArguments(b);
+                if (fragment instanceof RecentFragment) {
+                    ((RecentFragment)fragment).setFavorite(favorite);
+                } else {
+                    fragment = new RecentFragment();
+                    Bundle b = new Bundle();
+                    b.putBoolean("qdict_is_favorite", favorite);
+                    fragment.setArguments(b);
+                }
                 break;
             default:
                 fragment = null;
@@ -719,19 +786,10 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
 
         @Override
         protected void onPostExecute(String[] strWordsList) {
-
             mIsTaskRunning = false; // Task has stopped.
-
             if (null != mProgressDialog && mProgressDialog.isShowing())
                 mProgressDialog.cancel();
-
-            // Haven't got any words, not show the words list popup window.
             if (null == strWordsList || strWordsList.length <= 0) {
-                if (LIST_WORDS_NORMAL != mListType) {
-                    // mDictions.showHtmlContent(
-                    // getResources().getString(R.string.spell_error),
-                    // mDictContentView);
-                }
                 return;
             }
             showKeywordsList(strWordsList);
