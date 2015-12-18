@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mmt_white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/second_bar_height" >
+
+        <ImageButton
+            android:id="@+id/back_word"
+            android:layout_width="@dimen/action_width"
+            android:layout_height="@dimen/second_bar_height"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/action_bacground"
+            android:contentDescription="@string/app_name"
+            android:src="?attr/icon_actionBack"
+            android:visibility="invisible" />
+
+        <com.mmt.widget.QTextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/action_speak"
+            android:layout_toRightOf="@+id/back_word"
+            android:gravity="left|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/mmt_black" />
+
+        <ImageButton
+            android:id="@+id/action_speak"
+            android:layout_width="@dimen/action_width"
+            android:layout_height="@dimen/second_bar_height"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/action_bacground"
+            android:contentDescription="@string/app_name"
+            android:src="?attr/icon_actionSpeak"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/dictContentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout_title"
+        android:scrollbars="none" />
+
+</RelativeLayout>
