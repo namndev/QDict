@@ -1,2 +1,0 @@
-include ':madmanLib', ':appcompat'
-include ':qDict'
