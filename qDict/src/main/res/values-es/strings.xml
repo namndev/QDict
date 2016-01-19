@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="action_search">Búsqueda</string>
+
+    <!-- ui -->
+    <string name="sdcard_error">sdcard error</string>
+    <string name="prefs_title_help">Ayudar</string>
+    <string name="prefs_title_feed_back">Realimentación</string>
+    <string name="btn_more_apps">Más Apps</string>
+
+    <!-- action -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Remover</string>
+    <string name="checked_all">Seleccionar Todo</string>
+    <string name="unchecked_all">Deseleccionar Todo</string>
+    <string name="delete_all">Borrar Todo</string>
+    <string name="hide">Ocultar</string>
+    <string name="close">Cerrar</string>
+    <string name="corner">Esquina</string>
+    <string name="maximize">Maximizar</string>
+    <string name="delete_all_recent_summary">Quieres borrar todas las palabras recients?</string>
+    <string name="delete_all_favorite_summary">Quieres borrar todas las palabras favoritas?</string>
+    <string name="notification_message">Aprovechar aquí para abrir QDict</string>
+    <string name="notification_title">%1$s está en ejecución</string>
+    <!-- dicitonary -->
+    <plurals name="matches_found">
+        <item quantity="one">1 coincidencia</item>
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> coincidencias</item>
+    </plurals>
+    <plurals name="words_count">
+        <item quantity="one">1 palabra</item>
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> palabras</item>
+    </plurals>
+    <plurals name="items_count">
+        <item quantity="one">1 ítem</item>
+        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> ítems</item>
+    </plurals>
+
+    <string name="recent_lable">Recientes</string>
+    <string name="favorite_lable">Favoritas</string>
+    <string name="settings_lable">Ajustes</string>
+    <string name="guide_lable">Guía</string>
+    <string name="select_dictionary">Elegir diccionario</string>
+    <string name="join_us">Únete a nosotros!</string>
+    <string name="share_lable">Compartir</string>
+    <string name="about_lable">Sobre</string>
+    <string name="ftp_server">Ir a Mini-FTPServer</string>
+    <string name="keywords_null">No palabra emparejada</string>
+    <string name="favorites_no_word">No tengo ninguna palabra favorita</string>
+    <string name="recent_no_word">No tengo ninguna palabra reciente</string>
+    <string name="dict_not_found">No diccionario disponible.\n\nPor favor, añade los diccionarios a \'%1$s\' directorio.\n\nPuedes usar el Mini-FTPServer para copiar los diccionarios a tu dispositivo.</string>
+    <!-- seaching -->
+    <string name="keywords_search">Búsqueda&#8230;</string>
+    <string name="fuzzy_query_prompt">Presionar \'wordlist\' botón para \'fuzzy\' query con la palabra clave arriba.</string>
+    <string name="fulltext_query_prompt">Presionar \'wordlist\' botón para \'Full-text\' search con la palabra clave arriba.</string>
+    <string name="pattern_query_prompt">Presionar \'wordlist\' botón para \'pattern\' query con la palabra clave arriba.</string>
+
+    <!-- voice -->
+    <string name="press_on_when_done">Pulse sobre el icono del altavoz después de hablar</string>
+    <!-- setting -->
+    <string name="prefs_category_title_general">General</string>
+    <string name="prefs_title_source">Datos</string>
+    <string name="prefs_title_tts">Discurso</string>
+    <string name="prefs_title_capture">Capturar</string>
+    <string name="prefs_summary_capture">Buscar con clipboar</string>
+    <string name="prefs_title_notification">Notificación</string>
+    <string name="prefs_title_notification_summary">Usar el clipboard para la búsqueda rápida</string>
+    <string name="prefs_title_tts_summary">Usar texto a voz </string>
+    <string name="prefs_category_title_theme">tema</string>
+    <!--  -->
+    <string name="prefs_title_font_text">Font in content</string>
+    <string name="prefs_title_max_favorite_word">Palabras favoritas</string>
+    <string name="prefs_title_max_favorite_word_summary">Cuentan palabras max: %1$s</string>
+    <string name="prefs_title_theme">Temas</string>
+    <string name="prefs_title_languages">Idioma</string>
+    <!-- about -->
+    <string name="app_license">Apache, Versión 2.0</string>
+    <string name="app_version_label">Versión: </string>
+    <string name="app_author_label">Autor: </string>
+    <string name="app_email_label">Correo: </string>
+    <string name="app_license_label">Licencia: </string>
+    <string name="readme_text"> 1. La concordancia de patrón del estilo Glob:&lt;br&gt;
+       Puede introducir cadenas que contienen \'*\' (wildcard) y \'?\' (joker) como el patrón. \'*\' coincide con una arbitraria, posiblemente vacía o de cadenas y \'?\' coincide con un carácter arbitrario. Después de presionar el botón de \"wordlist\", la palabra que concuerda en este patrón se presentará en la lista.&lt;br&gt;&lt;br&gt;
+       2. La consulta de Fuzzy:&lt;br&gt;
+       Cuando no pueda recordar como deletrear una palabra de manera exacta, podrá probar La consulta de Fuzzy. Esto utiliza \"Levenshtein Edit Distance\" para calcular la similitud entre dos palabras y les da los resultados coincidentes que son más similares a la palabra que introduce. Con el fin de crear una consulta de Fuzzy, solo introduce una palabra con un principio de \"/\" y luego presiona el botón de \"wordlist\".&lt;br&gt;&lt;br&gt;
+       3. La búsqueda de textos completados:&lt;br&gt;
+       La búsqueda de textos completados busca una palabra en los datos. Con el propósito de crear una búsqueda de textos completados, solo introduce una palabra con un principio de \":\" y luego pulsa el botón de \"wordlist\". Por ejemplo, \":ab cd\" busca datos que contienen ambos \"ab\" y \"cd\". Si la palabra contiene la tecla Espacio, puede usar \"\\ \", en  particular \":apple\\ pie\", otros caracteres alternativos son \"\\\\\" representando para \'\\ \', \"\\t\" para Tab y \"\\n\" para una nueva línea..&lt;br&gt;&lt;br&gt;
+       Para obtener más información de ayuda, por favor lea la \"Guía del usuario\":&lt;br&gt;
+       &lt;a href="http://madman-team.blogspot.com/2015/05/qdict-guide.html" target="_blank">http://madman-team.blogspot.com&lt;\/a&gt;&lt;br&gt;&lt;br&gt;</string>
+
+</resources>

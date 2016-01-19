@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:m2t="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_recent"
+        android:icon="?attr/icon_actionRecent"
+        android:title="@string/recent_lable"
+        android:titleCondensed="@string/recent_lable"
+        android:visible="true"
+        m2t:showAsAction="always"/>
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="?attr/icon_actionFavorite"
+        android:title="@string/favorite_lable"
+        android:visible="true"
+        m2t:showAsAction="always"/>
+
+</menu>
