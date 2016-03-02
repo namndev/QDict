@@ -39,9 +39,10 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
     public ListDictFragment() {
 
     }
-
-    public ListDictFragment(QDictions dictions) {
-        mDictions = dictions;
+    public static final ListDictFragment newInstance(QDictions dictions){
+        ListDictFragment f = new ListDictFragment();
+        f.mDictions = dictions;
+        return f;
     }
 
     public void setDictions(QDictions dictions) {

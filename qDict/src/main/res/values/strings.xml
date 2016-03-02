@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <string name="app_name" translatable="false">QDict</string>
     <string name="action_search">Search</string>
@@ -9,18 +12,19 @@
     <string name="prefs_title_whatsnew" translatable="false">What\'s New?</string>
     <string name="prefs_title_help">Help</string>
     <string name="prefs_title_feed_back">Feedback</string>
-    <string name="btn_more_apps" translatable="false">More Apps</string>
+    <string name="btn_more_apps">More Apps</string>
 
     <!-- action -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Remove</string>
-    <string name="checked_all">Select All</string>
-    <string name="unchecked_all">Unselect All</string>
+    <string name="checked_all">Select all</string>
+    <string name="unchecked_all">Unselect all</string>
     <string name="hide">Hide</string>
     <string name="close">Close</string>
     <string name="corner">Corner</string>
     <string name="maximize">Maximize</string>
+    <string name="delete_all">Delete all</string>
     <string name="delete_all_recent_summary">Do you want to delete all recent words?</string>
     <string name="delete_all_favorite_summary">Do you want to delete all favorite words?</string>
     <string name="delete_recent_summary">Do you want to delete recent words?</string>
@@ -65,7 +69,7 @@
     <string name="pattern_query_prompt">Press \'wordlist\' button to \'pattern\' query with keyword above.</string>
 
     <!-- voice -->
-    <string name="press_on_when_done" translatable="false">Press on the recording icon when you are done!</string>
+    <string name="press_on_when_done">Press on the recording icon when you are done!</string>
     <!-- setting -->
     <string name="prefs_category_title_general">General</string>
     <string name="prefs_title_source">Data</string>

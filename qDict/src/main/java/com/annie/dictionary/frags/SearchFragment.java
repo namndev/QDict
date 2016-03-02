@@ -66,11 +66,13 @@ public class SearchFragment extends Fragment {
         // default constructor
     }
 
-    public SearchFragment(DictSpeechEng dictSpeechEng, QDictions dictions, String keyword, boolean search) {
-        mDictions = dictions;
-        mSpeechEng = dictSpeechEng;
-        mKeyword = keyword;
-        mIsSearch = search;
+    public static final SearchFragment newInstance(DictSpeechEng dictSpeechEng, QDictions dictions, String keyword, boolean search) {
+        SearchFragment s = new SearchFragment();
+        s.mDictions = dictions;
+        s.mSpeechEng = dictSpeechEng;
+        s.mKeyword = keyword;
+        s.mIsSearch = search;
+        return s;
     }
 
     public void setDictions(QDictions dictions) {

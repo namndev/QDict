@@ -58,8 +58,10 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         // default constructor
     }
 
-    public SettingFragment(DictSpeechEng speechEng) {
-        mSpeechEng = speechEng;
+    public static final SettingFragment newInstance(DictSpeechEng speechEng) {
+        SettingFragment s = new SettingFragment();
+        s.mSpeechEng = speechEng;
+        return s;
     }
 
     public void SetSpeechEng(DictSpeechEng speechEng) {

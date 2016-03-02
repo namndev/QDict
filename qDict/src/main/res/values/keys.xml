@@ -19,7 +19,7 @@
     <string name="prefs_key_capture_notification" translatable="false">prefs_key_capture_notification</string>
 
     <!-- app version -->
-    <string name="app_version" translatable="false">2.0.4</string>
+    <string name="app_version" translatable="false">2.0.5</string>
     <string name="app_email" translatable="false">madman.hust@gmail.com</string>
 
 </resources>

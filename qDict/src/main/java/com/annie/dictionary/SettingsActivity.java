@@ -41,7 +41,7 @@ public class SettingsActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         if (savedInstanceState == null) {
             FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-            mFrag = new SettingFragment(DictSpeechEng.getInstance(getApplicationContext()));
+            mFrag = SettingFragment.newInstance(DictSpeechEng.getInstance(getApplicationContext()));
             t.replace(R.id.setting_frame, mFrag);
             t.commit();
         } else {

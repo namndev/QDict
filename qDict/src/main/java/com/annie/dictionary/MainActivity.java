@@ -542,7 +542,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         } else {
             try {
                 mTransaction = mFragmentManager.beginTransaction();
-                Fragment searchFrag = new SearchFragment(mSpeechEng, mDictions, keyword, true);
+                Fragment searchFrag = SearchFragment.newInstance(mSpeechEng, mDictions, keyword, true);
                 mTransaction.replace(R.id.content_frame, searchFrag).commit();
                 mCurrentNavPosition = NAVIG.SEARCH;
             } catch (IllegalStateException ex) {
@@ -581,7 +581,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     @Override
     public void onNavigationItemSelected(final String title, final int position) {
         if (position == NAVIG.SELECT_DICT) {
-            Fragment fragment = new ListDictFragment(mDictions);
+            Fragment fragment = ListDictFragment.newInstance(mDictions);
             setMenuFragment(fragment);
         } else {
             onNavig = true;
@@ -625,7 +625,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         switch (position) {
             case NAVIG.HOME:
             case NAVIG.SEARCH:
-                fragment = new SearchFragment(mSpeechEng, mDictions, keyword, position == NAVIG.SEARCH);
+                fragment = SearchFragment.newInstance(mSpeechEng, mDictions, keyword, position == NAVIG.SEARCH);
                 break;
             case NAVIG.RECENT:
             case NAVIG.FAVORITE:

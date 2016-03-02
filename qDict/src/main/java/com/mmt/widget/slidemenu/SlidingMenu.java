@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class SlidingMenu extends RelativeLayout {
 
@@ -111,8 +112,7 @@ public class SlidingMenu extends RelativeLayout {
 	 * the object created with that class is registered with a component using
 	 * the component's <code>addOnOpenedListener<code> method. When the onOpened
 	 * event occurs, that object's appropriate method is invoked.
-	 * 
-	 * @see OnOpenedEvent
+	 *
 	 */
 	public interface OnOpenedListener {
 
@@ -128,8 +128,7 @@ public class SlidingMenu extends RelativeLayout {
 	 * the object created with that class is registered with a component using
 	 * the component's <code>addOnCloseListener<code> method. When the onClose
 	 * event occurs, that object's appropriate method is invoked.
-	 * 
-	 * @see OnCloseEvent
+	 *
 	 */
 	public interface OnCloseListener {
 
@@ -145,8 +144,7 @@ public class SlidingMenu extends RelativeLayout {
 	 * the object created with that class is registered with a component using
 	 * the component's <code>addOnClosedListener<code> method. When the onClosed
 	 * event occurs, that object's appropriate method is invoked.
-	 * 
-	 * @see OnClosedEvent
+	 *
 	 */
 	public interface OnClosedListener {
 
@@ -407,7 +405,7 @@ public class SlidingMenu extends RelativeLayout {
 	/**
 	 * Set the behind view (menu) content to the given View.
 	 * 
-	 * @param view
+	 * @param v
 	 *            The desired content to display.
 	 */
 	public void setMenu(View v) {
@@ -438,7 +436,7 @@ public class SlidingMenu extends RelativeLayout {
 	/**
 	 * Set the secondary behind view (right menu) content to the given View.
 	 * 
-	 * @param view
+	 * @param v
 	 *            The desired content to display.
 	 */
 	public void setSecondaryMenu(View v) {
@@ -1097,7 +1095,7 @@ public class SlidingMenu extends RelativeLayout {
 		int topPadding = insets.top;
 		int bottomPadding = insets.bottom;
 		String brand = android.os.Build.BRAND;
-		if (Utils.hasLlAbove() && !(brand.equalsIgnoreCase("Bkav") || brand.equalsIgnoreCase("Samsung"))) {
+		if (Utils.hasLlAbove() && !(brand.equalsIgnoreCase("Bkav") || brand.equalsIgnoreCase("Samsung") || brand.equalsIgnoreCase("Xiaomi"))) {
 
 			Resources resources = getContent().getResources();
 			boolean isBottom = isSystemBarOnBottom(resources);
@@ -1119,7 +1117,6 @@ public class SlidingMenu extends RelativeLayout {
 		}
 
 		if (!mActionbarOverlay) {
-			Log.v(TAG, "setting padding!");
 			setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
 		}
 		return true;
