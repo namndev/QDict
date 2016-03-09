@@ -1,8 +1,4 @@
-
 package com.mmt.widget.slidemenu;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,27 +13,33 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
+
 public class CustomViewBehind extends ViewGroup {
 
     private static final String TAG = "CustomViewBehind";
 
     private static final int MARGIN_THRESHOLD = 48; // dips
-
+    private final Paint mFadePaint = new Paint();
     private int mTouchMode = SlidingMenu.TOUCHMODE_MARGIN;
-
     private CustomViewAbove mViewAbove;
-
     private View mContent;
-
     private View mSecondaryContent;
-
     private int mMarginThreshold;
-
     private int mWidthOffset;
-
     private CanvasTransformer mTransformer;
-
     private boolean mChildrenEnabled;
+    private int mMode;
+    private boolean mFadeEnabled;
+    private float mScrollScale;
+    private Drawable mShadowDrawable;
+    private Drawable mSecondaryShadowDrawable;
+    private int mShadowWidth;
+    private float mFadeDegree;
+    private boolean mSelectorEnabled = true;
+    private Bitmap mSelectorDrawable;
+    private View mSelectedView;
 
     public CustomViewBehind(Context context) {
         this(context, null);
@@ -45,7 +47,7 @@ public class CustomViewBehind extends ViewGroup {
 
     public CustomViewBehind(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mMarginThreshold = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MARGIN_THRESHOLD,
+        mMarginThreshold = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MARGIN_THRESHOLD,
                 getResources().getDisplayMetrics());
     }
 
@@ -62,16 +64,20 @@ public class CustomViewBehind extends ViewGroup {
         requestLayout();
     }
 
-    public void setMarginThreshold(int marginThreshold) {
-        mMarginThreshold = marginThreshold;
-    }
-
     public int getMarginThreshold() {
         return mMarginThreshold;
     }
 
+    public void setMarginThreshold(int marginThreshold) {
+        mMarginThreshold = marginThreshold;
+    }
+
     public int getBehindWidth() {
         return mContent.getWidth();
+    }
+
+    public View getContent() {
+        return mContent;
     }
 
     public void setContent(View v) {
@@ -81,14 +87,14 @@ public class CustomViewBehind extends ViewGroup {
         addView(mContent);
     }
 
-    public View getContent() {
-        return mContent;
+    public View getSecondaryContent() {
+        return mSecondaryContent;
     }
 
     /**
      * Sets the secondary (right) menu for use when setMode is called with
      * SlidingMenu.LEFT_RIGHT.
-     * 
+     *
      * @param v the right menu
      */
     public void setSecondaryContent(View v) {
@@ -96,10 +102,6 @@ public class CustomViewBehind extends ViewGroup {
             removeView(mSecondaryContent);
         mSecondaryContent = v;
         addView(mSecondaryContent);
-    }
-
-    public View getSecondaryContent() {
-        return mSecondaryContent;
     }
 
     public void setChildrenEnabled(boolean enabled) {
@@ -155,21 +157,9 @@ public class CustomViewBehind extends ViewGroup {
             mSecondaryContent.measure(contentWidth, contentHeight);
     }
 
-    private int mMode;
-
-    private boolean mFadeEnabled;
-
-    private final Paint mFadePaint = new Paint();
-
-    private float mScrollScale;
-
-    private Drawable mShadowDrawable;
-
-    private Drawable mSecondaryShadowDrawable;
-
-    private int mShadowWidth;
-
-    private float mFadeDegree;
+    public int getMode() {
+        return mMode;
+    }
 
     public void setMode(int mode) {
         if (mode == SlidingMenu.LEFT || mode == SlidingMenu.RIGHT) {
@@ -181,16 +171,12 @@ public class CustomViewBehind extends ViewGroup {
         mMode = mode;
     }
 
-    public int getMode() {
-        return mMode;
+    public float getScrollScale() {
+        return mScrollScale;
     }
 
     public void setScrollScale(float scrollScale) {
         mScrollScale = scrollScale;
-    }
-
-    public float getScrollScale() {
-        return mScrollScale;
     }
 
     public void setShadowDrawable(Drawable shadow) {
@@ -234,19 +220,19 @@ public class CustomViewBehind extends ViewGroup {
         if (mMode == SlidingMenu.LEFT) {
             if (x >= content.getLeft())
                 vis = View.INVISIBLE;
-            scrollTo((int)((x + getBehindWidth()) * mScrollScale), y);
+            scrollTo((int) ((x + getBehindWidth()) * mScrollScale), y);
         } else if (mMode == SlidingMenu.RIGHT) {
             if (x <= content.getLeft())
                 vis = View.INVISIBLE;
-            scrollTo((int)(getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
+            scrollTo((int) (getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
         } else if (mMode == SlidingMenu.LEFT_RIGHT) {
             mContent.setVisibility(x >= content.getLeft() ? View.INVISIBLE : View.VISIBLE);
             mSecondaryContent.setVisibility(x <= content.getLeft() ? View.INVISIBLE : View.VISIBLE);
             vis = x == 0 ? View.INVISIBLE : View.VISIBLE;
             if (x <= content.getLeft()) {
-                scrollTo((int)((x + getBehindWidth()) * mScrollScale), y);
+                scrollTo((int) ((x + getBehindWidth()) * mScrollScale), y);
             } else {
-                scrollTo((int)(getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
+                scrollTo((int) (getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
             }
         }
         if (vis == View.INVISIBLE)
@@ -379,7 +365,7 @@ public class CustomViewBehind extends ViewGroup {
     public void drawFade(View content, Canvas canvas, float openPercent) {
         if (!mFadeEnabled)
             return;
-        final int alpha = (int)(mFadeDegree * 255 * Math.abs(1 - openPercent));
+        final int alpha = (int) (mFadeDegree * 255 * Math.abs(1 - openPercent));
         mFadePaint.setColor(Color.argb(alpha, 0, 0, 0));
         int left = 0;
         int right = 0;
@@ -399,21 +385,15 @@ public class CustomViewBehind extends ViewGroup {
         canvas.drawRect(left, 0, right, getHeight(), mFadePaint);
     }
 
-    private boolean mSelectorEnabled = true;
-
-    private Bitmap mSelectorDrawable;
-
-    private View mSelectedView;
-
     public void drawSelector(View content, Canvas canvas, float openPercent) {
         if (!mSelectorEnabled)
             return;
         if (mSelectorDrawable != null && mSelectedView != null) {
-            String tag = (String)mSelectedView.getTag(R.id.selected_view);
+            String tag = (String) mSelectedView.getTag(R.id.selected_view);
             if (tag.equals(TAG + "SelectedView")) {
                 canvas.save();
                 int left, right, offset;
-                offset = (int)(mSelectorDrawable.getWidth() * openPercent);
+                offset = (int) (mSelectorDrawable.getWidth() * openPercent);
                 if (mMode == SlidingMenu.LEFT) {
                     right = content.getLeft();
                     left = right - offset;

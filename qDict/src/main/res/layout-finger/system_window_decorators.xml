@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:layout_height="400dp"
-    android:background="@drawable/border" >
+    android:background="@drawable/border">
 
     <LinearLayout
         android:id="@+id/titlebar"
@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/mmt_white"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/menu_icon"
@@ -22,7 +22,7 @@
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
-            android:src="@drawable/ic_menu" />
+            android:src="@drawable/ic_menu"/>
 
         <com.mmt.widget.QEditText
             android:id="@+id/search_edt"
@@ -39,7 +39,7 @@
             android:selectAllOnFocus="true"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
-            android:textSize="16.0sp" />
+            android:textSize="16.0sp"/>
 
         <ImageView
             android:id="@+id/maximize"
@@ -56,21 +56,21 @@
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_close"/>
 
         <ImageView
             android:id="@+id/close"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:contentDescription="@string/app_name"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/titlebar" >
+        android:layout_below="@+id/titlebar">
     </FrameLayout>
 
     <ImageView
@@ -80,6 +80,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:contentDescription="@string/corner"
-        android:src="@drawable/ic_resize_window" />
+        android:src="@drawable/ic_resize_window"/>
 
 </RelativeLayout>

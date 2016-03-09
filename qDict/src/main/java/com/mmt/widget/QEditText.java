@@ -1,8 +1,4 @@
-
 package com.mmt.widget;
-
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,6 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.EditText;
+
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
 
 /**
  * Extends widget.EditText: Custom font for EditText
@@ -27,13 +26,13 @@ public class QEditText extends EditText {
         init(context, attrs);
     }
 
+    public QEditText(Context context) {
+        super(context);
+    }
+
     private void init(Context context, AttributeSet attrs) {
         SharedPreferences mSharedPreferences = context.getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         Typeface mFont = Utils.getFont(context, mSharedPreferences.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT));
         setTypeface(mFont);
-    }
-
-    public QEditText(Context context) {
-        super(context);
     }
 }

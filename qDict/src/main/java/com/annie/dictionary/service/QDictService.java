@@ -1,21 +1,4 @@
-
 package com.annie.dictionary.service;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.annie.dictionary.BaseActivity;
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.QDictions;
-import com.annie.dictionary.R;
-import com.annie.dictionary.standout.StandOutFlags;
-import com.annie.dictionary.standout.StandOutWindow;
-import com.annie.dictionary.standout.Window;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-import com.annie.dictionary.utils.WebViewClientCallback;
-import com.annie.dictionary.utils.WordsFileUtils;
 
 import android.content.ClipboardManager;
 import android.content.ClipboardManager.OnPrimaryClipChangedListener;
@@ -38,16 +21,25 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.annie.dictionary.BaseActivity;
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.QDictions;
+import com.annie.dictionary.R;
+import com.annie.dictionary.standout.StandOutFlags;
+import com.annie.dictionary.standout.StandOutWindow;
+import com.annie.dictionary.standout.Window;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.RECV_UI;
+import com.annie.dictionary.utils.WordsFileUtils;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class QDictService extends StandOutWindow {
 
-    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
-        public void onPrimaryClipChanged() {
-            clipboardCheck();
-        }
-    };
-
     private static final int CLOSED = 0, OPENED = 1;
-
+    public static boolean RUNNING = false;
     private static int CLOSED_WIDTH = 500;
 
     private static int CLOSED_HEIGHT = 700;
@@ -55,15 +47,11 @@ public class QDictService extends StandOutWindow {
     private static int OPENED_WIDTH = 880;
 
     private static int OPENED_HEIGHT = 960;
-
-    public static boolean RUNNING = false;
-
     private static int windowState = OPENED;
-
     private static StandOutLayoutParams closedParams;
-
     private static StandOutLayoutParams openedParams;
-
+    // This is the object that receives interactions from clients.
+    private final IBinder mBinder = new LocalBinder();
     WebView mDictViewContent;
 
     EditText mKeywordEdt;
@@ -91,17 +79,13 @@ public class QDictService extends StandOutWindow {
     private android.text.ClipboardManager mClipboardManagerGINGER = null;
 
     private ExecutorService mThreadPool = Executors.newSingleThreadExecutor();
-
-    public class ServiceWebViewClientCallback extends WebViewClientCallback {
-
-        public ServiceWebViewClientCallback() {
+    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
+        public void onPrimaryClipChanged() {
+            clipboardCheck();
         }
+    };
 
-        @Override
-        public void shouldOverrideUrlLoading(String word) {
-            makeDictContent(word);
-            setKeywordLable(word);
-        }
+    public QDictService() {
     }
 
     private void makeDictContent(String word) {
@@ -130,7 +114,7 @@ public class QDictService extends StandOutWindow {
 
     @SuppressWarnings("deprecation")
     private void clipboardCheck() {
-        String clipboardText = "";
+        String clipboardText;
         CharSequence s = null;
         if (Utils.hasHcAbove()) {
             if (mClipboardManager.hasPrimaryClip()) {
@@ -179,11 +163,11 @@ public class QDictService extends StandOutWindow {
         }
         float densityDpi = getResources().getDisplayMetrics().densityDpi + 0.1f;
         float scale = (densityDpi / DisplayMetrics.DENSITY_XXHIGH);
-        CLOSED_WIDTH = (int)(500 * scale);
-        CLOSED_HEIGHT = (int)(700 * scale);
+        CLOSED_WIDTH = (int) (500 * scale);
+        CLOSED_HEIGHT = (int) (700 * scale);
 
-        OPENED_WIDTH = (int)(880 * scale);
-        OPENED_HEIGHT = (int)(960 * scale);
+        OPENED_WIDTH = (int) (880 * scale);
+        OPENED_HEIGHT = (int) (960 * scale);
         if (!Utils.hasHcAbove())
             mClipboardTask = new Runnable() {
                 @Override
@@ -211,10 +195,10 @@ public class QDictService extends StandOutWindow {
     @Override
     public void initClipboardService() {
         if (Utils.hasHcAbove()) {
-            mClipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+            mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
         } else {
-            mClipboardManagerGINGER = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+            mClipboardManagerGINGER = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             if (mClipboardManagerGINGER.hasText())
                 mClipboardText = mClipboardManagerGINGER.getText().toString().trim();
         }
@@ -241,18 +225,6 @@ public class QDictService extends StandOutWindow {
         }
         super.onDestroy();
         RUNNING = false;
-    }
-
-    public QDictService() {
-    }
-
-    // This is the object that receives interactions from clients.
-    private final IBinder mBinder = new LocalBinder();
-
-    public class LocalBinder extends Binder {
-        QDictService getService() {
-            return QDictService.this;
-        }
     }
 
     @Override
@@ -301,16 +273,16 @@ public class QDictService extends StandOutWindow {
 
     @Override
     public void createAndAttachView(int id, FrameLayout frame) {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.capture_window, frame, true);
-        mDictViewContent = (WebView)view.findViewById(R.id.dictContentView);
-        mKeywordLable = (TextView)view.findViewById(R.id.tv_title);
+        mDictViewContent = (WebView) view.findViewById(R.id.dictContentView);
+        mKeywordLable = (TextView) view.findViewById(R.id.tv_title);
         WebSettings webSettings = mDictViewContent.getSettings();
         webSettings.setLayoutAlgorithm(Utils.getLayoutAlgorithm(true));
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("UTF-8");
         // webSettings.setSupportZoom(true);
-        mSpeakImg = (ImageButton)view.findViewById(R.id.action_speak);
+        mSpeakImg = (ImageButton) view.findViewById(R.id.action_speak);
         mSpeakImg.setVisibility(/* tts ? View.VISIBLE : */View.GONE);
     }
 
@@ -335,10 +307,10 @@ public class QDictService extends StandOutWindow {
     private void synchronizePositions(int id, StandOutLayoutParams... params) {
 
         StandOutLayoutParams currentParam = getParams(id);
-        for (int i = 0; i < params.length; i++) {
-            if (params[i] != null) {
-                params[i].x = currentParam.x;
-                params[i].y = currentParam.y;
+        for (StandOutLayoutParams param : params) {
+            if (param != null) {
+                param.x = currentParam.x;
+                param.y = currentParam.y;
             }
         }
     }
@@ -378,10 +350,15 @@ public class QDictService extends StandOutWindow {
         return openedParams;
     }
 
-    private class WriteHistoryRunnable implements Runnable {
-        private WordsFileUtils mWordsFileUtilsHis;
+    public class LocalBinder extends Binder {
+        QDictService getService() {
+            return QDictService.this;
+        }
+    }
 
+    private class WriteHistoryRunnable implements Runnable {
         private final CharSequence mTextToWrite;
+        private WordsFileUtils mWordsFileUtilsHis;
 
         public WriteHistoryRunnable(CharSequence text) {
             mWordsFileUtilsHis = new WordsFileUtils(mSharedPreferences, Def.TYPE_RECENTWORDS);

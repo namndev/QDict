@@ -1,8 +1,4 @@
-
 package com.mmt.widget;
-
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,6 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.CheckedTextView;
+
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
 
 /**
  * Extends widget.CheckedTextView: Custom font for CheckedTextView
@@ -27,15 +26,15 @@ public class QCheckedTextView extends CheckedTextView {
         init(context);
     }
 
+    public QCheckedTextView(Context context) {
+        super(context);
+        init(context);
+    }
+
     private void init(Context context) {
         SharedPreferences mSharedPreferences = context.getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         Typeface mFont = Utils.getFont(context, mSharedPreferences.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT));
         setTypeface(mFont);
-    }
-
-    public QCheckedTextView(Context context) {
-        super(context);
-        init(context);
     }
 
     public void updateFont(Context context) {

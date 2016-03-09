@@ -1,8 +1,6 @@
-
 package com.annie.dictionary;
 
 public class QDictEng {
-    private final String TAG = "QDictEng";
 
     public static String[] sDictPaths = null;
 
@@ -14,6 +12,10 @@ public class QDictEng {
 
     private static QDictEng mQDictEng = null;
 
+    static {
+        System.loadLibrary("qdicteng");
+    }
+
     public QDictEng() {
     }
 
@@ -24,6 +26,13 @@ public class QDictEng {
         return mQDictEng;
     }
 
+    // This function is called in JNI C code, it must be 'static' function.
+    private static void lookupProgressCB(int progress) {
+        MainActivity.lookupProgressCB(progress);
+    }
+
+    // -----------------------------------------------------------------------------------------------------//
+
     public void releaseQDictEng() {
         mReferenct--;
         if (0 == mReferenct) {
@@ -32,46 +41,33 @@ public class QDictEng {
         }
     }
 
-    // This function is called in JNI C code, it must be 'static' function.
-    private static void lookupProgressCB(int progress) {
-        MainActivity.lookupProgressCB(progress);
-    }
-
-    // -----------------------------------------------------------------------------------------------------//
-
     // Native function in QDictEng.c
     public native void CancelLookup();
+    // DICT_TYPE_INDEX,
+    // DICT_TYPE_CAPTURE
+    // and
+    // DICT_TYPE_MEMORIZE.
 
     public native String[] Lookup(String word, int type); // This function for
-                                                          // DICT_TYPE_INDEX,
-                                                          // DICT_TYPE_CAPTURE
-                                                          // and
-                                                          // DICT_TYPE_MEMORIZE.
+    // the type DICT_TYPE_INDEX.
 
     public native String[] ListWords(String word); // This function is only for
-                                                   // the type DICT_TYPE_INDEX.
+    // for the type
+    // DICT_TYPE_INDEX.
 
     public native String[] FuzzyListWords(String word); // This function is only
-                                                        // for the type
-                                                        // DICT_TYPE_INDEX.
+    // only for the type
+    // DICT_TYPE_INDEX.
 
     public native String[] PatternListWords(String word); // This function is
-                                                          // only for the type
-                                                          // DICT_TYPE_INDEX.
+    // only for the type
+    // DICT_TYPE_INDEX.
 
     public native String[] FullTextListWords(String word); // This function is
-                                                           // only for the type
-                                                           // DICT_TYPE_INDEX.
 
     public native String GetBookName(String ifoPath);
-
-    public native String[] GetInfo(String ifoPath);
 
     public native boolean LoadDicts(String[] paths, String[] names, int[] types);
 
     public native void UnloadDicts();
-
-    static {
-        System.loadLibrary("qdicteng");
-    }
 }

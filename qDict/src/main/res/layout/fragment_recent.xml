@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/mmt_white"
-    android:orientation="vertical" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/mmt_white"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/second_bar_height" >
+        android:layout_height="@dimen/second_bar_height">
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_title"
@@ -19,7 +19,7 @@
             android:gravity="left|center_vertical"
             android:text="@string/recent_lable"
             android:textColor="@color/mmt_black"
-            android:textSize="28.0sp" />
+            android:textSize="28.0sp"/>
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_count"
@@ -31,7 +31,7 @@
             android:gravity="right|bottom"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/mmt_grey_500"
-            android:textStyle="italic" />
+            android:textStyle="italic"/>
     </RelativeLayout>
 
     <com.mmt.widget.QTextView
@@ -46,12 +46,12 @@
         android:text="@string/recent_no_word"
         android:textColor="@color/mmt_black"
         android:textSize="16.0sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layout_title" >
+        android:layout_below="@+id/layout_title">
 
         <ListView
             android:id="@android:id/list"
@@ -59,7 +59,7 @@
             android:layout_height="match_parent"
             android:choiceMode="multipleChoice"
             android:paddingBottom="@dimen/preference_fragment_padding_bottom"
-            android:scrollbars="none" />
+            android:scrollbars="none"/>
     </RelativeLayout>
 
 </RelativeLayout>

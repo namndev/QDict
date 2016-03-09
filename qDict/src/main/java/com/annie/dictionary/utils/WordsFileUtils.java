@@ -1,5 +1,9 @@
-
 package com.annie.dictionary.utils;
+
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.annie.dictionary.utils.Utils.Def;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,53 +14,36 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
-
-import com.annie.dictionary.utils.Utils.Def;
-
-import android.content.SharedPreferences;
 
 public class WordsFileUtils {
 
+    SharedPreferences mShares;
+    int maxWords = Def.MAX_COUNT;
     private String mPath = null;
-
     private String mName = null;
-
     private boolean mChanged = false;
-
     private ArrayList<String> mWordsArrayList = null;
 
-    SharedPreferences mShares;
-
-    private int mTypeHis;
-
-    int maxWords = Def.MAX_COUNT;
-
     public WordsFileUtils(SharedPreferences shares, int typeHis) {
-        mPath = Utils.getRootFolder() + "/" + Def.WORDSLIST_FOLDER;
-        mTypeHis = typeHis;
-        if (mTypeHis == Def.TYPE_FAVORITEWORDS) {
+        mPath = Utils.getRootDictFolder(shares) + "/" + Def.WORDSLIST_FOLDER;
+        if (typeHis == Def.TYPE_FAVORITEWORDS) {
             mName = Def.FAVORITEWORDS_FILENAME;
             maxWords = shares.getInt("prefs_key_max_recent_word", 100);
-        } else if (mTypeHis == Def.TYPE_RECENTWORDS) {
+        } else if (typeHis == Def.TYPE_RECENTWORDS) {
             mName = Def.RECENTWORDS_FILENAME;
         }
         mChanged = false;
-        String[] wordsList = null;
+        String[] wordsList;
         mShares = shares;
         // String emptySet = "";
-        mWordsArrayList = new ArrayList<String>();
+        mWordsArrayList = new ArrayList<>();
         String data = read();
         if (null == data)
             return;
-
         wordsList = data.split(";");
-
-        if (null != wordsList) {
-            for (int i = 0; i < wordsList.length; i++) {
-                mWordsArrayList.add(wordsList[i]);
-            }
-        }
+        mWordsArrayList.addAll(Arrays.asList(wordsList));
     }
 
     public ArrayList<String> getArrayList() {
@@ -76,10 +63,7 @@ public class WordsFileUtils {
     }
 
     public boolean canBackSearch(int index) {
-        if (mWordsArrayList.isEmpty() || mWordsArrayList.size() <= 1) {
-            return false;
-        }
-        return (index < mWordsArrayList.size());
+        return (!(mWordsArrayList.isEmpty() || mWordsArrayList.size() <= 1) && (index < mWordsArrayList.size()));
     }
 
     public boolean contains(String word) {
@@ -88,11 +72,11 @@ public class WordsFileUtils {
 
     public void addWord(String word) {
         String newword = word.replace(";", "").toLowerCase(Locale.ENGLISH); // remove
-                                                                            // ';'
-                                                                            // if
-                                                                            // it
-                                                                            // exists
-                                                                            // in
+        // ';'
+        // if
+        // it
+        // exists
+        // in
         // the word.
         if (newword.length() <= 0) {
             return;
@@ -123,7 +107,7 @@ public class WordsFileUtils {
 
     public void removeAll() {
         mWordsArrayList.clear();
-        mWordsArrayList = new ArrayList<String>();
+        mWordsArrayList = new ArrayList<>();
         mChanged = true;
     }
 
@@ -135,7 +119,7 @@ public class WordsFileUtils {
         if (mDictIndexAll.isEmpty()) {
             return;
         }
-        if (cnt < 0 || false == mChanged) {
+        if (cnt < 0 || !mChanged) {
             return;
         }
 
@@ -144,7 +128,8 @@ public class WordsFileUtils {
 
         File folder = new File(mPath);
         if (!folder.exists()) {
-            folder.mkdirs();
+            if (!folder.mkdirs())
+                return;
         }
 
         for (int i = 0; i < cnt; i++) {
@@ -153,17 +138,20 @@ public class WordsFileUtils {
         try {
             File f = new File(mPath + mName);
             if (f.exists()) {
-                f.delete();
+                if (!f.delete())
+                    return;
             }
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)), 8192);
             writer.write(data);
             writer.flush();
         } catch (IOException e) {
+            Log.e("WordsFileUtils", e.toString());
         } finally {
             try {
                 if (writer != null)
                     writer.close();
             } catch (IOException e) {
+                Log.e("WordsFileUtils", e.toString());
             }
         }
     }
@@ -179,11 +167,13 @@ public class WordsFileUtils {
                 data = reader.readLine();
             }
         } catch (IOException e) {
+            Log.e("WordsFileUtils", e.toString());
         } finally {
             try {
                 if (reader != null)
                     reader.close();
             } catch (IOException e) {
+                Log.e("WordsFileUtils", e.toString());
             }
         }
         return data;

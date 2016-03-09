@@ -1,19 +1,11 @@
-
 package com.annie.dictionary.frags;
 
-import com.annie.dictionary.DictSpeechEng;
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.R;
-import com.annie.dictionary.service.QDictService;
-import com.annie.dictionary.standout.StandOutWindow;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Paint;
@@ -23,42 +15,58 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingFragment extends PreferenceFragment implements Def, OnPreferenceChangeListener {
+import com.annie.dictionary.DictSpeechEng;
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.PathSelectActivity;
+import com.annie.dictionary.R;
+import com.annie.dictionary.service.QDictService;
+import com.annie.dictionary.standout.StandOutWindow;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.RECV_UI;
 
-    private SharedPreferences mSharedPreferences;
+public class SettingFragment extends PreferenceFragment implements Def, OnPreferenceChangeListener, OnPreferenceClickListener {
 
-    private Preference mPrefSource;
-
-    private ListPreference mFontPreference, mThemePreference, mMaxFavPreference, mLangPreference;
-
-    private CheckBoxPreference mTTSPref, mNotifPref, mUseCapture;
-
+    public static final String DATA_SOURCE_INTENT = "com.annie.dictionary.DATA_SOURCE";
     Typeface mFont;
-
-    private int mCurrentFontIndex = 0;
-
-    private int mCurrentThemeIndex = 0;
-
     String mCurrentLang;
-
     String[] mLangValues;
+    private SharedPreferences mSharedPreferences;
+    private Preference mPrefSource;
+    private ListPreference mFontPreference, mThemePreference, mMaxFavPreference, mLangPreference;
+    private CheckBoxPreference mTTSPref, mNotifPref, mUseCapture;
+    private int mCurrentFontIndex = 0;
+    private int mCurrentThemeIndex = 0;
+    private FragmentActivity activity;
+    BroadcastReceiver mUpdateDataSourceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newPath = intent.getStringExtra("filePath");
+            mPrefSource.setSummary(newPath);
+            Utils.setRootDictFolder(mSharedPreferences, newPath);
+            Intent intentReceiver = new Intent(MainActivity.ACTION_UPDATE_UI);
+            intentReceiver.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.RELOAD_DICT);
+            activity.sendBroadcast(intentReceiver);
+        }
+    };
+    private DictSpeechEng mSpeechEng;
 
     public SettingFragment() {
         // default constructor
     }
 
-    public static final SettingFragment newInstance(DictSpeechEng speechEng) {
+    public static SettingFragment newInstance(DictSpeechEng speechEng) {
         SettingFragment s = new SettingFragment();
         s.mSpeechEng = speechEng;
         return s;
@@ -84,23 +92,25 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         addPreferencesFromResource(R.xml.prefs_settings);
         mSharedPreferences = activity.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         mPrefSource = findPreference(getString(R.string.prefs_key_source));
-        mFontPreference = (ListPreference)findPreference(getString(R.string.prefs_key_font_text));
+        mPrefSource.setOnPreferenceClickListener(this);
+        mFontPreference = (ListPreference) findPreference(getString(R.string.prefs_key_font_text));
         mFontPreference.setOnPreferenceChangeListener(this);
-        mThemePreference = (ListPreference)findPreference(getString(R.string.prefs_key_theme));
+        mThemePreference = (ListPreference) findPreference(getString(R.string.prefs_key_theme));
         mThemePreference.setOnPreferenceChangeListener(this);
-        mMaxFavPreference = (ListPreference)findPreference(getString(R.string.prefs_key_max_recent_word));
+        mMaxFavPreference = (ListPreference) findPreference(getString(R.string.prefs_key_max_recent_word));
         mMaxFavPreference.setOnPreferenceChangeListener(this);
-        mTTSPref = (CheckBoxPreference)findPreference(getResources().getString(R.string.prefs_key_using_tts));
+        mTTSPref = (CheckBoxPreference) findPreference(getResources().getString(R.string.prefs_key_using_tts));
         mTTSPref.setOnPreferenceChangeListener(this);
-        mLangPreference = (ListPreference)findPreference(getString(R.string.prefs_key_languages));
+        mLangPreference = (ListPreference) findPreference(getString(R.string.prefs_key_languages));
         mLangPreference.setOnPreferenceChangeListener(this);
-        mNotifPref = (CheckBoxPreference)findPreference(
+        mNotifPref = (CheckBoxPreference) findPreference(
                 getResources().getString(R.string.prefs_key_capture_notification));
         mNotifPref.setOnPreferenceChangeListener(this);
-        mUseCapture = (CheckBoxPreference)findPreference(getString(R.string.prefs_key_using_capture));
+        mUseCapture = (CheckBoxPreference) findPreference(getString(R.string.prefs_key_using_capture));
         mUseCapture.setOnPreferenceChangeListener(this);
         mLangValues = getResources().getStringArray(R.array.language_values);
         initInfo();
+        activity.registerReceiver(mUpdateDataSourceReceiver, new IntentFilter(DATA_SOURCE_INTENT));
     }
 
     @Override
@@ -110,11 +120,17 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         mFont = Utils.getFont(activity, s);
         mCurrentFontIndex = mFontPreference.findIndexOfValue(s);
         mCurrentThemeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
-        applyFont(mFont);
+        applyFont();
         return view;
     }
 
-    private void applyFont(Typeface font) {
+    @Override
+    public void onDestroy() {
+        activity.unregisterReceiver(mUpdateDataSourceReceiver);
+        super.onDestroy();
+    }
+
+    private void applyFont() {
         convertPreferenceToUseCustomFont(mPrefSource);
         convertPreferenceToUseCustomFont(mFontPreference);
         convertPreferenceToUseCustomFont(mThemePreference);
@@ -142,14 +158,13 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             mTTSPref.setEnabled(false);
             mTTSPref.setChecked(false);
         }
-        mPrefSource.setSummary(Utils.getRootFolder());
+        mPrefSource.setSummary(Utils.getRootDictFolder(mSharedPreferences));
         mFontPreference.setSummary(mFontPreference.getEntry());
         mThemePreference.setSummary(mThemePreference.getEntry());
         mMaxFavPreference.setSummary(
                 getString(R.string.prefs_title_max_favorite_word_summary, mMaxFavPreference.getEntry().toString()));
         if (TextUtils.isEmpty(mLangPreference.getEntry())) {
             String language = mSharedPreferences.getString("prefs_key_languages", "");
-            Log.e("NAMND", "language = " + language + ", index = " + getLanguageIndex(language));
             mLangPreference.setValueIndex(getLanguageIndex(language));
         }
         mCurrentLang = mLangPreference.getEntry().toString();
@@ -169,6 +184,16 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             index++;
         }
         return 0;
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == mPrefSource) {
+            Intent i = new Intent(activity, PathSelectActivity.class);
+            activity.startActivity(i);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -198,8 +223,8 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             return true;
         } else if (preference == mTTSPref) {
             mSharedPreferences.edit()
-                    .putBoolean(getResources().getString(R.string.prefs_key_using_tts), (Boolean)newValue).apply();
-            mTTSPref.setChecked((Boolean)newValue);
+                    .putBoolean(getResources().getString(R.string.prefs_key_using_tts), (Boolean) newValue).apply();
+            mTTSPref.setChecked((Boolean) newValue);
             return true;
         } else if (preference == mMaxFavPreference) {
             int index = mMaxFavPreference.findIndexOfValue(newValue.toString());
@@ -210,16 +235,16 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
                     .setSummary(getString(R.string.prefs_title_max_favorite_word_summary, entries[index].toString()));
             return true;
         } else if (preference == mNotifPref) {
-            mSharedPreferences.edit().putBoolean("prefs_key_capture_notification", (Boolean)newValue).apply();
-            mNotifPref.setChecked((Boolean)newValue);
+            mSharedPreferences.edit().putBoolean("prefs_key_capture_notification", (Boolean) newValue).apply();
+            mNotifPref.setChecked((Boolean) newValue);
             if (QDictService.RUNNING) {
                 StandOutWindow.toggleNoti(getActivity(), QDictService.class, StandOutWindow.DEFAULT_ID,
-                        (Boolean)newValue);
+                        (Boolean) newValue);
             }
             return true;
         } else if (preference == mUseCapture) {
             if (newValue instanceof Boolean) {
-                Boolean boolVal = (Boolean)newValue;
+                Boolean boolVal = (Boolean) newValue;
                 SharedPreferences.Editor editor = mSharedPreferences.edit();
                 editor.putBoolean(getString(R.string.prefs_key_using_capture), boolVal);
                 editor.apply();
@@ -255,7 +280,7 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
 
     @SuppressWarnings("unused")
     private void questionResetDlg() {
-        AlertDialog.Builder alertDialogBuilder = null;
+        AlertDialog.Builder alertDialogBuilder;
         if (Utils.hasHcAbove()) {
             alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
         } else {
@@ -305,16 +330,6 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             newType = type;
         }
 
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            applyCustomTypeFace(ds, newType);
-        }
-
-        @Override
-        public void updateMeasureState(TextPaint paint) {
-            applyCustomTypeFace(paint, newType);
-        }
-
         private static void applyCustomTypeFace(Paint paint, Typeface tf) {
             int oldStyle;
             Typeface old = paint.getTypeface();
@@ -334,9 +349,15 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             }
             paint.setTypeface(tf);
         }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            applyCustomTypeFace(ds, newType);
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint paint) {
+            applyCustomTypeFace(paint, newType);
+        }
     }
-
-    private FragmentActivity activity;
-
-    private DictSpeechEng mSpeechEng;
 }

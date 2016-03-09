@@ -1,4 +1,3 @@
-
 package com.annie.dictionary.frags;
 
 import android.os.Bundle;
@@ -26,7 +25,7 @@ public abstract class BaseListFragment extends ListFragment {
             // same.
             // So we must remove rootView from the existing parent view group
             // (it will be added back).
-            ((ViewGroup)rootView.getParent()).removeView(rootView);
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
             Log.e("NAMND", "No Create new View");
         }
 

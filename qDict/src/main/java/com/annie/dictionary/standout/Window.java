@@ -1,11 +1,4 @@
-
 package com.annie.dictionary.standout;
-
-import java.util.LinkedList;
-import java.util.Queue;
-
-import com.annie.dictionary.R;
-import com.annie.dictionary.standout.StandOutWindow.StandOutLayoutParams;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,6 +16,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
+import com.annie.dictionary.R;
+import com.annie.dictionary.standout.StandOutWindow.StandOutLayoutParams;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Special view that represents a floating window.
  */
@@ -34,60 +33,65 @@ public class Window extends FrameLayout {
     public static final int VISIBILITY_TRANSITION = 2;
 
     static final String TAG = "Window";
-
-    /**
-     * Class of the window, indicating which application the window belongs to.
-     */
-    public Class<? extends StandOutWindow> cls;
-
-    /**
-     * Id of the window.
-     */
-    public int id;
-
-    /**
-     * Whether the window is shown, hidden/closed, or in transition.
-     */
-    public int visibility;
-
-    /**
-     * Whether the window is focused.
-     */
-    public boolean focused;
-
-    /**
-     * Original params from {@link StandOutWindow#getParams(int, Window)}.
-     */
-    public StandOutLayoutParams originalParams;
-
-    public EditText searchEdt;
-
-    /**
-     * Original flags from {@link StandOutWindow#getFlags(int)}.
-     */
-    public int flags;
-
-    /**
-     * Touch information of the window.
-     */
-    public TouchInfo touchInfo;
-
-    /**
-     * Data attached to the window.
-     */
-    public Bundle data;
-
-    /**
-     * Width and height of the screen.
-     */
-    int displayWidth, displayHeight;
-
     /**
      * Context of the window.
      */
     private final StandOutWindow mContext;
-
+    /**
+     * Class of the window, indicating which application the window belongs to.
+     */
+    public Class<? extends StandOutWindow> cls;
+    /**
+     * Id of the window.
+     */
+    public int id;
+    /**
+     * Whether the window is shown, hidden/closed, or in transition.
+     */
+    public int visibility;
+    /**
+     * Whether the window is focused.
+     */
+    public boolean focused;
+    /**
+     * Original params from {@link StandOutWindow#getParams(int, Window)}.
+     */
+    public StandOutLayoutParams originalParams;
+    public EditText searchEdt;
+    /**
+     * Original flags from {@link StandOutWindow#getFlags(int)}.
+     */
+    public int flags;
+    /**
+     * Touch information of the window.
+     */
+    public TouchInfo touchInfo;
+    /**
+     * Data attached to the window.
+     */
+    public Bundle data;
+    /**
+     * Width and height of the screen.
+     */
+    int displayWidth, displayHeight;
     private LayoutInflater mLayoutInflater;
+    private OnTouchListener mTouch = new OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            // pass all touch events to the implementation
+            boolean consumed = false;
+
+            // handle move and bring to front
+            consumed = mContext.onTouchHandleMove(id, Window.this, v, event) || consumed;
+
+            // alert implementation
+            // consumed = mContext.onTouchBody(id, Window.this, v, event)
+            // || consumed;
+
+            return consumed;
+        }
+    };
 
     public Window(Context context) {
         super(context);
@@ -106,11 +110,11 @@ public class Window extends FrameLayout {
         this.originalParams = context.getParams(id, this);
         this.flags = context.getFlags(id);
         this.touchInfo = new TouchInfo();
-        touchInfo.ratio = (float)originalParams.width / originalParams.height;
+        touchInfo.ratio = (float) originalParams.width / originalParams.height;
         this.data = new Bundle();
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         displayWidth = metrics.widthPixels;
-        displayHeight = (int)(metrics.heightPixels - 25 * metrics.density);
+        displayHeight = (int) (metrics.heightPixels - 25 * metrics.density);
 
         // create the window contents
         View content;
@@ -119,12 +123,12 @@ public class Window extends FrameLayout {
         if (Utils.isSet(flags, StandOutFlags.FLAG_DECORATION_SYSTEM)) {
             // requested system window decorations
             content = getSystemDecorations();
-            body = (FrameLayout)content.findViewById(R.id.body);
+            body = (FrameLayout) content.findViewById(R.id.body);
         } else {
             // did not request decorations. will provide own implementation
             content = new FrameLayout(context);
             content.setId(R.id.content);
-            body = (FrameLayout)content;
+            body = (FrameLayout) content;
         }
 
         addView(content);
@@ -177,24 +181,6 @@ public class Window extends FrameLayout {
         return false;
     }
 
-    private OnTouchListener mTouch = new OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            // pass all touch events to the implementation
-            boolean consumed = false;
-
-            // handle move and bring to front
-            consumed = mContext.onTouchHandleMove(id, Window.this, v, event) || consumed;
-
-            // alert implementation
-            // consumed = mContext.onTouchBody(id, Window.this, v, event)
-            // || consumed;
-
-            return consumed;
-        }
-    };
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // handle touching outside
@@ -229,8 +215,8 @@ public class Window extends FrameLayout {
                     touchInfo.dist = dist;
 
                     // scale the window with anchor point set to middle
-                    edit().setAnchorPoint(.5f, .5f).setSize((int)(touchInfo.firstWidth * touchInfo.scale),
-                            (int)(touchInfo.firstHeight * touchInfo.scale)).commit();
+                    edit().setAnchorPoint(.5f, .5f).setSize((int) (touchInfo.firstWidth * touchInfo.scale),
+                            (int) (touchInfo.firstHeight * touchInfo.scale)).commit();
                     break;
             }
             mContext.onResize(id, this, this, event);
@@ -259,7 +245,7 @@ public class Window extends FrameLayout {
 
     /**
      * Request or remove the focus from this window.
-     * 
+     *
      * @param focus Whether we want to gain or lose focus.
      * @return True if focus changed successfully, false if it failed.
      */
@@ -319,6 +305,26 @@ public class Window extends FrameLayout {
         return false;
     }
 
+    /**
+     * Convenience method to start editting the size and position of this
+     * window. Make sure you call {@link Editor#commit()} when you are done to
+     * update the window.
+     *
+     * @return The Editor associated with this window.
+     */
+    public Editor edit() {
+        return new Editor();
+    }
+
+    @Override
+    public StandOutLayoutParams getLayoutParams() {
+        StandOutLayoutParams params = (StandOutLayoutParams) super.getLayoutParams();
+        if (params == null) {
+            params = originalParams;
+        }
+        return params;
+    }
+
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
         if (params instanceof StandOutLayoutParams) {
@@ -330,39 +336,19 @@ public class Window extends FrameLayout {
     }
 
     /**
-     * Convenience method to start editting the size and position of this
-     * window. Make sure you call {@link Editor#commit()} when you are done to
-     * update the window.
-     * 
-     * @return The Editor associated with this window.
-     */
-    public Editor edit() {
-        return new Editor();
-    }
-
-    @Override
-    public StandOutLayoutParams getLayoutParams() {
-        StandOutLayoutParams params = (StandOutLayoutParams)super.getLayoutParams();
-        if (params == null) {
-            params = originalParams;
-        }
-        return params;
-    }
-
-    /**
      * Returns the system window decorations if the implementation sets
      * {@link #FLAG_DECORATION_SYSTEM}.
-     * <p>
+     * <p/>
      * The system window decorations support hiding, closing, moving, and
      * resizing.
-     * 
+     *
      * @return The frame view containing the system window decorations.
      */
     private View getSystemDecorations() {
         final View decorations = mLayoutInflater.inflate(R.layout.system_window_decorators, null);
 
         // icon
-        final ImageView icon = (ImageView)decorations.findViewById(R.id.menu_icon);
+        final ImageView icon = (ImageView) decorations.findViewById(R.id.menu_icon);
         icon.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -375,7 +361,7 @@ public class Window extends FrameLayout {
         });
         icon.setVisibility(View.GONE);
         // search
-        searchEdt = (EditText)decorations.findViewById(R.id.search_edt);
+        searchEdt = (EditText) decorations.findViewById(R.id.search_edt);
         searchEdt.setOnKeyListener(new View.OnKeyListener() {
 
             @Override
@@ -449,7 +435,7 @@ public class Window extends FrameLayout {
         });
 
         // resize
-        ImageView corner = (ImageView)decorations.findViewById(R.id.corner);
+        ImageView corner = (ImageView) decorations.findViewById(R.id.corner);
         corner.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -494,12 +480,12 @@ public class Window extends FrameLayout {
 
     /**
      * Implement StandOut specific additional functionalities.
-     * <p>
+     * <p/>
      * Currently, this method does the following:
-     * <p>
+     * <p/>
      * Attach resize handles: For every View found to have id R.id.corner,
      * attach an OnTouchListener that implements resizing the window.
-     * 
+     *
      * @param root The view hierarchy that is part of the window.
      */
     void addFunctionality(View root) {
@@ -541,11 +527,11 @@ public class Window extends FrameLayout {
     /**
      * Iterate through each View in the view hiearchy and implement StandOut
      * specific compatibility workarounds.
-     * <p>
+     * <p/>
      * Currently, this method does the following:
-     * <p>
+     * <p/>
      * Nothing yet.
-     * 
+     *
      * @param root The root view hierarchy to iterate through and check.
      */
     void fixCompatibility(View root) {
@@ -558,7 +544,7 @@ public class Window extends FrameLayout {
 
             // iterate through children
             if (view instanceof ViewGroup) {
-                ViewGroup group = (ViewGroup)view;
+                ViewGroup group = (ViewGroup) view;
                 for (int i = 0; i < group.getChildCount(); i++) {
                     queue.add(group.getChildAt(i));
                 }
@@ -566,10 +552,22 @@ public class Window extends FrameLayout {
         }
     }
 
+    public static class WindowDataKeys {
+        public static final String IS_MAXIMIZED = "isMaximized";
+
+        public static final String WIDTH_BEFORE_MAXIMIZE = "widthBeforeMaximize";
+
+        public static final String HEIGHT_BEFORE_MAXIMIZE = "heightBeforeMaximize";
+
+        public static final String X_BEFORE_MAXIMIZE = "xBeforeMaximize";
+
+        public static final String Y_BEFORE_MAXIMIZE = "yBeforeMaximize";
+    }
+
     /**
      * Convenient way to resize or reposition a Window. The Editor allows you to
      * easily resize and reposition the window around anchor points.
-     * 
+     *
      * @author Mark Wei <markwei@gmail.com>
      */
     public class Editor {
@@ -587,13 +585,13 @@ public class Window extends FrameLayout {
         /**
          * The position of the anchor point as a percentage of the window's
          * width/height. The anchor point is only used by the {@link Editor}.
-         * <p>
+         * <p/>
          * The anchor point effects the following methods:
-         * <p>
+         * <p/>
          * {@link #setSize(float, float)}, {@link #setSize(int, int)},
          * {@link #setPosition(int, int)}, {@link #setPosition(int, int)}. The
          * window will move, expand, or shrink around the anchor point.
-         * <p>
+         * <p/>
          * Values must be between 0 and 1, inclusive. 0 means the left/top, 0.5
          * is the center, 1 is the right/bottom.
          */
@@ -621,13 +619,13 @@ public class Window extends FrameLayout {
          * you've set a different anchor point with
          * {@link #setAnchorPoint(float, float)}. Changes will not applied until
          * you {@link #commit()}.
-         * 
+         *
          * @param percentWidth
          * @param percentHeight
          * @return The same Editor, useful for method chaining.
          */
         public Editor setSize(float percentWidth, float percentHeight) {
-            return setSize((int)(displayWidth * percentWidth), (int)(displayHeight * percentHeight));
+            return setSize((int) (displayWidth * percentWidth), (int) (displayHeight * percentHeight));
         }
 
         /**
@@ -635,7 +633,7 @@ public class Window extends FrameLayout {
          * expand and shrink around the top-left corner, unless you've set a
          * different anchor point with {@link #setAnchorPoint(float, float)}.
          * Changes will not applied until you {@link #commit()}.
-         * 
+         *
          * @param width
          * @param height
          * @return The same Editor, useful for method chaining.
@@ -649,11 +647,11 @@ public class Window extends FrameLayout {
          * expand and shrink around the top-left corner, unless you've set a
          * different anchor point with {@link #setAnchorPoint(float, float)}.
          * Changes will not applied until you {@link #commit()}.
-         * 
+         *
          * @param width
          * @param height
-         * @param skip Don't call {@link #setPosition(int, int)} to avoid stack
-         *            overflow.
+         * @param skip   Don't call {@link #setPosition(int, int)} to avoid stack
+         *               overflow.
          * @return The same Editor, useful for method chaining.
          */
         private Editor setSize(int width, int height, boolean skip) {
@@ -677,8 +675,8 @@ public class Window extends FrameLayout {
                 int maxHeight = mParams.maxHeight;
 
                 if (Utils.isSet(flags, StandOutFlags.FLAG_WINDOW_EDGE_LIMITS_ENABLE)) {
-                    maxWidth = (int)Math.min(maxWidth, displayWidth);
-                    maxHeight = (int)Math.min(maxHeight, displayHeight);
+                    maxWidth = (int) Math.min(maxWidth, displayWidth);
+                    maxHeight = (int) Math.min(maxHeight, displayHeight);
                 }
 
                 // keep window between min and max
@@ -687,8 +685,8 @@ public class Window extends FrameLayout {
 
                 // keep window in aspect ratio
                 if (Utils.isSet(flags, StandOutFlags.FLAG_WINDOW_ASPECT_RATIO_ENABLE)) {
-                    int ratioWidth = (int)(mParams.height * touchInfo.ratio);
-                    int ratioHeight = (int)(mParams.width / touchInfo.ratio);
+                    int ratioWidth = (int) (mParams.height * touchInfo.ratio);
+                    int ratioHeight = (int) (mParams.width / touchInfo.ratio);
                     if (ratioHeight >= mParams.minHeight && ratioHeight <= mParams.maxHeight) {
                         // width good adjust height
                         mParams.height = ratioHeight;
@@ -700,7 +698,7 @@ public class Window extends FrameLayout {
 
                 if (!skip) {
                     // set position based on anchor point
-                    setPosition((int)(mParams.x + lastWidth * anchorX), (int)(mParams.y + lastHeight * anchorY));
+                    setPosition((int) (mParams.x + lastWidth * anchorX), (int) (mParams.y + lastHeight * anchorY));
                 }
             }
 
@@ -713,13 +711,13 @@ public class Window extends FrameLayout {
          * unless you've set a different anchor point with
          * {@link #setAnchorPoint(float, float)}. Changes will not applied until
          * you {@link #commit()}.
-         * 
+         *
          * @param percentWidth
          * @param percentHeight
          * @return The same Editor, useful for method chaining.
          */
         public Editor setPosition(float percentWidth, float percentHeight) {
-            return setPosition((int)(displayWidth * percentWidth), (int)(displayHeight * percentHeight));
+            return setPosition((int) (displayWidth * percentWidth), (int) (displayHeight * percentHeight));
         }
 
         /**
@@ -728,7 +726,7 @@ public class Window extends FrameLayout {
          * you've set a different anchor point with
          * {@link #setAnchorPoint(float, float)}. Changes will not applied until
          * you {@link #commit()}.
-         * 
+         *
          * @param x
          * @param y
          * @return The same Editor, useful for method chaining.
@@ -743,11 +741,11 @@ public class Window extends FrameLayout {
          * you've set a different anchor point with
          * {@link #setAnchorPoint(float, float)}. Changes will not applied until
          * you {@link #commit()}.
-         * 
+         *
          * @param x
          * @param y
          * @param skip Don't call {@link #setPosition(int, int)} and
-         *            {@link #setSize(int, int)} to avoid stack overflow.
+         *             {@link #setSize(int, int)} to avoid stack overflow.
          * @return The same Editor, useful for method chaining.
          */
         private Editor setPosition(int x, int y, boolean skip) {
@@ -759,10 +757,10 @@ public class Window extends FrameLayout {
                 // sets the x and y correctly according to anchorX and
                 // anchorY
                 if (x != UNCHANGED) {
-                    mParams.x = (int)(x - mParams.width * anchorX);
+                    mParams.x = (int) (x - mParams.width * anchorX);
                 }
                 if (y != UNCHANGED) {
-                    mParams.y = (int)(y - mParams.height * anchorY);
+                    mParams.y = (int) (y - mParams.height * anchorY);
                 }
 
                 if (Utils.isSet(flags, StandOutFlags.FLAG_WINDOW_EDGE_LIMITS_ENABLE)) {
@@ -791,17 +789,5 @@ public class Window extends FrameLayout {
                 mParams = null;
             }
         }
-    }
-
-    public static class WindowDataKeys {
-        public static final String IS_MAXIMIZED = "isMaximized";
-
-        public static final String WIDTH_BEFORE_MAXIMIZE = "widthBeforeMaximize";
-
-        public static final String HEIGHT_BEFORE_MAXIMIZE = "heightBeforeMaximize";
-
-        public static final String X_BEFORE_MAXIMIZE = "xBeforeMaximize";
-
-        public static final String Y_BEFORE_MAXIMIZE = "yBeforeMaximize";
     }
 }

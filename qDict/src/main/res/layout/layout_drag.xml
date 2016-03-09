@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dragView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/mmt_white"
-    android:clickable="true"
-    android:focusable="false"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/small_padding"
-    android:paddingRight="@dimen/small_padding"
-    android:paddingTop="@dimen/small_padding" >
+<LinearLayout android:id="@+id/dragView"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/mmt_white"
+              android:clickable="true"
+              android:focusable="false"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/small_padding"
+              android:paddingRight="@dimen/small_padding"
+              android:paddingTop="@dimen/small_padding">
 
     <LinearLayout
         android:id="@+id/dictSearchBarLayout"
@@ -17,7 +17,7 @@
         android:layout_height="?attr/actionBarSize"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/action_menu"
@@ -26,7 +26,7 @@
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
-            android:src="?attr/navigationIcon" >
+            android:src="?attr/navigationIcon">
         </ImageButton>
 
         <LinearLayout
@@ -36,7 +36,7 @@
             android:layout_marginLeft="@dimen/small_padding"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/medium_padding" >
+            android:paddingBottom="@dimen/medium_padding">
         </LinearLayout>
 
         <ImageButton
@@ -47,7 +47,7 @@
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
             android:src="?attr/icon_actionWordsList"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/action_voice"
@@ -56,7 +56,7 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
-            android:src="?attr/icon_actionVoice" />
+            android:src="?attr/icon_actionVoice"/>
     </LinearLayout>
 
     <com.mmt.widget.QTextView
@@ -67,12 +67,12 @@
         android:padding="3dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/empty_list"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <com.mmt.widget.DropDownListView
         android:id="@+id/drop_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none" />
+        android:scrollbars="none"/>
 
 </LinearLayout>

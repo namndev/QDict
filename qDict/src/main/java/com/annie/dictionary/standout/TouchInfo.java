@@ -1,4 +1,3 @@
-
 package com.annie.dictionary.standout;
 
 import java.util.Locale;
@@ -6,7 +5,7 @@ import java.util.Locale;
 /**
  * This class holds temporal touch and gesture information. Mainly used to hold
  * temporary data for onTouchEvent(MotionEvent).
- * 
+ *
  * @author Mark Wei <markwei@gmail.com>
  */
 public class TouchInfo {

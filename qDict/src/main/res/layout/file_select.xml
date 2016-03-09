@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="320dp"
+              android:layout_height="480dp"
+              android:orientation="vertical">
+
+    <com.mmt.widget.QTextView
+        android:id="@+id/dictPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:padding="6dp"
+        android:textColor="@color/mmt_white"
+        android:textSize="18sp">
+    </com.mmt.widget.QTextView>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.mmt.widget.QButton
+            android:id="@+id/buttonCancle"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textColor="@color/mmt_black"
+            android:text="@string/cancel"/>
+
+        <com.mmt.widget.QButton
+            android:id="@+id/buttonConfirm"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:textColor="@color/mmt_black"
+            android:padding="15dp"
+            android:text="@string/ok"/>
+
+    </LinearLayout>
+</LinearLayout>

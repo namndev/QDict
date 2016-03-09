@@ -1,10 +1,4 @@
-
 package com.annie.dictionary;
-
-import com.annie.dictionary.frags.SettingFragment;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.mmt.app.SystemBarTintManager;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,6 +11,11 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.annie.dictionary.frags.SettingFragment;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.mmt.app.SystemBarTintManager;
+
 public class SettingsActivity extends ActionBarActivity {
 
     protected Fragment mFrag;
@@ -27,7 +26,7 @@ public class SettingsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         mSharedPreferences = getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         int themeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
-        Utils.onActivityCreateSetTheme(this, themeIndex, false);
+        Utils.onActivityCreateSetTheme(this, themeIndex, Utils.ThemeActivity.SETTING);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_settings);
         setTitle(R.string.settings_lable);
@@ -47,7 +46,7 @@ public class SettingsActivity extends ActionBarActivity {
         } else {
             mFrag = this.getSupportFragmentManager().findFragmentById(R.id.setting_frame);
             if (mFrag instanceof SettingFragment) {
-                ((SettingFragment)mFrag).SetSpeechEng(DictSpeechEng.getInstance(getApplicationContext()));
+                ((SettingFragment) mFrag).SetSpeechEng(DictSpeechEng.getInstance(getApplicationContext()));
             }
         }
     }

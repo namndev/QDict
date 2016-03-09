@@ -1,16 +1,4 @@
-
 package com.annie.dictionary;
-
-import java.util.Locale;
-
-import com.annie.dictionary.frags.ListDictFragment;
-import com.annie.dictionary.frags.NavigatorFragment;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.mmt.app.SlidingFragmentActivity;
-import com.mmt.app.SystemBarTintManager;
-import com.mmt.widget.slidemenu.SlidingMenu;
-import com.mmt.widget.slidemenu.SlidingMenu.OnClosedListener;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -21,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -29,28 +18,38 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.annie.dictionary.frags.ListDictFragment;
+import com.annie.dictionary.frags.NavigatorFragment;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.mmt.app.SlidingFragmentActivity;
+import com.mmt.app.SystemBarTintManager;
+import com.mmt.widget.slidemenu.SlidingMenu;
+import com.mmt.widget.slidemenu.SlidingMenu.OnClosedListener;
+
+import java.util.Locale;
+
 public abstract class BaseActivity extends SlidingFragmentActivity {
 
-    protected Fragment mFrag;
-
-    protected SharedPreferences mSharedPreferences;
-
-    protected int mThemeIndex;
-
-    String mCurrentLanguage;
-
+    public final static int REQUEST_STORAGE_CODE = 1001;
+    public final static int REQUEST_ALERT_WINDOW_CODE = 1003;
     /**
      * Read and write permission for storage listed here.
      */
-    public static String STORAGE_PERMISSIONS[] = new String[] {
+    public static String STORAGE_PERMISSIONS[] = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
     };
+    protected Fragment mFrag;
+    protected SharedPreferences mSharedPreferences;
+    protected int mThemeIndex;
+    String mCurrentLanguage;
+    OnClosedListener mOnClosedListener = new OnClosedListener() {
 
-    public final static int REQUEST_STORAGE_CODE = 1001;
-
-    public final static int REQUEST_ALERT_WINDOW_CODE = 1003;
-
-    public static boolean isActive = false;
+        @Override
+        public void onClosed() {
+            onMenuClose();
+        }
+    };
 
     public void checkPermission(int requestCode) {
         switch (requestCode) {
@@ -81,7 +80,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     public abstract void onRequestPermissionResult(int requestCode, boolean isSucess);
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE_CODE:
             case REQUEST_ALERT_WINDOW_CODE:
@@ -107,7 +106,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         mSharedPreferences = getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         setLanguage();
         mThemeIndex = mSharedPreferences.getInt("prefs_key_theme", 0);
-        Utils.onActivityCreateSetTheme(this, mThemeIndex, true);
+        Utils.onActivityCreateSetTheme(this, mThemeIndex, Utils.ThemeActivity.HOME);
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
         if (Utils.hasKk()) {
@@ -119,7 +118,12 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         // set the Behind View
         setBehindContentView(R.layout.menu_frame);
         // float density = getResources().getDisplayMetrics().density;
-        boolean headerShow = getResources().getBoolean(R.bool.header_menu_visiable);
+        boolean headerShow;
+        try {
+            headerShow = getResources().getBoolean(R.bool.header_menu_visiable);
+        }catch (Exception e){
+            headerShow = false;
+        }
         findViewById(R.id.img_header).setVisibility(headerShow ? View.VISIBLE : View.GONE);
         if (savedInstanceState == null) {
             FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
@@ -127,7 +131,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
             t.replace(R.id.menu_frame, mFrag);
             t.commit();
         } else {
-            mFrag = (Fragment)this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
+            mFrag = this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
         }
         // customize the SlidingMenu
         SlidingMenu sm = getSlidingMenu();
@@ -138,14 +142,6 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         sm.setOnClosedListener(mOnClosedListener);
     }
-
-    OnClosedListener mOnClosedListener = new OnClosedListener() {
-
-        @Override
-        public void onClosed() {
-            onMenuClose();
-        }
-    };
 
     public abstract void onMenuClose();
 
@@ -196,7 +192,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    };
+    }
 
     public void backMainMenuFragment() {
         FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();

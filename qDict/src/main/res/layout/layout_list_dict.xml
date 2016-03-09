@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:dslv="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_dict_frame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorPrimary" >
+<RelativeLayout android:id="@+id/list_dict_frame"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dslv="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary">
 
     <RelativeLayout
         android:id="@+id/layout_header"
@@ -12,7 +12,7 @@
         android:layout_height="@dimen/navi_menu_height"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/preference_fragment_padding_side"
-        android:layout_marginTop="@dimen/small_padding" >
+        android:layout_marginTop="@dimen/small_padding">
 
         <ImageButton
             android:id="@+id/action_back"
@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/action_bacground"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_back_white" />
+            android:src="@drawable/ic_back_white"/>
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_dict_count"
@@ -31,7 +31,7 @@
             android:layout_toRightOf="@+id/action_back"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/mmt_white" />
+            android:textColor="@color/mmt_white"/>
 
         <CheckBox
             android:id="@+id/check_all"
@@ -39,13 +39,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/medium_padding" />
+            android:layout_marginRight="@dimen/medium_padding"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_empty"
@@ -55,7 +55,7 @@
             android:paddingTop="@dimen/list_dict_padding"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/mmt_white"
-            android:textStyle="italic" />
+            android:textStyle="italic"/>
 
         <com.mmt.widget.QButton
             android:id="@+id/goto_ftp_server"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_empty"
             android:layout_centerHorizontal="true"
-            android:text="@string/ftp_server" />
+            android:text="@string/ftp_server"/>
     </RelativeLayout>
 
     <com.mmt.widget.DragSortListView
@@ -84,6 +84,6 @@
         dslv:drag_scroll_start="0.33"
         dslv:drag_start_mode="onDown"
         dslv:float_alpha="0.6"
-        dslv:slide_shuffle_speed="0.3" />
+        dslv:slide_shuffle_speed="0.3"/>
 
 </RelativeLayout>

@@ -187,6 +187,9 @@
         <attr name="icon_actionBack" format="reference" />
         <attr name="icon_actionSpeak" format="reference" />
         <attr name="icon_actionWordsList" format="reference" />
+        <attr name="icon_folder" format="reference" />
+        <attr name="icon_folder_back" format="reference" />
+        <attr name="icon_file" format="reference" />
         <!-- =================== -->
         <!-- Text styles -->
         <!-- =================== -->

@@ -1,4 +1,3 @@
-
 package com.mmt.widget.draglistview;
 
 import android.content.Context;
@@ -30,12 +29,12 @@ public class DragSortItemView extends ViewGroup {
         // setClipChildren(true);
     }
 
-    public void setGravity(int gravity) {
-        mGravity = gravity;
-    }
-
     public int getGravity() {
         return mGravity;
+    }
+
+    public void setGravity(int gravity) {
+        mGravity = gravity;
     }
 
     @Override
@@ -54,7 +53,7 @@ public class DragSortItemView extends ViewGroup {
     }
 
     /**
-     * 
+     *
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

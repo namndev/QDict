@@ -1,17 +1,4 @@
-
 package com.annie.dictionary.frags;
-
-import com.annie.dictionary.DictSpeechEng;
-import com.annie.dictionary.DictWebViewClient;
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.QDictions;
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.NAVIG;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-import com.annie.dictionary.utils.WebViewClientCallback;
-import com.annie.dictionary.utils.WordsFileUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +19,18 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.annie.dictionary.DictSpeechEng;
+import com.annie.dictionary.DictWebViewClient;
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.QDictions;
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.NAVIG;
+import com.annie.dictionary.utils.Utils.RECV_UI;
+import com.annie.dictionary.utils.WebViewClientCallback;
+import com.annie.dictionary.utils.WordsFileUtils;
+
 public class SearchFragment extends Fragment {
 
     // UX
@@ -46,8 +45,6 @@ public class SearchFragment extends Fragment {
     private String mReadmeHtml = null;
 
     private boolean mIsSearch, mBackClick = false, mTts;
-
-    private SharedPreferences mSharedPreferences;
 
     private int mCurrentHisIndex = 0;
 
@@ -66,7 +63,7 @@ public class SearchFragment extends Fragment {
         // default constructor
     }
 
-    public static final SearchFragment newInstance(DictSpeechEng dictSpeechEng, QDictions dictions, String keyword, boolean search) {
+    public static SearchFragment newInstance(DictSpeechEng dictSpeechEng, QDictions dictions, String keyword, boolean search) {
         SearchFragment s = new SearchFragment();
         s.mDictions = dictions;
         s.mSpeechEng = dictSpeechEng;
@@ -109,16 +106,6 @@ public class SearchFragment extends Fragment {
         setKeyword(keyword, true);
     }
 
-    public class MyWebViewClientCallback extends WebViewClientCallback {
-        public MyWebViewClientCallback() {
-        }
-
-        @Override
-        public void shouldOverrideUrlLoading(String word) {
-            makeDictContent(word);
-        }
-    }
-
     private void makeDictContent(String word) {
         mTvKeyword.setText(word);
         mSpeakBtn.setVisibility(mTts ? View.VISIBLE : View.GONE);
@@ -155,12 +142,12 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.layout_search, container, false);
-        mDictBackBtn = (ImageButton)root.findViewById(R.id.back_word);
-        mTvKeyword = (TextView)root.findViewById(R.id.tv_title);
-        mSpeakBtn = (ImageButton)root.findViewById(R.id.action_speak);
-        mDictContentView = (WebView)root.findViewById(R.id.dictContentView);
+        mDictBackBtn = (ImageButton) root.findViewById(R.id.back_word);
+        mTvKeyword = (TextView) root.findViewById(R.id.tv_title);
+        mSpeakBtn = (ImageButton) root.findViewById(R.id.action_speak);
+        mDictContentView = (WebView) root.findViewById(R.id.dictContentView);
         DictWebViewClient webclient = new DictWebViewClient(getActivity().getApplicationContext(),
                 new MyWebViewClientCallback());
         mDictContentView.setWebViewClient(webclient);
@@ -197,7 +184,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                mSpeechEng.speak(mKeyword.toString().trim());
+                mSpeechEng.speak(mKeyword.trim());
             }
         });
         return root;
@@ -206,7 +193,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSharedPreferences = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
 
         if (mDictions == null && MainActivity.hasStoragePermission) {
             mDictions = new QDictions(getActivity());
@@ -291,5 +278,15 @@ public class SearchFragment extends Fragment {
         mWordsFileUtilsHis.save();
         mWordsFileUtilsHis = null;
         super.onDestroyView();
+    }
+
+    public class MyWebViewClientCallback extends WebViewClientCallback {
+        public MyWebViewClientCallback() {
+        }
+
+        @Override
+        public void shouldOverrideUrlLoading(String word) {
+            makeDictContent(word);
+        }
     }
 }

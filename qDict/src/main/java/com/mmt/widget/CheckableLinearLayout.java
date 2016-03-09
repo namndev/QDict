@@ -1,4 +1,3 @@
-
 package com.mmt.widget;
 
 import android.content.Context;
@@ -19,7 +18,7 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        child = (Checkable)getChildAt(CHECKABLE_CHILD_INDEX);
+        child = (Checkable) getChildAt(CHECKABLE_CHILD_INDEX);
     }
 
     @Override

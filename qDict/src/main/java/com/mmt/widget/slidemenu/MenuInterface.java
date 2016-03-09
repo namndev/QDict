@@ -1,4 +1,3 @@
-
 package com.mmt.widget.slidemenu;
 
 import android.graphics.Canvas;

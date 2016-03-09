@@ -2,5 +2,5 @@
 <resources>
 
     <color name="empty_list">#ffbbbdbf</color>
-
+    <drawable name="other">#fff00f</drawable>
 </resources>

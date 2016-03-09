@@ -1,4 +1,3 @@
-
 package com.mmt.widget;
 
 import android.content.Context;
@@ -26,6 +25,10 @@ public class M2tListView extends ListView {
         return expanded;
     }
 
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // HACK! TAKE THAT ANDROID!
@@ -41,9 +44,5 @@ public class M2tListView extends ListView {
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 }

@@ -1,23 +1,20 @@
-
 package com.annie.dictionary;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
+import android.util.Log;
+import android.webkit.WebView;
+
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.WindowManager;
-import android.webkit.WebView;
 
 public class QDictions {
     // private final String FILTER_SYMBOLS =
@@ -33,9 +30,49 @@ public class QDictions {
     private SharedPreferences mSharedPrefs;
 
     public QDictions(Context context) {
-        mContext = new WeakReference<Context>(context);
+        mContext = new WeakReference<>(context);
         mSharedPrefs = mContext.get().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         mQDictEng = QDictEng.createQDictEng();
+    }
+
+    public static String getTextHtmlColor() {
+        return "#" + Def.DEFAULT_TEXT_COLOR.substring(3);
+    }
+
+    public static String getWordHtmlColor() {
+        return "#" + Def.DEFAULT_WORD_COLOR.substring(3);
+    }
+
+    public static String getReadmeHtml(Context context, SharedPreferences shares) {
+        // CharSequence content = Utils.getTextFromAssets(mContext, "help.txt");
+        String content = context.getResources().getString(R.string.readme_text);
+        String textColor = getTextHtmlColor();
+        String wordColor = getWordHtmlColor();
+        String font = shares.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT);
+        String head = "<head><style>@font-face {font-family:'Unicode';src:url('file:///android_asset/fonts/" + font
+                + "');}";
+        head += "@font-face {font-family:'KPhonetic';src:url('file:///android_asset/fonts/KPhonetic.ttf');}";
+        head += " body,font{font-family:'Unicode';} i,b{font-family: sans-serif;}</style></head>";
+
+        String html = "<html>" + head + "<body style='color:" + textColor + "'>" + content + "</body></html>";
+
+        html = html.replace("color:#TOBEREPLACE;", "color:" + wordColor + ";");
+        return html;
+
+    }
+
+    public static void showHtmlContent(String content, WebView webView) {
+        if (webView != null) {
+            if (!content.contains("<body style='color:")) {
+                content = "<body style='color:" + getTextHtmlColor() + "'>" + content + "</body>";
+            }
+            try {
+                webView.loadDataWithBaseURL(null, content, Def.MIME_TYPE, Def.HTML_ENCODING, null);
+            } catch (Exception ex) {
+                Log.e("QDictions", ex.toString());
+            }
+            webView.scrollTo(0, 0);
+        }
     }
 
     public void initDicts() {
@@ -45,19 +82,18 @@ public class QDictions {
     }
 
     private String[] lookupWord(String word) {
-        String strWordsArray[] = null;
-        String keyword = word;
-        String keyword2 = "";
-        if (keyword.length() <= 0)
+        String strWordsArray[];
+        String keyword;
+        if (word.length() <= 0)
             return null;
-        strWordsArray = mQDictEng.Lookup(keyword, DICT_TYPE_INDEX);
+        strWordsArray = mQDictEng.Lookup(word, DICT_TYPE_INDEX);
         if (null != strWordsArray && strWordsArray.length > 0)
             return strWordsArray;
         // step 2: to lowercase.
-        keyword2 = keyword.toLowerCase(Locale.US);
-        if (keyword2.equals(keyword))
+        keyword = word.toLowerCase(Locale.US);
+        if (keyword.equals(word))
             return null;
-        strWordsArray = mQDictEng.Lookup(keyword2, DICT_TYPE_INDEX);
+        strWordsArray = mQDictEng.Lookup(keyword, DICT_TYPE_INDEX);
         return strWordsArray;
     }
 
@@ -69,16 +105,14 @@ public class QDictions {
             for (String dictIndex : dictIndexArray) {
                 boolean bFound = false;
                 for (int i = 0; i < k; i++) {
-                    if (dictFolders[i] == null)
-                        continue;
-                    else if (dictFolders[i].equals(dictIndex)) {
+                    if (!TextUtils.isEmpty(dictFolders[i]) && dictFolders[i].equals(dictIndex)) {
                         bFound = true;
                         break;
                     }
                 }
                 // Not found this dictionary, it has been
                 // removed from the SD card.
-                if (false == bFound) { // Remove it from the configuration file.
+                if (!bFound) { // Remove it from the configuration file.
                     removeDictInArrays(Def.PREF_INDEX_CHECKED, dictIndex);
                     removeDictInArrays(Def.PREF_INDEX_ALL, dictIndex);
                 }
@@ -88,14 +122,12 @@ public class QDictions {
         for (int i = 0; i < k; i++) {
             boolean bFound = false;
             for (String dictIndex : dictIndexArray) {
-                if (dictFolders[i] == null)
-                    continue;
-                else if (dictFolders[i].equals(dictIndex)) {
+                if (!TextUtils.isEmpty(dictFolders[i]) && dictFolders[i].equals(dictIndex)) {
                     bFound = true;
                     break;
                 }
             }
-            if (false == bFound) {
+            if (!bFound) {
                 addDictInArrays(Def.PREF_INDEX_ALL, dictFolders[i]);
             }
         }
@@ -115,11 +147,11 @@ public class QDictions {
                 lDictPaths[i] = dictsPath + "/" + dictIndex + "/";
                 for (int k = 0; k < dictFolders.length; k++) {
                     try {
-                        if (dictFolders[k] == null)
-                            continue;
-                        else if (dictFolders[k].equals(dictIndex))
+                        if (!TextUtils.isEmpty(dictFolders[k]) && dictFolders[k].equals(dictIndex)) {
                             lDictNames[i] = dictNames[k];
+                        }
                     } catch (NullPointerException e) {
+                        Log.e("QDictions", e.toString());
                     }
                 }
                 lDictTypes[i] = DICT_TYPE_INDEX;
@@ -146,11 +178,12 @@ public class QDictions {
     }
 
     private void loadDictsFromFolder() {
-        String dictsPath = Utils.getRootFolder() + Def.DICT_FOLDER;
+        String dictsPath = Utils.getRootDictFolder(mSharedPrefs) + Def.DICT_FOLDER;
         File f = new File(dictsPath);
 
         if (!f.exists()) {
-            f.mkdirs();
+            if (!f.mkdirs())
+                return;
         }
         if (!f.exists() || !f.isDirectory()) {
             Log.d("QDictions", "file is not exists ");
@@ -163,16 +196,14 @@ public class QDictions {
 
         int k = 0;
         File[] files = f.listFiles();
-        String dictPaths[] = new String[files.length];
         String dictFolders[] = new String[files.length];
         String dictNames[] = new String[files.length];
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                String dictName = Utils.getFileInfoName(files[i].getPath());
+        for (File file : files) {
+            if (file.isDirectory()) {
+                String dictName = Utils.getFileInfoName(file.getPath());
                 if (null != dictName) {
-                    dictPaths[k] = files[i].getPath();
-                    dictFolders[k] = files[i].getName();
+                    dictFolders[k] = file.getName();
                     dictNames[k] = dictName;
                     k++;
                 }
@@ -188,7 +219,7 @@ public class QDictions {
             String mDictIndexAll = mSharedPrefs.getString(Def.PREF_INDEX_ALL, mEmptyList);
             if (mDictIndexAll.equals("")) {
                 for (int m = 0; m < k; m++) {
-                    mDictIndexAll = addDictInArrays(Def.PREF_INDEX_ALL, dictFolders[m]);
+                    addDictInArrays(Def.PREF_INDEX_ALL, dictFolders[m]);
                 }
             }
         }
@@ -221,12 +252,12 @@ public class QDictions {
 
     /**
      * Replace label attribute content.
-     * 
-     * @param str : the string to be replaced
+     *
+     * @param str       : the string to be replaced
      * @param beforeTag : the label to be replaced
      * @param tagAttrib : the lable's attribute to be replaced
-     * @param startTag : the begin of the new label
-     * @param endTag : the end of the new label
+     * @param startTag  : the begin of the new label
+     * @param endTag    : the end of the new label
      */
     private String replaceHtmlTag(String str, String beforeTag, String tagAttrib, String startTag, String endTag) {
         String regxpForTag = "<\\s*" + beforeTag + "\\s+([^>]*)>";
@@ -263,25 +294,10 @@ public class QDictions {
         return sb.toString();
     }
 
-    public static String getTextHtmlColor() {
-        return "#" + Def.DEFAULT_TEXT_COLOR.substring(3);
-    }
-
-    public static String getWordHtmlColor() {
-        return "#" + Def.DEFAULT_WORD_COLOR.substring(3);
-    }
-
-    public int getDensityDpi() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((WindowManager)(mContext.get().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay()
-                .getMetrics(displayMetrics);
-        return displayMetrics.densityDpi;
-    }
-
     public String generateHtmlContent(String word) {
-        String html = "";
+        String html;
         String dictHtmlData = "";
-        String dictCheckeds = mEmptyList;
+        String dictCheckeds;
 
         String strWordsArray[] = lookupWord(word);
         if (null == strWordsArray)
@@ -292,8 +308,8 @@ public class QDictions {
         String[] dictCheckedArrays = dictCheckeds.split(";");
         // This is for dictionary order.
         String dictContentArray[] = new String[dictCheckedArrays.length];
-        for (int i = 0; i < strWordsArray.length;) {
-            String dictContent = "";
+        for (int i = 0; i < strWordsArray.length; ) {
+            String dictContent;
             if (null != strWordsArray[i] && null != strWordsArray[i + 1] && null != strWordsArray[i + 2]) {
                 int dictID = Integer.parseInt(strWordsArray[i]);
                 String strResPath = "file://" + QDictEng.sDictPaths[dictID] + "res/";
@@ -328,7 +344,7 @@ public class QDictions {
                 // This is for dictionary order.
                 int k = 0;
                 for (String dictChecked : dictCheckedArrays) {
-                    if (QDictEng.sDictPaths[dictID].indexOf(dictChecked) >= 0) {
+                    if (QDictEng.sDictPaths[dictID].contains(dictChecked)) {
                         dictContentArray[k] = dictContent;
                         break;
                     }
@@ -338,9 +354,9 @@ public class QDictions {
                 i += 3; // Ignore this dictionary.
             }
         }
-        for (int k = 0; k < dictContentArray.length; k++) {
-            if (null != dictContentArray[k])
-                dictHtmlData += dictContentArray[k];
+        for (String dictContent : dictContentArray) {
+            if (null != dictContent)
+                dictHtmlData += dictContent;
         }
         if (TextUtils.isEmpty(dictHtmlData)) {
             return mContext.get().getResources().getString(R.string.keywords_null);
@@ -356,60 +372,6 @@ public class QDictions {
         html = "<html>" + head + "<body style='color:" + textColor + "'>" + dictHtmlData + "</body></html>";
         html = html.replace("color:#TOBEREPLACE;", "color:" + wordColor + ";");
         return html;
-    }
-
-    public static String getReadmeHtml(Context context, SharedPreferences shares) {
-        // CharSequence content = Utils.getTextFromAssets(mContext, "help.txt");
-        String content = context.getResources().getString(R.string.readme_text);
-        String textColor = getTextHtmlColor();
-        String wordColor = getWordHtmlColor();
-        String font = shares.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT);
-        String head = "<head><style>@font-face {font-family:'Unicode';src:url('file:///android_asset/fonts/" + font
-                + "');}";
-        head += "@font-face {font-family:'KPhonetic';src:url('file:///android_asset/fonts/KPhonetic.ttf');}";
-        head += " body,font{font-family:'Unicode';} i,b{font-family: sans-serif;}</style></head>";
-
-        String html = "<html>" + head + "<body style='color:" + textColor + "'>" + content + "</body></html>";
-
-        html = html.replace("color:#TOBEREPLACE;", "color:" + wordColor + ";");
-        return html;
-
-    }
-
-    public String getReadmeHtml() {
-        // CharSequence content = Utils.getTextFromAssets(mContext, "help.txt");
-        String content = mContext.get().getResources().getString(R.string.readme_text);
-        String textColor = getTextHtmlColor();
-        String wordColor = getWordHtmlColor();
-        String font = mSharedPrefs.getString(Def.PREF_KEY_FONT, Def.DEFAULT_FONT);
-        String head = "<head><style>@font-face {font-family:'Unicode';src:url('file:///android_asset/fonts/" + font
-                + "');}";
-        head += "@font-face {font-family:'KPhonetic';src:url('file:///android_asset/fonts/KPhonetic.ttf');}";
-        head += " body,font{font-family:'Unicode';} i,b{font-family: sans-serif;}</style></head>";
-
-        String html = "<html>" + head + "<body style='color:" + textColor + "'>" + content + "</body></html>";
-
-        html = html.replace("color:#TOBEREPLACE;", "color:" + wordColor + ";");
-
-        return html;
-    }
-
-    public void showHtmlByResId(int resId, WebView webView) {
-        showHtmlContent(mContext.get().getResources().getString(resId), webView);
-    }
-
-    public static void showHtmlContent(String content, WebView webView) {
-        if (webView != null) {
-            if (content.indexOf("<body style='color:") < 0) {
-                content = "<body style='color:" + getTextHtmlColor() + "'>" + content + "</body>";
-            }
-            try {
-                webView.loadDataWithBaseURL(null, content, Def.MIME_TYPE, Def.HTML_ENCODING, null);
-            } catch (Exception ex) {
-                Log.e("QDictions", ex.toString());
-            }
-            webView.scrollTo(0, 0);
-        }
     }
 
     public String[] listWords(String word) {
@@ -430,10 +392,6 @@ public class QDictions {
 
     public String getBookName(String ifoPath) {
         return mQDictEng.GetBookName(ifoPath);
-    }
-
-    public String[] getDictInfo(String ifoPath) {
-        return mQDictEng.GetInfo(ifoPath);
     }
 
     public void cancelLookup() {

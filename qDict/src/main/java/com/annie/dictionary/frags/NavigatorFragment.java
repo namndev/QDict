@@ -1,8 +1,4 @@
-
 package com.annie.dictionary.frags;
-
-import com.annie.dictionary.R;
-import com.mmt.widget.M2tListView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,20 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.annie.dictionary.R;
+import com.mmt.widget.M2tListView;
+
 public class NavigatorFragment extends Fragment implements OnItemClickListener {
 
+    NavigatorAdapter mAdapter1, mAdapter2;
+    String[] mFunctionLables;
+    String[] mSystemLables;
     private M2tListView mListView1, mListView2;
-
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationCallbacks mCallbacks;
-
-    NavigatorAdapter mAdapter1, mAdapter2;
-
-    String[] mFunctionLables;
-
-    String[] mSystemLables;
 
     public NavigatorFragment() {
         // default constructor
@@ -38,8 +33,8 @@ public class NavigatorFragment extends Fragment implements OnItemClickListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.layout_navigatior, container, false);
-        mListView1 = (M2tListView)root.findViewById(R.id.list1);
-        mListView2 = (M2tListView)root.findViewById(R.id.list2);
+        mListView1 = (M2tListView) root.findViewById(R.id.list1);
+        mListView2 = (M2tListView) root.findViewById(R.id.list2);
         mListView1.setExpanded(true);
         mListView2.setExpanded(true);
         return root;
@@ -76,7 +71,7 @@ public class NavigatorFragment extends Fragment implements OnItemClickListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallbacks = (NavigationCallbacks)activity;
+            mCallbacks = (NavigationCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationCallbacks.");
         }
@@ -88,15 +83,15 @@ public class NavigatorFragment extends Fragment implements OnItemClickListener {
         mCallbacks = null;
     }
 
-    private class NavigatorItem {
-        public String tag;
-
-        public int iconRes;
-
-        public NavigatorItem(String tag, int iconRes) {
-            this.tag = tag;
-            this.iconRes = iconRes;
-        }
+    /**
+     * Callbacks interface that all activities using this fragment must
+     * implement.
+     */
+    public interface NavigationCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationItemSelected(String title, int position);
     }
 
     public static class NavigatorAdapter extends ArrayAdapter<NavigatorItem> {
@@ -109,23 +104,23 @@ public class NavigatorFragment extends Fragment implements OnItemClickListener {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.navi_row, parent, false);
             }
-            ImageView icon = (ImageView)convertView.findViewById(R.id.row_icon);
+            ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
             icon.setImageResource(getItem(position).iconRes);
-            TextView title = (TextView)convertView.findViewById(R.id.row_title);
+            TextView title = (TextView) convertView.findViewById(R.id.row_title);
             title.setText(getItem(position).tag);
             return convertView;
         }
 
     }
 
-    /**
-     * Callbacks interface that all activities using this fragment must
-     * implement.
-     */
-    public static interface NavigationCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationItemSelected(String title, int position);
+    private class NavigatorItem {
+        public String tag;
+
+        public int iconRes;
+
+        public NavigatorItem(String tag, int iconRes) {
+            this.tag = tag;
+            this.iconRes = iconRes;
+        }
     }
 }

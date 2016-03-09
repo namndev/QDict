@@ -1,13 +1,12 @@
-
 package com.annie.dictionary.service;
-
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils.Def;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils.Def;
 
 public class QDictBootReceiver extends BroadcastReceiver {
     @Override

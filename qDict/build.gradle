@@ -11,8 +11,8 @@ android {
 
         ndk {
             moduleName "qdicteng"
-            ldLibs =['log']
-            ldLibs +=['z']
+            ldLibs = ['log']
+            ldLibs += ['z']
             stl = 'gnustl_shared'
 
         }

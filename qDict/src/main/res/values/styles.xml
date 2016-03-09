@@ -16,6 +16,7 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="navigationIcon">@drawable/ic_menu_orange</item>
         <item name="icon_actionRemove">@drawable/ic_recycle_orange</item>
+        <item name="icon_folder">@drawable/ic_folder_orange</item>
         <item name="icon_actionRotate">@drawable/ic_rotate_orange</item>
         <item name="icon_actionRecent">@drawable/ic_recent_orange</item>
         <item name="icon_actionFavorite">@drawable/favorite_orange</item>
@@ -47,6 +48,7 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
         <item name="navigationIcon">@drawable/ic_menu</item>
         <item name="icon_actionRemove">@drawable/ic_recycle</item>
+        <item name="icon_folder">@drawable/ic_folder_blue</item>
         <item name="icon_actionRecent">@drawable/ic_recent_blue</item>
         <item name="android:toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
@@ -132,7 +134,7 @@
         <item name="android:displayOptions">homeAsUp</item>
     </style>
 
-    <style name="App_EditTextStyle" parent="@Widget.AppCompat.EditText">
+    <style name="App_EditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/ic_textfield_search</item>
         <item name="android:textCursorDrawable">@drawable/color_cursor</item>
         <item name="android:textColor">@color/mmt_black</item>
@@ -144,7 +146,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="mmt_action_button_base_style" parent="mmt_layout_wrap_width_wrap_height_style" />
+    <style name="mmt_action_button_base_style" parent="mmt_layout_wrap_width_wrap_height_style"/>
 
     <style name="mmt_action_button_style" parent="mmt_action_button_base_style">
         <item name="android:layout_alignParentBottom">true</item>
@@ -162,4 +164,17 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
+    <style name="QDialog.Orange" parent="QDialog">
+        <item name="icon_folder">@drawable/ic_folder_orange</item>
+        <item name="icon_folder_back">@drawable/ic_folder_back_orange</item>
+        <item name="colorPrimary">@color/mmt_orange_500</item>
+        <item name="icon_file">@drawable/ic_file_orange</item>
+    </style>
+
+    <style name="QDialog.Blue" parent="QDialog">
+        <item name="icon_folder">@drawable/ic_folder_blue</item>
+        <item name="colorPrimary">@color/mmt_light_blue_500</item>
+        <item name="icon_folder_back">@drawable/ic_folder_back_blue</item>
+        <item name="icon_file">@drawable/ic_file_blue</item>
+    </style>
 </resources>

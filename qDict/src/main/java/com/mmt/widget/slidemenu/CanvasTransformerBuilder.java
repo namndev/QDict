@@ -1,20 +1,18 @@
-
 package com.mmt.widget.slidemenu;
-
-import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
 
 import android.graphics.Canvas;
 import android.view.animation.Interpolator;
 
-public class CanvasTransformerBuilder {
+import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
 
-    private CanvasTransformer mTrans;
+public class CanvasTransformerBuilder {
 
     private static Interpolator lin = new Interpolator() {
         public float getInterpolation(float t) {
             return t;
         }
     };
+    private CanvasTransformer mTrans;
 
     private void initTransformer() {
         if (mTrans == null)
@@ -25,12 +23,12 @@ public class CanvasTransformerBuilder {
     }
 
     public CanvasTransformer zoom(final int openedX, final int closedX, final int openedY, final int closedY,
-            final int px, final int py) {
+                                  final int px, final int py) {
         return zoom(openedX, closedX, openedY, closedY, px, py, lin);
     }
 
     public CanvasTransformer zoom(final int openedX, final int closedX, final int openedY, final int closedY,
-            final int px, final int py, final Interpolator interp) {
+                                  final int px, final int py, final Interpolator interp) {
         initTransformer();
         mTrans = new CanvasTransformer() {
             public void transformCanvas(Canvas canvas, float percentOpen) {
@@ -47,7 +45,7 @@ public class CanvasTransformerBuilder {
     }
 
     public CanvasTransformer rotate(final int openedDeg, final int closedDeg, final int px, final int py,
-            final Interpolator interp) {
+                                    final Interpolator interp) {
         initTransformer();
         mTrans = new CanvasTransformer() {
             public void transformCanvas(Canvas canvas, float percentOpen) {
@@ -64,7 +62,7 @@ public class CanvasTransformerBuilder {
     }
 
     public CanvasTransformer translate(final int openedX, final int closedX, final int openedY, final int closedY,
-            final Interpolator interp) {
+                                       final Interpolator interp) {
         initTransformer();
         mTrans = new CanvasTransformer() {
             public void transformCanvas(Canvas canvas, float percentOpen) {

@@ -1,4 +1,3 @@
-
 package com.annie.dictionary.utils;
 
 public class WebViewClientCallback {

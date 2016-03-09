@@ -1,4 +1,3 @@
-
 package com.mmt.widget;
 
 import android.annotation.TargetApi;

@@ -1,4 +1,3 @@
-
 package com.annie.dictionary.standout;
 
 public class Utils {

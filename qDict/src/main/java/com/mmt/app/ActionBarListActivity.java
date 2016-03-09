@@ -1,4 +1,3 @@
-
 package com.mmt.app;
 
 import android.support.v7.app.ActionBarActivity;
@@ -12,21 +11,21 @@ public abstract class ActionBarListActivity extends ActionBarActivity {
 
     protected ListView getListView() {
         if (mListView == null) {
-            mListView = (ListView)findViewById(android.R.id.list);
+            mListView = (ListView) findViewById(android.R.id.list);
         }
         return mListView;
-    }
-
-    protected void setListAdapter(ListAdapter adapter) {
-        getListView().setAdapter(adapter);
     }
 
     protected ListAdapter getListAdapter() {
         ListAdapter adapter = getListView().getAdapter();
         if (adapter instanceof HeaderViewListAdapter) {
-            return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
+            return ((HeaderViewListAdapter) adapter).getWrappedAdapter();
         } else {
             return adapter;
         }
+    }
+
+    protected void setListAdapter(ListAdapter adapter) {
+        getListView().setAdapter(adapter);
     }
 }

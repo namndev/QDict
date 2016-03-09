@@ -1,26 +1,6 @@
-
 package com.annie.dictionary;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import com.annie.dictionary.frags.ListDictFragment;
-import com.annie.dictionary.frags.NavigatorFragment.NavigationCallbacks;
-import com.annie.dictionary.frags.RecentFragment;
-import com.annie.dictionary.frags.SearchFragment;
-import com.annie.dictionary.service.QDictService;
-import com.annie.dictionary.standout.StandOutWindow;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.DIALOG;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.NAVIG;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-import com.mmt.widget.DropDownListView;
-import com.mmt.widget.SlidingUpPanelLayout;
-import com.mmt.widget.SlidingUpPanelLayout.PanelState;
-import com.mmt.widget.slidemenu.SlidingMenu;
-import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
-
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -42,11 +22,11 @@ import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -63,12 +43,51 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annie.dictionary.frags.ListDictFragment;
+import com.annie.dictionary.frags.NavigatorFragment.NavigationCallbacks;
+import com.annie.dictionary.frags.RecentFragment;
+import com.annie.dictionary.frags.SearchFragment;
+import com.annie.dictionary.service.QDictService;
+import com.annie.dictionary.standout.StandOutWindow;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.DIALOG;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.NAVIG;
+import com.annie.dictionary.utils.Utils.RECV_UI;
+import com.mmt.widget.DropDownListView;
+import com.mmt.widget.SlidingUpPanelLayout;
+import com.mmt.widget.SlidingUpPanelLayout.PanelState;
+import com.mmt.widget.slidemenu.SlidingMenu;
+import com.mmt.widget.slidemenu.SlidingMenu.CanvasTransformer;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class MainActivity extends BaseActivity implements NavigationCallbacks, OnClickListener {
 
     public static final String ACTION_UPDATE_UI = "com.annie.dictionary.ACTION_UPDATE_UI";
 
     public static final String ACTION_UPDATE_KEY = "receiver_update_ui";
-
+    // const
+    public static final int REQUEST_CODE = 101;
+    public static final int POPUPWORDSLIST_TIMER = 200;
+    public static final int LIST_WORDS_NORMAL = 0;
+    public static final int LIST_WORDS_FUZZY = 1;
+    public static final int LIST_WORDS_PATTERN = 2;
+    public static final int LIST_WORDS_FULLTEXT = 3;
+    public static boolean hasStoragePermission = false;
+    //
+    public static boolean active = false;
+    private static Handler mProgressCBHandler = null;
+    FragmentManager mFragmentManager;
+    Toolbar mToolbar;
+    // UX
+    DictSpeechEng mSpeechEng;
+    QDictions mDictions;
+    int mCurrentNavPosition = -1;
+    String tempKeyword;
+    int tempPos;
+    boolean onNavig = false;
     private CanvasTransformer mTransformer = new CanvasTransformer() {
 
         @Override
@@ -76,79 +95,66 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             canvas.scale(percentOpen, 1, 0, 0);
         }
     };
-
-    // const
-    public static final int REQUEST_CODE = 101;
-
-    public static final int POPUPWORDSLIST_TIMER = 200;
-
-    public static final int LIST_WORDS_NORMAL = 0;
-
-    public static final int LIST_WORDS_FUZZY = 1;
-
-    public static final int LIST_WORDS_PATTERN = 2;
-
-    public static final int LIST_WORDS_FULLTEXT = 3;
-
     // UI
     private SlidingUpPanelLayout mLayout;
-
-    FragmentManager mFragmentManager;
-
-    FragmentTransaction mTransaction;
-
-    Toolbar mToolbar;
-
-    public static boolean hasStoragePermission = false;
-
     // dict
     private DictEditTextView mDictKeywordView = null;
-
     private TextView mInfoSearch;
-
-    private LinearLayout mInputLayout;
-
     private DropDownListView mDictKeywordsPopupList = null;
-
-    private ImageButton mActionMenu, mActionVoice, mActionWordsList;
-
+    private ImageButton mActionMenu, mActionWordsList;
     private ProgressDialog mProgressDialog = null;
-
-    // UX
-    DictSpeechEng mSpeechEng;
-
-    QDictions mDictions;
-
-    private ListWordsTask mListWordsTask = null;
-
     private Handler mPopupWordsListHandler = null;
-
-    private static Handler mProgressCBHandler = null;
-
     // keyboard handler
     private Handler mShowKeyboardHander = null;
-
     private Runnable mShowKeyboarRunable = null;
-
-    //
-    public static boolean active = false;
-
     private Runnable mPopupWordsListRunnable = null;
-
     private boolean mReplaceKeyword = false;
-
     private boolean mIsTaskRunning = false;
-
-    int mCurrentNavPosition = -1;
-
     private ClipboardManager mClipboardManager = null;
-
     private String mClipboardText = "";
+
+    private OnPrimaryClipChangedListener mClipboardListener = null;
+
+    BroadcastReceiver mUIReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int id = intent.getIntExtra(ACTION_UPDATE_KEY, -1);
+            if (id == RECV_UI.SELECT_DICT) {
+                backMainMenuFragment();
+            } else if (id == RECV_UI.CHANGE_THEME || id == RECV_UI.CHANGE_FONT) {
+                stopService();
+                Utils.changeToTheme(MainActivity.this);
+            } else if (id == RECV_UI.SEARCH_WORD) {
+                String keyword = intent.getStringExtra("receiver_keyword");
+                if (!TextUtils.isEmpty(keyword)) {
+                    mDictKeywordView.setText(keyword);
+                    showSearchContent();
+                }
+            } else if (id == RECV_UI.RELOAD_DICT) {
+                mDictions.initDicts();
+            } else if (id == RECV_UI.RUN_SERVICE) {
+                startService();
+            } else if (id == RECV_UI.CHANGE_FRAG) {
+                int pos = intent.getIntExtra("receiver_frag_position", NAVIG.RECENT);
+                if (mCurrentNavPosition == NAVIG.SEARCH) {
+                    setFragment("", pos);
+                }
+                mCurrentNavPosition = pos;
+            }
+        }
+    };
+
+    public static void lookupProgressCB(int progress) {
+        Message m = Message.obtain();
+        m.arg1 = progress;
+        m.setTarget(mProgressCBHandler);
+        m.sendToTarget();
+    }
 
     public void initClipboard() {
         if (Utils.hasHcAbove()) {
             if (mClipboardManager == null) {
-                mClipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
             }
         }
@@ -163,14 +169,8 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         }
     }
 
-    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
-        public void onPrimaryClipChanged() {
-            clipboardCheck();
-        }
-    };
-
     private void clipboardCheck() {
-        String clipboardText = "";
+        String clipboardText;
         CharSequence s = null;
         if (mClipboardManager != null && mClipboardManager.hasPrimaryClip()) {
             s = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
@@ -199,12 +199,12 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         checkPermission(REQUEST_STORAGE_CODE);
         // UI: set the Above View
         setContentView(R.layout.content_frame);
-        mToolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         mToolbar.setTitle(null);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        mLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(PanelState.HIDDEN);
         mLayout.setTouchEnabled(false);
         mFragmentManager = getSupportFragmentManager();
@@ -214,16 +214,17 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         sm.setBehindScrollScale(0.0f);
         sm.setBehindCanvasTransformer(mTransformer);
         // layout_drag
-        mActionMenu = (ImageButton)findViewById(R.id.action_menu);
-        mActionVoice = (ImageButton)findViewById(R.id.action_voice);
-        mActionWordsList = (ImageButton)findViewById(R.id.action_wordslist);
+        mActionMenu = (ImageButton) findViewById(R.id.action_menu);
+        ImageButton mActionVoice = (ImageButton) findViewById(R.id.action_voice);
+        mActionWordsList = (ImageButton) findViewById(R.id.action_wordslist);
         mActionMenu.setOnClickListener(this);
         mActionVoice.setOnClickListener(this);
         mActionWordsList.setOnClickListener(this);
-        mInputLayout = (LinearLayout)findViewById(R.id.layout_input);
-        mInfoSearch = (TextView)findViewById(R.id.tv_info_search);
+        LinearLayout inputLayout;
+        inputLayout = (LinearLayout) findViewById(R.id.layout_input);
+        mInfoSearch = (TextView) findViewById(R.id.tv_info_search);
         mDictKeywordView = new DictEditTextView(this);
-        mInputLayout.addView(mDictKeywordView, 0,
+        inputLayout.addView(mDictKeywordView, 0,
                 new LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
         initDropList();
 
@@ -261,6 +262,14 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                         SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
             }
         };
+        if (Utils.hasHcAbove()){
+            mClipboardListener = new OnPrimaryClipChangedListener() {
+                public void onPrimaryClipChanged() {
+                    clipboardCheck();
+                }
+            };
+
+        }
         startService();
         registerReceiver(mUIReceiver, new IntentFilter(ACTION_UPDATE_UI));
     }
@@ -299,7 +308,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         if (mCurrentNavPosition == NAVIG.SEARCH) {
             Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (fragment instanceof SearchFragment) {
-                SearchFragment fg = ((SearchFragment)fragment);
+                SearchFragment fg = ((SearchFragment) fragment);
                 if (fg.isSearch()) {
                     outState.putString("search_fragment_keyword", fg.getKeyword());
                 }
@@ -312,7 +321,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     }
 
     private void initDropList() {
-        mDictKeywordsPopupList = (DropDownListView)findViewById(R.id.drop_list);
+        mDictKeywordsPopupList = (DropDownListView) findViewById(R.id.drop_list);
         mDictKeywordsPopupList.setFocusable(true);
         mDictKeywordsPopupList.setFocusableInTouchMode(true);
         mDictKeywordsPopupList.setListSelectionHidden(false);
@@ -321,12 +330,12 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                TextView textView = (TextView)v;
+                TextView textView = (TextView) v;
                 String keyword = textView.getText().toString();
 
                 mReplaceKeyword = true; // Don't response the
-                                        // onTextChanged event this
-                                        // time.
+                // onTextChanged event this
+                // time.
 
                 mDictKeywordView.setText(keyword);
                 mInfoSearch.setVisibility(View.GONE);
@@ -385,7 +394,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     protected void onStop() {
         active = false;
         super.onStop();
-    };
+    }
 
     private void showProgressDialog() {
         mProgressDialog = new ProgressDialog(this);
@@ -401,13 +410,6 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                     }
                 });
         mProgressDialog.show();
-    }
-
-    public static void lookupProgressCB(int progress) {
-        Message m = Message.obtain();
-        m.arg1 = progress;
-        m.setTarget(mProgressCBHandler);
-        m.sendToTarget();
     }
 
     private void startKeywordsList() {
@@ -432,22 +434,16 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             }
         }
 
-        if (true == mIsTaskRunning) // One task is running.
+        if (!mIsTaskRunning) // One task is running.
         {
-            return;
-        } else {
             mIsTaskRunning = true;
             if (LIST_WORDS_NORMAL != listType)
                 showProgressDialog();
-            mListWordsTask = new ListWordsTask(listType);
+            ListWordsTask mListWordsTask = new ListWordsTask(listType);
             if (Build.VERSION.SDK_INT > 10)
-                mListWordsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[] {
-                        keyword
-                });
+                mListWordsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, keyword);
             else {
-                mListWordsTask.execute(new String[] {
-                        keyword
-                });
+                mListWordsTask.execute(keyword);
             }
         }
     }
@@ -492,37 +488,8 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    BroadcastReceiver mUIReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int id = intent.getIntExtra(ACTION_UPDATE_KEY, -1);
-            if (id == RECV_UI.SELECT_DICT) {
-                backMainMenuFragment();
-            } else if (id == RECV_UI.CHANGE_THEME || id == RECV_UI.CHANGE_FONT) {
-                stopService();
-                Utils.changeToTheme(MainActivity.this);
-            } else if (id == RECV_UI.SEARCH_WORD) {
-                String keyword = intent.getStringExtra("receiver_keyword");
-                if (!TextUtils.isEmpty(keyword)) {
-                    mDictKeywordView.setText(keyword);
-                    showSearchContent();
-                }
-            } else if (id == RECV_UI.RELOAD_DICT) {
-                mDictions.initDicts();
-            } else if (id == RECV_UI.RUN_SERVICE) {
-                startService();
-            } else if (id == RECV_UI.CHANGE_FRAG) {
-                int pos = intent.getIntExtra("receiver_frag_position", NAVIG.RECENT);
-                if (mCurrentNavPosition == NAVIG.SEARCH) {
-                    setFragment("", pos);
-                }
-                mCurrentNavPosition = pos;
-            }
-        }
-    };
-
     private void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         // check if no view has focus:
         View view = getCurrentFocus();
         if (view != null) {
@@ -534,18 +501,18 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         String keyword = mDictKeywordView.getText().toString().trim();
         Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (fragment instanceof SearchFragment) {
-            SearchFragment sFrag = (SearchFragment)fragment;
+            SearchFragment sFrag = (SearchFragment) fragment;
             sFrag.setDictions(mDictions);
             sFrag.setSpeechEng(mSpeechEng);
             sFrag.setKeyword(keyword);
             mCurrentNavPosition = NAVIG.SEARCH;
         } else {
             try {
-                mTransaction = mFragmentManager.beginTransaction();
                 Fragment searchFrag = SearchFragment.newInstance(mSpeechEng, mDictions, keyword, true);
-                mTransaction.replace(R.id.content_frame, searchFrag).commit();
+                mFragmentManager.beginTransaction().replace(R.id.content_frame, searchFrag).commit();
                 mCurrentNavPosition = NAVIG.SEARCH;
             } catch (IllegalStateException ex) {
+                Log.e("MainActivity", ex.toString());
             }
         }
 
@@ -567,6 +534,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         }
     }
 
+    // call from layout xml
     public void onActionButtonClick(View v) {
         if (mLayout != null) {
             mLayout.setPanelState(PanelState.EXPANDED);
@@ -613,15 +581,8 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         }
     }
 
-    String tempKeyword;
-
-    int tempPos;
-
-    boolean onNavig = false;
-
     public void setFragment(String keyword, int position) {
-        mTransaction = mFragmentManager.beginTransaction();
-        Fragment fragment = null;
+        Fragment fragment;
         switch (position) {
             case NAVIG.HOME:
             case NAVIG.SEARCH:
@@ -632,7 +593,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 fragment = this.getSupportFragmentManager().findFragmentById(R.id.content_frame);
                 boolean favorite = (position == NAVIG.FAVORITE);
                 if (fragment instanceof RecentFragment) {
-                    ((RecentFragment)fragment).setFavorite(favorite);
+                    ((RecentFragment) fragment).setFavorite(favorite);
                 } else {
                     fragment = new RecentFragment();
                     Bundle b = new Bundle();
@@ -645,9 +606,74 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 break;
         }
         if (fragment != null) {
-            mTransaction.replace(R.id.content_frame, fragment).commit();
+            mFragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             mCurrentNavPosition = position;
         }
+    }
+
+    private void showKeywordsList(String[] strWordsList) {
+        MyArrayAdapter keywordsAdapter = new MyArrayAdapter(this, strWordsList);
+        mDictKeywordsPopupList.setAdapter(keywordsAdapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                String keyword = results.get(0);
+                if (!TextUtils.isEmpty(keyword)) {
+                    mDictKeywordView.setText(keyword);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showSearchContent();
+                        }
+                    });
+
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.action_menu:
+                toggle();
+                break;
+            case R.id.action_voice:
+                startVoiceRecognition();
+                break;
+            case R.id.action_wordslist:
+                startKeywordsList();
+                break;
+            case R.id.action_share:
+                startActivity(Utils.getIntentShareData(MainActivity.class));
+                break;
+            case R.id.action_about:
+                showDialog(DIALOG.ABOUT);
+                break;
+            default:
+                break;
+        }
+    }
+
+    // / for menu
+    @SuppressWarnings("deprecation")
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DIALOG.ABOUT:
+                return Utils.createAboutDialog(this);
+            case DIALOG.CHANGE_LOG:
+                return Utils.createWhatsNewDialog(this);
+            default:
+                break;
+        }
+        return super.onCreateDialog(id);
     }
 
     // Extend classes.
@@ -704,8 +730,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                     mDictKeywordsPopupList.setListSelectionHidden(false);
                     return true;
             }
-            if (KeyEvent.KEYCODE_SEARCH == keyCode || KeyEvent.KEYCODE_ENTER == keyCode
-                    || KeyEvent.KEYCODE_DPAD_CENTER == keyCode) {
+            if (KeyEvent.KEYCODE_ENTER == keyCode) {
                 if (type == LIST_WORDS_NORMAL) {
                     showSearchContent();
                 } else {
@@ -721,7 +746,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             if (mPopupWordsListHandler != null)
                 mPopupWordsListHandler.removeCallbacks(mPopupWordsListRunnable);
 
-            if (mReplaceKeyword == true) {
+            if (mReplaceKeyword) {
                 mReplaceKeyword = false;
             } else {
                 String keyword = text.toString();
@@ -794,71 +819,6 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             }
             showKeywordsList(strWordsList);
         }
-    }
-
-    private void showKeywordsList(String[] strWordsList) {
-        MyArrayAdapter keywordsAdapter = new MyArrayAdapter(this, strWordsList);
-        mDictKeywordsPopupList.setAdapter(keywordsAdapter);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                String keyword = results.get(0);
-                if (!TextUtils.isEmpty(keyword)) {
-                    mDictKeywordView.setText(keyword);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showSearchContent();
-                        }
-                    });
-
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.action_menu:
-                toggle();
-                break;
-            case R.id.action_voice:
-                startVoiceRecognition();
-                break;
-            case R.id.action_wordslist:
-                startKeywordsList();
-                break;
-            case R.id.action_share:
-                startActivity(Utils.getIntentShareData(MainActivity.class));
-                break;
-            case R.id.action_about:
-                showDialog(DIALOG.ABOUT);
-                break;
-            default:
-                break;
-        }
-    }
-
-    // / for menu
-    @SuppressWarnings("deprecation")
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DIALOG.ABOUT:
-                return Utils.createAboutDialog(this);
-            case DIALOG.CHANGE_LOG:
-                return Utils.createWhatsNewDialog(this);
-            default:
-                break;
-        }
-        return super.onCreateDialog(id);
     }
 
 }

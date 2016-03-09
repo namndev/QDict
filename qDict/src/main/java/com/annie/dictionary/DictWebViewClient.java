@@ -1,9 +1,4 @@
-
 package com.annie.dictionary;
-
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.WebViewClientCallback;
-import com.mmt.widget.M2tToast;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,6 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.WebViewClientCallback;
+import com.mmt.widget.M2tToast;
 
 public class DictWebViewClient extends WebViewClient {
 
@@ -36,7 +35,7 @@ public class DictWebViewClient extends WebViewClient {
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(myIntent);
             } catch (ActivityNotFoundException e) {
-                M2tToast.makeText(mContext, "No application can handle this request. Please install a webbrowser",
+                M2tToast.makeText(mContext, "No application can handle this request. Please install a web browser",
                         M2tToast.LENGTH_LONG).show();
             }
         }

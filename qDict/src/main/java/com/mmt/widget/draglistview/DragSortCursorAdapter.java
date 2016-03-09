@@ -1,10 +1,4 @@
-
 package com.mmt.widget.draglistview;
-
-import java.util.ArrayList;
-
-import com.mmt.widget.DragSortListView;
-import com.mmt.widget.DragSortListView.DragSortListener;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +7,11 @@ import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+
+import com.mmt.widget.DragSortListView;
+import com.mmt.widget.DragSortListView.DragSortListener;
+
+import java.util.ArrayList;
 
 /**
  * A subclass of {@link android.widget.CursorAdapter} that provides reordering
@@ -51,7 +50,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
 
     /**
      * Swaps Cursor and clears list-Cursor mapping.
-     * 
+     *
      * @see android.widget.CursorAdapter#swapCursor(android.database.Cursor)
      */
     @Override
@@ -63,7 +62,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
 
     /**
      * Changes Cursor and clears list-Cursor mapping.
-     * 
+     *
      * @see android.widget.CursorAdapter#changeCursor(android.database.Cursor)
      */
     @Override
@@ -109,7 +108,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
      * On drop, this updates the mapping between Cursor positions and ListView
      * positions. The Cursor is unchanged. Retrieve the current mapping with
      * {@link getCursorPositions()}.
-     * 
+     *
      * @see DragSortListView.DropListener#drop(int, int)
      */
     @Override
@@ -137,7 +136,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
      * On remove, this updates the mapping between Cursor positions and ListView
      * positions. The Cursor is unchanged. Retrieve the current mapping with
      * {@link getCursorPositions()}.
-     * 
+     *
      * @see DragSortListView.RemoveListener#remove(int)
      */
     @Override
@@ -193,7 +192,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
     /**
      * Get the Cursor position mapped to by the provided list position (given
      * all previously handled drag-sort operations).
-     * 
+     *
      * @param position List position
      * @return The mapped-to Cursor position
      */
@@ -218,7 +217,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
      * Get the list position mapped to by the provided Cursor position. If the
      * provided Cursor position has been removed by a drag-sort, this returns
      * {@link #REMOVED}.
-     * 
+     *
      * @param cursorPosition A Cursor position
      * @return The mapped-to list position or REMOVED
      */

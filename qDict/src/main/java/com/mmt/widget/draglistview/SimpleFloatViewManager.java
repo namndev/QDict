@@ -1,7 +1,4 @@
-
 package com.mmt.widget.draglistview;
-
-import com.mmt.widget.DragSortListView;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.mmt.widget.DragSortListView;
 
 /**
  * Simple implementation of the FloatViewManager class. Uses list items as they
@@ -81,7 +80,7 @@ public class SimpleFloatViewManager implements DragSortListView.FloatViewManager
      */
     @Override
     public void onDestroyFloatView(View floatView) {
-        ((ImageView)floatView).setImageDrawable(null);
+        ((ImageView) floatView).setImageDrawable(null);
 
         mFloatBitmap.recycle();
         mFloatBitmap = null;

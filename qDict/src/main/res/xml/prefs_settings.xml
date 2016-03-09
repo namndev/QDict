@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/prefs_category_title_general" >
+    <PreferenceCategory android:title="@string/prefs_category_title_general">
         <Preference
             android:key="@string/prefs_key_source"
-            android:persistent="false"
+            android:persistent="true"
             android:summary="@string/prefs_summary_source"
-            android:title="@string/prefs_title_source" />
+            android:title="@string/prefs_title_source"/>
 
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/languages"
             android:entryValues="@array/language_values"
             android:key="@string/prefs_key_languages"
-            android:title="@string/prefs_title_languages" />
+            android:title="@string/prefs_title_languages"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_using_tts"
             android:summary="@string/prefs_title_tts_summary"
-            android:title="@string/prefs_title_tts" />
+            android:title="@string/prefs_title_tts"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_capture_notification"
             android:summary="@string/prefs_title_notification_summary"
-            android:title="@string/prefs_title_notification" />
+            android:title="@string/prefs_title_notification"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/prefs_key_using_capture"
             android:summary="@string/prefs_summary_capture"
-            android:title="@string/prefs_title_capture" />
+            android:title="@string/prefs_title_capture"/>
 
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/max_recent_words"
             android:entryValues="@array/max_recent_words"
             android:key="@string/prefs_key_max_recent_word"
-            android:title="@string/prefs_title_max_favorite_word" />
+            android:title="@string/prefs_title_max_favorite_word"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/prefs_category_title_theme" >
+    <PreferenceCategory android:title="@string/prefs_category_title_theme">
         <ListPreference
             android:defaultValue="3"
             android:entries="@array/fonts"
             android:entryValues="@array/fonts_value"
             android:key="@string/prefs_key_font_text"
-            android:title="@string/prefs_title_font_text" />
+            android:title="@string/prefs_title_font_text"/>
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/themes_lables"
             android:entryValues="@array/themes_values"
             android:key="@string/prefs_key_theme"
-            android:title="@string/prefs_title_theme" />
+            android:title="@string/prefs_title_theme"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,28 +1,25 @@
-
 package com.annie.dictionary;
-
-import java.util.Locale;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.text.TextUtils;
 
-public class DictSpeechEng {
-    private TextToSpeech mTts = null;
+import java.util.Locale;
 
+public class DictSpeechEng {
+    private static DictSpeechEng mSpeechEng;
+    private TextToSpeech mTts = null;
     private boolean mCanSpeak = false;
 
-    private static DictSpeechEng mSpeechEng;
+    private DictSpeechEng(Context context) {
+        mTts = new TextToSpeech(context.getApplicationContext(), new TtsInitListener());
+    }
 
     public static DictSpeechEng getInstance(Context context) {
         if (mSpeechEng == null) {
             mSpeechEng = new DictSpeechEng(context);
         }
         return mSpeechEng;
-    }
-
-    private DictSpeechEng(Context context) {
-        mTts = new TextToSpeech(context.getApplicationContext(), new TtsInitListener());
     }
 
     public void destroy() {
@@ -48,7 +45,7 @@ public class DictSpeechEng {
 
     @SuppressWarnings("deprecation")
     public int speak(String text) {
-        if (null != text && true == mCanSpeak && mTts != null) {
+        if (null != text && mCanSpeak && mTts != null) {
             mTts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
             return text.length();
         }
@@ -65,13 +62,8 @@ public class DictSpeechEng {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (status == TextToSpeech.SUCCESS) {
-                        int result = mTts.setLanguage(Locale.US);
-                        if (result == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                            mCanSpeak = true;
-                        } else {
-                            mCanSpeak = false;
-                        }
+                    if (status == TextToSpeech.SUCCESS && mTts.setLanguage(Locale.US) == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                        mCanSpeak = true;
                     } else {
                         // Initialization failed.
                         mCanSpeak = false;

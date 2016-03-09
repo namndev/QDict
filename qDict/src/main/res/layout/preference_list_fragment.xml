@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <ListView
         android:id="@android:id/list"
@@ -16,7 +16,7 @@
         android:paddingRight="@dimen/preference_fragment_padding_side"
         android:paddingTop="@dimen/preference_fragment_padding_bottom"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarStyle="@integer/preference_fragment_scrollbarStyle" />
+        android:scrollbarStyle="@integer/preference_fragment_scrollbarStyle"/>
 
     <com.mmt.widget.QTextView
         android:id="@android:id/empty"
@@ -24,6 +24,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="@dimen/preference_fragment_padding_side"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

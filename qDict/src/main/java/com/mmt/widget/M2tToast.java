@@ -1,7 +1,4 @@
-
 package com.mmt.widget;
-
-import com.annie.dictionary.R;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annie.dictionary.R;
+
 public class M2tToast extends Toast {
 
     private static int SHADOW_TEXTVIEW = 1;
@@ -20,22 +19,21 @@ public class M2tToast extends Toast {
     private static M2tToast mInstance;
 
     private static int mToastYOffset;
+    private static TextView tvMessage;
 
     public M2tToast(Context context) {
         super(context);
     }
-
-    private static TextView tvMessage;
 
     public static M2tToast makeText(Context context, CharSequence text, int duration) {
         if (mInstance == null) {
             mInstance = new M2tToast(context);
         }
 
-        LayoutInflater inflate = (LayoutInflater)context.getApplicationContext()
+        LayoutInflater inflate = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.transient_notification, null);
-        tvMessage = (TextView)v.findViewById(android.R.id.message);
+        tvMessage = (TextView) v.findViewById(android.R.id.message);
         tvMessage.setGravity(Gravity.CENTER_VERTICAL);
         tvMessage.setText(text);
         tvMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
@@ -49,12 +47,12 @@ public class M2tToast extends Toast {
         return mInstance;
     }
 
-    public void setTypeface(Typeface typeface) {
-        tvMessage.setTypeface(typeface);
-    }
-
     public static M2tToast makeText(Context context, int resId, int duration) throws Resources.NotFoundException {
         return makeText(context, context.getResources().getText(resId), duration);
+    }
+
+    public void setTypeface(Typeface typeface) {
+        tvMessage.setTypeface(typeface);
     }
 
     public M2tToast setToastOnTop() {

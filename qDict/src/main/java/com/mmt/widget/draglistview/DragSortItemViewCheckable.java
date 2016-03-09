@@ -1,4 +1,3 @@
-
 package com.mmt.widget.draglistview;
 
 import android.content.Context;
@@ -24,7 +23,7 @@ public class DragSortItemViewCheckable extends DragSortItemView implements Check
     public boolean isChecked() {
         View child = getChildAt(0);
         if (child instanceof Checkable)
-            return ((Checkable)child).isChecked();
+            return ((Checkable) child).isChecked();
         else
             return false;
     }
@@ -33,13 +32,13 @@ public class DragSortItemViewCheckable extends DragSortItemView implements Check
     public void setChecked(boolean checked) {
         View child = getChildAt(0);
         if (child instanceof Checkable)
-            ((Checkable)child).setChecked(checked);
+            ((Checkable) child).setChecked(checked);
     }
 
     @Override
     public void toggle() {
         View child = getChildAt(0);
         if (child instanceof Checkable)
-            ((Checkable)child).toggle();
+            ((Checkable) child).toggle();
     }
 }

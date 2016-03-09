@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="action_search">查询中</string>
 
@@ -59,10 +59,10 @@
     <string name="prefs_title_languages">语言</string>
 
     <plurals name="words_count">
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 关键词</item>
+        <item quantity="other"><xliff:g example="137" id="number">%d</xliff:g> 关键词</item>
     </plurals>
     <plurals name="items_count">
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> 项目</item>
+        <item quantity="other"><xliff:g example="137" id="number">%d</xliff:g> 项目</item>
     </plurals>
     <!-- about -->
     <string name="app_license">Apache, 版本 2.0</string>

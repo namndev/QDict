@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navi_frame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorPrimary" >
+<RelativeLayout android:id="@+id/navi_frame"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary">
 
     <ImageView
         android:id="@+id/img_header"
@@ -12,8 +12,8 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:visibility="gone"
-        android:src="@drawable/bamboo" />
+        android:src="@drawable/bamboo"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/menu_frame"
@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_footer"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@+id/img_header" />
+        android:layout_below="@+id/img_header"/>
 
     <LinearLayout
         android:id="@+id/layout_footer"
@@ -29,7 +29,7 @@
         android:layout_height="@dimen/second_bar_height"
         android:layout_alignParentBottom="true"
         android:background="?attr/colorPrimaryDark"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <com.mmt.widget.QButton
             android:id="@+id/action_about"
@@ -43,12 +43,12 @@
             android:onClick="onClick"
             android:paddingLeft="@dimen/super_padding"
             android:text="@string/about_lable"
-            android:textColor="@color/mmt_white" />
+            android:textColor="@color/mmt_white"/>
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/mmt_grey_500" />
+            android:background="@color/mmt_grey_500"/>
 
         <com.mmt.widget.QButton
             android:id="@+id/action_share"
@@ -62,7 +62,7 @@
             android:onClick="onClick"
             android:paddingLeft="@dimen/super_padding"
             android:text="@string/share_lable"
-            android:textColor="@color/mmt_white" />
+            android:textColor="@color/mmt_white"/>
     </LinearLayout>
 
 </RelativeLayout>

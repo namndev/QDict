@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="action_search">Búsqueda</string>
 
@@ -27,15 +27,15 @@
     <!-- dicitonary -->
     <plurals name="matches_found">
         <item quantity="one">1 coincidencia</item>
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> coincidencias</item>
+        <item quantity="other"><xliff:g example="137" id="number">%d</xliff:g> coincidencias</item>
     </plurals>
     <plurals name="words_count">
         <item quantity="one">1 palabra</item>
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> palabras</item>
+        <item quantity="other"><xliff:g example="137" id="number">%d</xliff:g> palabras</item>
     </plurals>
     <plurals name="items_count">
         <item quantity="one">1 ítem</item>
-        <item quantity="other"><xliff:g id="number" example="137">%d</xliff:g> ítems</item>
+        <item quantity="other"><xliff:g example="137" id="number">%d</xliff:g> ítems</item>
     </plurals>
 
     <string name="recent_lable">Recientes</string>

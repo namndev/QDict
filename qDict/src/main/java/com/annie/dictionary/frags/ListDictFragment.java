@@ -1,18 +1,4 @@
-
 package com.annie.dictionary.frags;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.annie.dictionary.MainActivity;
-import com.annie.dictionary.QDictions;
-import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils;
-import com.annie.dictionary.utils.Utils.Def;
-import com.annie.dictionary.utils.Utils.RECV_UI;
-import com.mmt.widget.DragSortListView;
-import com.mmt.widget.draglistview.DragSortController;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -34,91 +20,28 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.annie.dictionary.MainActivity;
+import com.annie.dictionary.QDictions;
+import com.annie.dictionary.R;
+import com.annie.dictionary.utils.Utils;
+import com.annie.dictionary.utils.Utils.Def;
+import com.annie.dictionary.utils.Utils.RECV_UI;
+import com.mmt.widget.DragSortListView;
+import com.mmt.widget.draglistview.DragSortController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ListDictFragment extends ListFragment implements Def, OnItemClickListener {
 
-    public ListDictFragment() {
-
-    }
-    public static final ListDictFragment newInstance(QDictions dictions){
-        ListDictFragment f = new ListDictFragment();
-        f.mDictions = dictions;
-        return f;
-    }
-
-    public void setDictions(QDictions dictions) {
-        mDictions = dictions;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.layout_list_dict, container, false);
-        mDictsPath = Utils.getRootFolder() + Def.DICT_FOLDER;
-        mCheckBox = (CheckBox)root.findViewById(R.id.check_all);
-        mEmptyDictLayout = (RelativeLayout)root.findViewById(R.id.layout_empty);
-        mEmptyDictTv = (TextView)root.findViewById(R.id.tv_empty);
-        mDictCountTv = (TextView)root.findViewById(R.id.tv_dict_count);
-        mGotoFTPServer = (Button)root.findViewById(R.id.goto_ftp_server);
-        mGotoFTPServer.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClassName("com.m2t.ftpserver", "com.m2t.ftpserver.FTPServerActivity");
-                intent.putExtra("stay_in_folder", mDictsPath);
-                if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
-                    getActivity().startActivity(intent);
-                } else {
-                    try {
-                        Intent ftpIntent = Utils.goToFTPServer();
-                        getActivity().startActivity(ftpIntent);
-                    } catch (ActivityNotFoundException ex) {
-                        Intent ftpIntent = Utils.goToFTPServerLink();
-                        getActivity().startActivity(ftpIntent);
-                    }
-                }
-
-            }
-        });
-        mCheckBox.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mCheckBox.setChecked(mCheckBox.isChecked());
-                checked(mCheckBox.isChecked());
-                isCurrentCheckAll();
-            }
-        });
-        mBackBtn = (ImageButton)root.findViewById(R.id.action_back);
-        mBackBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
-                intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.SELECT_DICT);
-                getActivity().sendBroadcast(intent);
-            }
-        });
-        return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mSharedPreferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
-        if (mDictions == null) {
-            mDictions = new QDictions(getActivity().getApplicationContext());
-        }
-        mDictions.initDicts();
-        getDictInfo();
-        DragSortListView list = getListView();
-        mController = new MyDSController(list);
-        list.setFloatViewManager(mController);
-        list.setDragEnabled(true);
-        list.setDropListener(onDrop);
-        list.setOnItemClickListener(this);
-        mCheckBox.setChecked(isCurrentCheckAll());
-    }
-
+    String mDictsPath;
+    private ArrayList<String> mAllValueArrays;
+    private List<String> mCheckValues;
+    private QDictions mDictions;
+    private SharedPreferences mSharedPreferences;
+    private ArrayAdapter<String> mAdapter;
+    private DragSortListView mList;
     private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
         @Override
         public void drop(int from, int to) {
@@ -150,17 +73,101 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
             }
         }
     };
+    private CheckBox mCheckBox;
+    private TextView mEmptyDictTv, mDictCountTv;
+    private RelativeLayout mEmptyDictLayout;
+
+    public ListDictFragment() {
+
+    }
+
+    public static ListDictFragment newInstance(QDictions dictions) {
+        ListDictFragment f = new ListDictFragment();
+        f.mDictions = dictions;
+        return f;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.layout_list_dict, container, false);
+        SharedPreferences shares = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
+        mDictsPath = Utils.getRootDictFolder(shares) + Def.DICT_FOLDER;
+        mCheckBox = (CheckBox) root.findViewById(R.id.check_all);
+        mEmptyDictLayout = (RelativeLayout) root.findViewById(R.id.layout_empty);
+        mEmptyDictTv = (TextView) root.findViewById(R.id.tv_empty);
+        mDictCountTv = (TextView) root.findViewById(R.id.tv_dict_count);
+        Button gotoFTPServer = (Button) root.findViewById(R.id.goto_ftp_server);
+        gotoFTPServer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClassName("com.m2t.ftpserver", "com.m2t.ftpserver.FTPServerActivity");
+                intent.putExtra("stay_in_folder", mDictsPath);
+                if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
+                    getActivity().startActivity(intent);
+                } else {
+                    try {
+                        Intent ftpIntent = Utils.goToFTPServer();
+                        getActivity().startActivity(ftpIntent);
+                    } catch (ActivityNotFoundException ex) {
+                        Intent ftpIntent = Utils.goToFTPServerLink();
+                        getActivity().startActivity(ftpIntent);
+                    }
+                }
+
+            }
+        });
+        mCheckBox.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mCheckBox.setChecked(mCheckBox.isChecked());
+                checked(mCheckBox.isChecked());
+                isCurrentCheckAll();
+            }
+        });
+        ImageButton backBtn = (ImageButton) root.findViewById(R.id.action_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
+                intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.SELECT_DICT);
+                getActivity().sendBroadcast(intent);
+            }
+        });
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mSharedPreferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
+        if (mDictions == null) {
+            mDictions = new QDictions(getActivity().getApplicationContext());
+        }
+        mDictions.initDicts();
+        getDictInfo();
+        DragSortListView list = getListView();
+        DragSortController mController = new MyDSController(list);
+        list.setFloatViewManager(mController);
+        list.setDragEnabled(true);
+        list.setDropListener(onDrop);
+        list.setOnItemClickListener(this);
+        mCheckBox.setChecked(isCurrentCheckAll());
+    }
 
     @Override
     public DragSortListView getListView() {
-        return (DragSortListView)super.getListView();
+        return (DragSortListView) super.getListView();
     }
 
     private void getDictInfo() {
-        String dictAlls = "";
-        String selections = "";
+        String dictAlls;
+        String selections;
         String emptySet = "";
-        mAllInfoArrays = new ArrayList<String>();
+        ArrayList<String> mAllInfoArrays = new ArrayList<>();
         selections = mSharedPreferences.getString(Def.PREF_INDEX_CHECKED, emptySet);
         dictAlls = mSharedPreferences.getString(Def.PREF_INDEX_ALL, emptySet);
         if (dictAlls.equals("")) {
@@ -175,17 +182,14 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
             String dictName = Utils.getFileInfoName(dictPath);
             if (null == dictName)
                 continue;
-            if (null != dictName) {
-                String bookIfoPath = "";
-                bookIfoPath = dictPath + "/" + dictName + ".ifo";
-                String bookName = mDictions.getBookName(bookIfoPath);
-                mAllInfoArrays.add(bookName);
-            }
+            String bookIfoPath = dictPath + "/" + dictName + ".ifo";
+            String bookName = mDictions.getBookName(bookIfoPath);
+            mAllInfoArrays.add(bookName);
         }
         List<String> abcs = Arrays.asList(dictAllArrays);
-        mAllValueArrays = new ArrayList<String>(abcs);
+        mAllValueArrays = new ArrayList<>(abcs);
         setEmptyDict(mAllInfoArrays.isEmpty(), mDictsPath);
-        mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.listitem_check, R.id.text, mAllInfoArrays);
+        mAdapter = new ArrayAdapter<>(getActivity(), R.layout.listitem_check, R.id.text, mAllInfoArrays);
         setListAdapter(mAdapter);
         mList = getListView();
         for (String dictIndex : dictAllArrays) {
@@ -249,19 +253,15 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
             mSharedPreferences.edit().putString(Def.PREF_INDEX_CHECKED, checkValues).apply();
             String[] checks = checkValues.split(";");
             mCheckValues = Arrays.asList(checks);
-            mAdapter.notifyDataSetChanged();
-            reloadDict();
-            return;
         } else {
             for (int i = 0; i < count; i++) {
                 mList.setItemChecked(i, false);
             }
             mSharedPreferences.edit().putString(Def.PREF_INDEX_CHECKED, checkValues).apply();
-            mCheckValues = new ArrayList<String>();
-            mAdapter.notifyDataSetChanged();
-            reloadDict();
-            return;
+            mCheckValues = new ArrayList<>();
         }
+        mAdapter.notifyDataSetChanged();
+        reloadDict();
     }
 
     private boolean isCurrentCheckAll() {
@@ -304,37 +304,11 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
             int res = super.dragHandleHitPosition(ev);
             int width = mDslv.getWidth();
 
-            if ((int)ev.getX() < width / 3) {
+            if ((int) ev.getX() < width / 3) {
                 return res;
             } else {
                 return DragSortController.MISS;
             }
         }
     }
-
-    String mDictsPath;
-
-    private DragSortController mController;
-
-    private ArrayList<String> mAllInfoArrays, mAllValueArrays;
-
-    private List<String> mCheckValues;
-
-    private QDictions mDictions;
-
-    private SharedPreferences mSharedPreferences;
-
-    private ArrayAdapter<String> mAdapter;
-
-    private DragSortListView mList;
-
-    private ImageButton mBackBtn;
-
-    private CheckBox mCheckBox;
-
-    private TextView mEmptyDictTv, mDictCountTv;
-
-    private RelativeLayout mEmptyDictLayout;
-
-    private Button mGotoFTPServer;
 }
