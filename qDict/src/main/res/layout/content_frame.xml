@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <com.mmt.widget.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
-        xmlns:mmt="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        mmt:umanoDragView="@+id/dragView"
-        mmt:umanoOverlay="true"
-        mmt:umanoPanelHeight="68dp"
-        mmt:umanoParalaxOffset="100dp"
-        mmt:umanoShadowHeight="4dp">
+        app:umanoDragView="@+id/dragView"
+        app:umanoOverlay="true"
+        app:umanoPanelHeight="68dp"
+        app:umanoParalaxOffset="100dp"
+        app:umanoShadowHeight="4dp">
 
         <!-- MAIN CONTENT -->
 
@@ -24,31 +25,30 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_toolbar"
-                xmlns:mmt="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/mmt_white"
                 android:fitsSystemWindows="true"
-                mmt:theme="@style/ActionBar">
-            </androidx.appcompat.widget.Toolbar>
+                app:theme="@style/ActionBar" />
 
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/main_toolbar"/>
+                android:layout_below="@+id/main_toolbar" />
 
-            <com.mmt.widget.ActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_button"
                 style="@style/mmt_action_button_style"
+                android:background="?attr/colorPrimary"
+                android:backgroundTint="?attr/colorPrimary"
                 android:onClick="onActionButtonClick"
-                fab:button_color="?attr/colorPrimary"
-                fab:image="@drawable/ic_search"
-                fab:type="DEFAULT"/>
+                app:srcCompat="@drawable/ic_search"
+                app:borderWidth="0dp"/>
         </RelativeLayout>
         <!-- SLIDING LAYOUT -->
 
-        <include layout="@layout/layout_drag"/>
+        <include layout="@layout/layout_drag" />
     </com.mmt.widget.SlidingUpPanelLayout>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

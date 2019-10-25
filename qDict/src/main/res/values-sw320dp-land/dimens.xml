@@ -3,5 +3,4 @@
 
     <dimen name="second_bar_height">48dp</dimen>
     <dimen name="navi_menu_height">48dp</dimen>
-    <dimen name="slidingmenu_offset">320dp</dimen>
 </resources>

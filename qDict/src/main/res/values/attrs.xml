@@ -11,102 +11,51 @@
     <attr name="icon_folder" format="reference" />
     <attr name="icon_folder_back" format="reference" />
     <attr name="icon_file" format="reference" />
-    <declare-styleable name="ActionButton">
-        <attr name="type" format="enum">
-            <enum name="DEFAULT" value="0" />
-            <enum name="MINI" value="1" />
 
-            <!--Deprecated and will be removed in version 2.0.0. Use DEFAULT and MINI instead-->
-            <enum name="normal" value="0" />
-            <enum name="mini" value="1" />
-        </attr>
-        <attr name="button_color" format="color" />
-        <attr name="button_colorPressed" format="color" />
-        <attr name="shadow_radius" format="dimension" />
-        <attr name="shadow_xOffset" format="dimension" />
-        <attr name="shadow_yOffset" format="dimension" />
-        <attr name="shadow_color" format="color" />
-        <attr name="stroke_width" format="dimension" />
-        <attr name="stroke_color" format="color" />
-        <attr name="show_animation" format="reference" />
-        <attr name="hide_animation" format="reference" />
-        <attr name="image" format="reference" />
-        <attr name="image_size" format="dimension" />
-
-        <!--Deprecated and will be removed in version 2.0.0. Use show_animation and hide_animation instead-->
-        <attr name="animation_onShow" format="reference" />
-        <attr name="animation_onHide" format="reference" />
-    </declare-styleable>
     <declare-styleable name="SlidingUpPanelLayout">
-        <attr name="umanoPanelHeight" format="dimension"/>
-        <attr name="umanoShadowHeight" format="dimension"/>
-        <attr name="umanoParalaxOffset" format="dimension"/>
-        <attr name="umanoFadeColor" format="color"/>
-        <attr name="umanoFlingVelocity" format="integer"/>
-        <attr name="umanoDragView" format="reference"/>
-        <attr name="umanoOverlay" format="boolean"/>
-        <attr name="umanoClipPanel" format="boolean"/>
-        <attr name="umanoAnchorPoint" format="float"/>
+        <attr name="umanoPanelHeight" format="dimension" />
+        <attr name="umanoShadowHeight" format="dimension" />
+        <attr name="umanoParalaxOffset" format="dimension" />
+        <attr name="umanoFadeColor" format="color" />
+        <attr name="umanoFlingVelocity" format="integer" />
+        <attr name="umanoDragView" format="reference" />
+        <attr name="umanoOverlay" format="boolean" />
+        <attr name="umanoClipPanel" format="boolean" />
+        <attr name="umanoAnchorPoint" format="float" />
         <attr name="umanoInitialState" format="enum">
-            <enum name="expanded" value="0"/>
-            <enum name="collapsed" value="1"/>
-            <enum name="anchored" value="2"/>
-            <enum name="hidden" value="3"/>
+            <enum name="expanded" value="0" />
+            <enum name="collapsed" value="1" />
+            <enum name="anchored" value="2" />
+            <enum name="hidden" value="3" />
         </attr>
     </declare-styleable>
-    <declare-styleable name="SlidingMenu">
-        <attr name="mode">
-            <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
-        </attr>
-        <attr name="viewAbove" format="reference"/>
-        <attr name="viewBehind" format="reference"/>
-        <attr name="behindOffset" format="dimension"/>
-        <attr name="behindWidth" format="dimension"/>
-        <attr name="behindScrollScale" format="float"/>
-        <attr name="touchModeAbove">
-            <enum name="margin" value="0"/>
-            <enum name="fullscreen" value="1"/>
-            <enum name="none" value="2"/>
-        </attr>
-        <attr name="touchModeBehind">
-            <enum name="margin" value="0"/>
-            <enum name="fullscreen" value="1"/>
-            <enum name="none" value="2"/>
-        </attr>
-        <attr name="shadowDrawable" format="reference"/>
-        <attr name="shadowWidth" format="dimension"/>
-        <attr name="fadeEnabled" format="boolean"/>
-        <attr name="fadeDegree" format="float"/>
-        <attr name="selectorEnabled" format="boolean"/>
-        <attr name="selectorDrawable" format="reference"/>
-    </declare-styleable>
+
     <declare-styleable name="DragSortListView">
-        <attr name="collapsed_height" format="dimension"/>
-        <attr name="drag_scroll_start" format="float"/>
-        <attr name="max_drag_scroll_speed" format="float"/>
-        <attr name="float_background_color" format="color"/>
+        <attr name="collapsed_height" format="dimension" />
+        <attr name="drag_scroll_start" format="float" />
+        <attr name="max_drag_scroll_speed" format="float" />
+        <attr name="float_background_color" format="color" />
         <attr name="remove_mode">
-            <enum name="clickRemove" value="0"/>
-            <enum name="flingRemove" value="1"/>
+            <enum name="clickRemove" value="0" />
+            <enum name="flingRemove" value="1" />
         </attr>
-        <attr name="track_drag_sort" format="boolean"/>
-        <attr name="float_alpha" format="float"/>
-        <attr name="slide_shuffle_speed" format="float"/>
-        <attr name="remove_animation_duration" format="integer"/>
-        <attr name="drop_animation_duration" format="integer"/>
-        <attr name="drag_enabled" format="boolean"/>
-        <attr name="sort_enabled" format="boolean"/>
-        <attr name="remove_enabled" format="boolean"/>
+        <attr name="track_drag_sort" format="boolean" />
+        <attr name="float_alpha" format="float" />
+        <attr name="slide_shuffle_speed" format="float" />
+        <attr name="remove_animation_duration" format="integer" />
+        <attr name="drop_animation_duration" format="integer" />
+        <attr name="drag_enabled" format="boolean" />
+        <attr name="sort_enabled" format="boolean" />
+        <attr name="remove_enabled" format="boolean" />
         <attr name="drag_start_mode">
-            <enum name="onDown" value="0"/>
-            <enum name="onMove" value="1"/>
-            <enum name="onLongPress" value="2"/>
+            <enum name="onDown" value="0" />
+            <enum name="onMove" value="1" />
+            <enum name="onLongPress" value="2" />
         </attr>
-        <attr name="drag_handle_id" format="integer"/>
-        <attr name="fling_handle_id" format="integer"/>
-        <attr name="click_remove_id" format="integer"/>
-        <attr name="use_default_controller" format="boolean"/>
+        <attr name="drag_handle_id" format="integer" />
+        <attr name="fling_handle_id" format="integer" />
+        <attr name="click_remove_id" format="integer" />
+        <attr name="use_default_controller" format="boolean" />
     </declare-styleable>
 
 </resources>

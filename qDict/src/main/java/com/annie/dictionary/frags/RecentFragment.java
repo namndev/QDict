@@ -54,7 +54,7 @@ public class RecentFragment extends BaseListFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         setHasOptionsMenu(true);
     }
@@ -103,7 +103,6 @@ public class RecentFragment extends BaseListFragment {
         return getPersistentView(inflater, container, savedInstanceState, R.layout.fragment_recent);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void doInitialSetUpOfUI() {
         Bundle b = getArguments();

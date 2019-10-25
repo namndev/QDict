@@ -20,11 +20,8 @@ import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewCompat;
 
 import com.annie.dictionary.R;
-import com.mmt.widget.slidemenu.SlidingMenu;
 
 public class SlidingUpPanelLayout extends ViewGroup {
-
-    public static final String TAG = SlidingUpPanelLayout.class.getSimpleName();
 
     /**
      * Default peeking out panel height
@@ -77,7 +74,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
     /**
      * Drawable used to draw the shadow between panes.
      */
-    private final Drawable mShadowDrawable;
     private final ViewDragHelper mDragHelper;
     private final Rect mTmpRect = new Rect();
     /**
@@ -178,7 +174,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         super(context, attrs, defStyle);
 
         if (isInEditMode()) {
-            mShadowDrawable = null;
             mDragHelper = null;
             return;
         }
@@ -227,17 +222,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         }
         if (mParallaxOffset == -1) {
             mParallaxOffset = (int) (DEFAULT_PARALAX_OFFSET * density);
-        }
-        // If the shadow height is zero, don't show the shadow
-        if (mShadowHeight > 0) {
-            if (mIsSlidingUp) {
-                mShadowDrawable = SlidingMenu.getDrawable(getContext(), R.drawable.above_shadow);
-            } else {
-                mShadowDrawable = SlidingMenu.getDrawable(getContext(), R.drawable.below_shadow);
-            }
-
-        } else {
-            mShadowDrawable = null;
         }
 
         setWillNotDraw(false);
@@ -1008,28 +992,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         }
     }
 
-    @Override
-    public void draw(Canvas c) {
-        super.draw(c);
-
-        // draw the shadow
-        if (mShadowDrawable != null) {
-            final int right = mSlideableView.getRight();
-            final int top;
-            final int bottom;
-            if (mIsSlidingUp) {
-                top = mSlideableView.getTop() - mShadowHeight;
-                bottom = mSlideableView.getTop();
-            } else {
-                top = mSlideableView.getBottom();
-                bottom = mSlideableView.getBottom() + mShadowHeight;
-            }
-            final int left = mSlideableView.getLeft();
-            mShadowDrawable.setBounds(left, top, right, bottom);
-            mShadowDrawable.draw(c);
-        }
-    }
-
     /**
      * Tests scrollability within child views of v given a delta of dx.
      *
@@ -1058,7 +1020,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 }
             }
         }
-        return checkV && ViewCompat.canScrollHorizontally(v, -dx);
+        return checkV && v.canScrollHorizontally(-dx);
     }
 
     @Override

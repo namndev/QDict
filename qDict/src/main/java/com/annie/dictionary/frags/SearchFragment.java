@@ -3,7 +3,6 @@ package com.annie.dictionary.frags;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -89,8 +89,7 @@ public class SearchFragment extends Fragment {
         mTvKeyword.setText(mKeyword);
         if (mMenu != null) {
             onCreateOptionsMenu(mMenu, mMenuInflater);
-            if (Build.VERSION.SDK_INT > 10)
-                getActivity().invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
         showSearchContent();
     }
@@ -145,10 +144,10 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.layout_search, container, false);
-        mDictBackBtn = (ImageButton) root.findViewById(R.id.back_word);
-        mTvKeyword = (TextView) root.findViewById(R.id.tv_title);
-        mSpeakBtn = (ImageButton) root.findViewById(R.id.action_speak);
-        mDictContentView = (WebView) root.findViewById(R.id.dictContentView);
+        mDictBackBtn = root.findViewById(R.id.back_word);
+        mTvKeyword = root.findViewById(R.id.tv_title);
+        mSpeakBtn = root.findViewById(R.id.action_speak);
+        mDictContentView = root.findViewById(R.id.dictContentView);
         DictWebViewClient webclient = new DictWebViewClient(getActivity().getApplicationContext(),
                 new MyWebViewClientCallback());
         mDictContentView.setWebViewClient(webclient);
@@ -159,35 +158,24 @@ public class SearchFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // /
-        mDictBackBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mCurrentHisIndex++;
-                String text = mWordsFileUtilsHis.getBeforeWord(mCurrentHisIndex);
-                if (!TextUtils.isEmpty(text)) {
-                    mBackClick = true;
-                    mKeyword = text;
-                    mTvKeyword.setText(mKeyword);
-                    if (mMenu != null) {
-                        onCreateOptionsMenu(mMenu, mMenuInflater);
-                        if (Build.VERSION.SDK_INT > 10)
-                            getActivity().invalidateOptionsMenu();
-                    }
-                    showSearchContent();
+        mDictBackBtn.setOnClickListener(v -> {
+            mCurrentHisIndex++;
+            String text = mWordsFileUtilsHis.getBeforeWord(mCurrentHisIndex);
+            if (!TextUtils.isEmpty(text)) {
+                mBackClick = true;
+                mKeyword = text;
+                mTvKeyword.setText(mKeyword);
+                if (mMenu != null) {
+                    onCreateOptionsMenu(mMenu, mMenuInflater);
+                    getActivity().invalidateOptionsMenu();
                 }
-                if (!mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
-                    mDictBackBtn.setVisibility(View.INVISIBLE);
-                }
+                showSearchContent();
+            }
+            if (!mWordsFileUtilsHis.canBackSearch(mCurrentHisIndex + 1)) {
+                mDictBackBtn.setVisibility(View.INVISIBLE);
             }
         });
-        mSpeakBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mSpeechEng.speak(mKeyword.trim());
-            }
-        });
+        mSpeakBtn.setOnClickListener(v -> mSpeechEng.speak(mKeyword.trim()));
         return root;
     }
 
@@ -196,7 +184,7 @@ public class SearchFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
 
-        if (mDictions == null && MainActivity.hasStoragePermission) {
+        if (mDictions == null && MainActivity.Companion.getHasStoragePermission()) {
             mDictions = new QDictions(getActivity());
             mDictions.initDicts();
         }
@@ -225,7 +213,7 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.search_menu, menu);

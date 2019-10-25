@@ -28,7 +28,7 @@ public class QDictEng {
 
     // This function is called in JNI C code, it must be 'static' function.
     private static void lookupProgressCB(int progress) {
-        MainActivity.lookupProgressCB(progress);
+        MainActivity.Companion.lookupProgressCB(progress);
     }
 
     // -----------------------------------------------------------------------------------------------------//

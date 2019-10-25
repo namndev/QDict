@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/navi_menu_height"
-              android:orientation="horizontal">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navi_menu_height">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/row_icon"
         android:layout_width="@dimen/navi_menu_height"
         android:layout_height="@dimen/navi_menu_height"
         android:contentDescription="@string/app_name"
         android:padding="10dp"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.mmt.widget.QTextView
         android:id="@+id/row_title"
@@ -22,6 +25,10 @@
         android:padding="10dp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/mmt_white"/>
+        android:textColor="@color/mmt_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/row_icon"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

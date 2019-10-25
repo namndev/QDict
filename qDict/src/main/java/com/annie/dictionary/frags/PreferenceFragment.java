@@ -1,5 +1,6 @@
 package com.annie.dictionary.frags;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,11 +57,11 @@ public abstract class PreferenceFragment extends Fragment
         }
 
     };
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
                 case MSG_BIND_PREFERENCES:
                     bindPreferences();
                     break;

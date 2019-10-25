@@ -10,11 +10,11 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.SwitchPreference;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -45,7 +45,7 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
     private SharedPreferences mSharedPreferences;
     private Preference mPrefSource;
     private ListPreference mFontPreference, mThemePreference, mMaxFavPreference, mLangPreference;
-    private CheckBoxPreference mTTSPref, mNotifPref, mUseCapture;
+    private SwitchPreference mTTSPref, mNotifPref, mUseCapture;
     private int mCurrentFontIndex = 0;
     private int mCurrentThemeIndex = 0;
     private FragmentActivity activity;
@@ -99,14 +99,14 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
         mThemePreference.setOnPreferenceChangeListener(this);
         mMaxFavPreference = (ListPreference) findPreference(getString(R.string.prefs_key_max_recent_word));
         mMaxFavPreference.setOnPreferenceChangeListener(this);
-        mTTSPref = (CheckBoxPreference) findPreference(getResources().getString(R.string.prefs_key_using_tts));
+        mTTSPref = (SwitchPreference) findPreference(getResources().getString(R.string.prefs_key_using_tts));
         mTTSPref.setOnPreferenceChangeListener(this);
         mLangPreference = (ListPreference) findPreference(getString(R.string.prefs_key_languages));
         mLangPreference.setOnPreferenceChangeListener(this);
-        mNotifPref = (CheckBoxPreference) findPreference(
+        mNotifPref = (SwitchPreference) findPreference(
                 getResources().getString(R.string.prefs_key_capture_notification));
         mNotifPref.setOnPreferenceChangeListener(this);
-        mUseCapture = (CheckBoxPreference) findPreference(getString(R.string.prefs_key_using_capture));
+        mUseCapture = (SwitchPreference) findPreference(getString(R.string.prefs_key_using_capture));
         mUseCapture.setOnPreferenceChangeListener(this);
         mLangValues = getResources().getStringArray(R.array.language_values);
         initInfo();

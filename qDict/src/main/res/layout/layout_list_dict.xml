@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/navi_menu_height"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/preference_fragment_padding_side"
+        android:layout_marginStart="@dimen/preference_fragment_padding_side"
         android:layout_marginTop="@dimen/small_padding">
 
         <ImageButton
@@ -33,13 +33,13 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/mmt_white"/>
 
-        <CheckBox
+        <Switch
             android:id="@+id/check_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/medium_padding"/>
+            android:layout_marginEnd="@dimen/medium_padding"/>
     </RelativeLayout>
 
     <RelativeLayout

@@ -21,10 +21,10 @@ public class WordsFileUtils {
 
     SharedPreferences mShares;
     int maxWords = Def.MAX_COUNT;
-    private String mPath = null;
+    private String mPath;
     private String mName = null;
-    private boolean mChanged = false;
-    private ArrayList<String> mWordsArrayList = null;
+    private boolean mChanged;
+    private ArrayList<String> mWordsArrayList;
 
     public WordsFileUtils(SharedPreferences shares, int typeHis) {
         mPath = Utils.getRootDictFolder(shares) + "/" + Def.WORDSLIST_FOLDER;

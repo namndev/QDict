@@ -22,8 +22,8 @@
             android:fadeScrollbars="false"
             android:fadingEdge="none"
             android:focusable="false"
-            android:paddingLeft="@dimen/large_padding"
-            android:paddingRight="@dimen/large_padding"
+            android:paddingStart="@dimen/large_padding"
+            android:paddingEnd="@dimen/large_padding"
             android:scrollbars="none">
         </com.mmt.widget.M2tListView>
 
@@ -39,8 +39,8 @@
             android:fadeScrollbars="false"
             android:fadingEdge="none"
             android:focusable="false"
-            android:paddingLeft="@dimen/large_padding"
-            android:paddingRight="@dimen/large_padding"
+            android:paddingStart="@dimen/large_padding"
+            android:paddingEnd="@dimen/large_padding"
             android:scrollbars="none">
         </com.mmt.widget.M2tListView>
     </LinearLayout>

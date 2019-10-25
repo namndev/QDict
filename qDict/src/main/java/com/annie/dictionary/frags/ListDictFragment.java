@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -74,7 +75,7 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
             }
         }
     };
-    private CheckBox mCheckBox;
+    private Switch mCheckBox;
     private TextView mEmptyDictTv, mDictCountTv;
     private RelativeLayout mEmptyDictLayout;
 

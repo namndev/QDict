@@ -21,6 +21,7 @@
         <item>San Francisco</item>
         <item>Times New Roman</item>
         <item>Lingoes Unicode</item>
+        <item>Nunito</item>
     </string-array>
     <string-array name="fonts_value" translatable="false">
         <item>Antipasto.otf</item>
@@ -30,6 +31,7 @@
         <item>SanFranciscoRegular.ttf</item>
         <item>TimesNewRoman.ttf</item>
         <item>Unicode.ttf</item>
+        <item>Nunito.ttf</item>
     </string-array>
     <string-array name="themes_lables">
         <item>Orange (Default)</item>

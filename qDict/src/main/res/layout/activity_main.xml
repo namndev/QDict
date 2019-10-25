@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <include
+        layout="@layout/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/nav_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/navi_header_height"
+                android:background="@drawable/bamboo"
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@+id/frame_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/layout_footer"
+                app:layout_constraintTop_toBottomOf="@+id/nav_header" />
+
+            <LinearLayout
+                android:id="@+id/layout_footer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/second_bar_height"
+                android:layout_gravity="bottom"
+                android:background="?attr/colorPrimaryDark"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.mmt.widget.QButton
+                    android:id="@+id/action_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/action_bacground"
+                    android:drawableStart="@drawable/ic_about_white"
+                    android:drawablePadding="@dimen/large_padding"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:onClick="onClick"
+                    android:paddingStart="@dimen/super_padding"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    android:text="@string/about_lable"
+                    android:textColor="@color/mmt_white" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/mmt_grey_500" />
+
+                <com.mmt.widget.QButton
+                    android:id="@+id/action_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/action_bacground"
+                    android:drawableStart="@drawable/ic_share"
+                    android:drawablePadding="@dimen/large_padding"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:onClick="onClick"
+                    android:paddingStart="@dimen/super_padding"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    android:text="@string/share_lable"
+                    android:textColor="@color/mmt_white" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

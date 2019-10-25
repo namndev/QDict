@@ -15,17 +15,17 @@
             android:key="@string/prefs_key_languages"
             android:title="@string/prefs_title_languages"/>
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_using_tts"
             android:summary="@string/prefs_title_tts_summary"
             android:title="@string/prefs_title_tts"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/prefs_key_capture_notification"
             android:summary="@string/prefs_title_notification_summary"
             android:title="@string/prefs_title_notification"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="@string/prefs_key_using_capture"
             android:summary="@string/prefs_summary_capture"

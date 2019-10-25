@@ -16,11 +16,10 @@
 
 <resources>
 
-    <dimen name="slidingmenu_offset">75dp</dimen>
     <dimen name="about_padding">40dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
     <!-- cover image -->
-    <dimen name="navi_header_height">105dp</dimen>
+    <dimen name="navi_header_height">176dp</dimen>
     <dimen name="navi_menu_height">48dp</dimen>
 
     <dimen name="list_dict_padding">60dp</dimen>

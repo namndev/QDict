@@ -1,6 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Application theme. -->
+
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -25,12 +26,6 @@
         <item name="icon_actionWordsList">@drawable/ic_wordslist_orange</item>
         <item name="android:alertDialogTheme">@style/AppOrange.AlertDialog</item>
         <item name="android:windowIsFloating">false</item>
-
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
     </style>
 
     <style name="AppBlueLightTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -135,7 +130,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="mmt_action_button_base_style" parent="mmt_layout_wrap_width_wrap_height_style"/>
+    <style name="mmt_action_button_base_style" parent="mmt_layout_wrap_width_wrap_height_style" />
 
     <style name="mmt_action_button_style" parent="mmt_action_button_base_style">
         <item name="android:layout_alignParentBottom">true</item>

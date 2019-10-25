@@ -13,7 +13,7 @@ public class DropDownListView extends ListView {
         super(context, null, android.R.attr.dropDownListViewStyle);
     }
 
-    @TargetApi(20)
+    @TargetApi(21)
     public DropDownListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, android.R.attr.dropDownListViewStyle, defStyleRes);
     }

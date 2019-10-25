@@ -120,7 +120,7 @@ public class QDictService extends StandOutWindow {
             return;
         if (clipboardText.length() > 0) {
             mClipboardText = clipboardText;
-            if (!MainActivity.active) {
+            if (!MainActivity.Companion.getActive()) {
                 showCaptureWindow();
                 if (Utils.isSdCardWrittenable())
                     mThreadPool.execute(new WriteHistoryRunnable(mClipboardText));
@@ -143,7 +143,7 @@ public class QDictService extends StandOutWindow {
 
     @Override
     public void onCreate() {
-        if (Utils.hasSelfPermission(this, BaseActivity.STORAGE_PERMISSIONS)) {
+        if (Utils.hasSelfPermission(this, BaseActivity.Companion.getSTORAGE_PERMISSIONS())) {
             mQDictions = new QDictions(this);
         } else {
             stopSelf();

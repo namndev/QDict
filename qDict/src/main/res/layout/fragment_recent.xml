@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/mmt_white"
-                android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mmt_white">
 
     <RelativeLayout
         android:id="@+id/layout_title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/second_bar_height">
+        android:layout_width="0dp"
+        android:layout_height="@dimen/second_bar_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/super_padding"
-            android:gravity="left|center_vertical"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/super_padding"
+            android:gravity="start|center_vertical"
             android:text="@string/recent_lable"
             android:textColor="@color/mmt_black"
-            android:textSize="28.0sp"/>
+            android:textSize="28.0sp" />
 
         <com.mmt.widget.QTextView
             android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/small_padding"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/medium_padding"
-            android:gravity="right|bottom"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:gravity="end|bottom"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/mmt_grey_500"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
     </RelativeLayout>
 
     <com.mmt.widget.QTextView
@@ -39,27 +42,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawablePadding="@dimen/small_padding"
         android:drawableTop="@drawable/ic_recent_empty"
+        android:drawablePadding="@dimen/medium_padding"
         android:gravity="center"
         android:paddingBottom="?attr/actionBarSize"
         android:text="@string/recent_no_word"
         android:textColor="@color/mmt_black"
         android:textSize="16.0sp"
-        android:textStyle="italic"/>
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_title" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/layout_title">
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:choiceMode="multipleChoice"
+        android:paddingBottom="@dimen/preference_fragment_padding_bottom"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_title" />
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:choiceMode="multipleChoice"
-            android:paddingBottom="@dimen/preference_fragment_padding_bottom"
-            android:scrollbars="none"/>
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
