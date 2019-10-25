@@ -729,8 +729,6 @@ public class DragSortListView extends ListView {
      *
      * @param position
      * @param top
-     * @param height   Height of item at position. If -1, this function calculates
-     *                 this height.
      * @return Shuffle line between position-1 and position (for the given view
      * of the list; that is, for when top of item at position has
      * y-coord of given `top`). If floating View (treated as horizontal

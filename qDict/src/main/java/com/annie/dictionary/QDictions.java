@@ -23,9 +23,9 @@ public class QDictions {
 
     String mEmptyList = "";
 
-    private WeakReference<Context> mContext = null;
+    private WeakReference<Context> mContext;
 
-    private QDictEng mQDictEng = null;
+    private QDictEng mQDictEng;
 
     private SharedPreferences mSharedPrefs;
 
@@ -196,6 +196,8 @@ public class QDictions {
 
         int k = 0;
         File[] files = f.listFiles();
+        if (files == null)
+            return;
         String dictFolders[] = new String[files.length];
         String dictNames[] = new String[files.length];
 

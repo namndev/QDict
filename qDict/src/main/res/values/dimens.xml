@@ -45,5 +45,5 @@
     <dimen name="toast_y_offset">70dip</dimen>
     <!-- actionbar -->
     <dimen name="recent_button_corner">8dp</dimen>
-
+    <dimen name="mmt_margin">16dp</dimen>
 </resources>

@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/QDict.iml" filepath="$PROJECT_DIR$/QDict.iml" />
-      <module fileurl="file://$PROJECT_DIR$/appcompat/appcompat.iml" filepath="$PROJECT_DIR$/appcompat/appcompat.iml" />
-      <module fileurl="file://$PROJECT_DIR$/madmanLib/madmanLib.iml" filepath="$PROJECT_DIR$/madmanLib/madmanLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/qDict/qDict.iml" filepath="$PROJECT_DIR$/qDict/qDict.iml" />
     </modules>
   </component>

@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class DictSpeechEng {
     private static DictSpeechEng mSpeechEng;
-    private TextToSpeech mTts = null;
+    private TextToSpeech mTts;
     private boolean mCanSpeak = false;
 
     private DictSpeechEng(Context context) {
@@ -59,15 +59,12 @@ public class DictSpeechEng {
     class TtsInitListener implements TextToSpeech.OnInitListener {
         @Override
         public void onInit(final int status) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (status == TextToSpeech.SUCCESS && mTts.setLanguage(Locale.US) == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                        mCanSpeak = true;
-                    } else {
-                        // Initialization failed.
-                        mCanSpeak = false;
-                    }
+            new Thread(() -> {
+                if (status == TextToSpeech.SUCCESS && mTts.setLanguage(Locale.US) == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                    mCanSpeak = true;
+                } else {
+                    // Initialization failed.
+                    mCanSpeak = false;
                 }
             }).start();
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -103,20 +102,10 @@ public class Utils {
     public static Dialog createAboutDialog(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         AlertDialog.Builder builder;
-        if (Utils.hasHcAbove()) {
-            builder = new AlertDialog.Builder(context, R.style.QDialog);
-        } else {
-            builder = new AlertDialog.Builder(context);
-        }
+        builder = new AlertDialog.Builder(context, R.style.QDialog);
         builder.setView(inflater.inflate(R.layout.about, null));
         builder.setTitle(R.string.about_lable);
-        builder.setNeutralButton(R.string.btn_more_apps, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                context.startActivity(goToMoreApp());
-            }
-        });
+        builder.setNeutralButton(R.string.btn_more_apps, (dialog, which) -> context.startActivity(goToMoreApp()));
         builder.setPositiveButton(R.string.ok, null);
         return builder.create();
     }
@@ -128,20 +117,11 @@ public class Utils {
 
     public static Dialog createWhatsNewDialog(Context context) {
         AlertDialog.Builder builder;
-        if (Utils.hasHcAbove()) {
-            builder = new AlertDialog.Builder(context, R.style.QDialog);
-        } else {
-            builder = new AlertDialog.Builder(context);
-        }
+        builder = new AlertDialog.Builder(context, R.style.QDialog);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle(R.string.prefs_title_whatsnew);
         builder.setMessage(getTextFromAssets(context, "whatsnew.txt"));
-        builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNeutralButton(R.string.ok, (dialog, which) -> dialog.cancel());
         return builder.create();
 
     }
@@ -321,14 +301,6 @@ public class Utils {
      */
     public static boolean hasKkAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
-    /**
-     * Uses static final constants to detect if the device's platform version is
-     * Kitkat or later.
-     */
-    public static boolean hasHcAbove() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     /**

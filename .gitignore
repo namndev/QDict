@@ -4,15 +4,16 @@
 .DS_Store
 # Files for the Dalvik VM
 *.dex
-
+*.iml
+.idea/*
+.cxx/
 # Java class files
 *.class
 
 # Generated files
 bin/
 gen/
-jni/
-qDict/src/main/jni/
+qDict/src/main/cpp/includes
 obj/
 .externalToolBuilders/
 

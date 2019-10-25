@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
@@ -13,7 +14,7 @@ import com.annie.dictionary.utils.Utils.Def;
 /**
  * Extends View.TextView: Custom font for TextView
  */
-public class QTextView extends TextView {
+public class QTextView extends AppCompatTextView {
 
     public QTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

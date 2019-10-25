@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -75,15 +74,8 @@ public class QDictService extends StandOutWindow {
 
     private ClipboardManager mClipboardManager = null;
 
-    @SuppressWarnings("deprecation")
-    private android.text.ClipboardManager mClipboardManagerGINGER = null;
-
     private ExecutorService mThreadPool = Executors.newSingleThreadExecutor();
-    private OnPrimaryClipChangedListener mClipboardListener = new OnPrimaryClipChangedListener() {
-        public void onPrimaryClipChanged() {
-            clipboardCheck();
-        }
-    };
+    private OnPrimaryClipChangedListener mClipboardListener = this::clipboardCheck;
 
     public QDictService() {
     }
@@ -112,16 +104,11 @@ public class QDictService extends StandOutWindow {
             mKeywordLable.setText(word);
     }
 
-    @SuppressWarnings("deprecation")
     private void clipboardCheck() {
         String clipboardText;
         CharSequence s = null;
-        if (Utils.hasHcAbove()) {
-            if (mClipboardManager.hasPrimaryClip()) {
-                s = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
-            }
-        } else {
-            s = mClipboardManagerGINGER.getText();
+        if (mClipboardManager.hasPrimaryClip()) {
+            s = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
         }
         if (TextUtils.isEmpty(s)) {
             return;
@@ -168,40 +155,17 @@ public class QDictService extends StandOutWindow {
 
         OPENED_WIDTH = (int) (880 * scale);
         OPENED_HEIGHT = (int) (960 * scale);
-        if (!Utils.hasHcAbove())
-            mClipboardTask = new Runnable() {
-                @Override
-                public void run() {
-                    clipboardCheck();
-                    mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
-                    Log.e("NAMND", "mClipboardTask");
-                }
-            };
-        mInitServiceTask = new Runnable() {
-            @Override
-            public void run() {
-                initClipboardService();
-                if (!Utils.hasHcAbove())
-                    mHandler.postDelayed(mClipboardTask, Def.CLIPBOARD_TIMER);
-                Log.e("NAMND", "mInitServiceTask");
-            }
-        };
+
+        mInitServiceTask = this::initClipboardService;
         mHandler.postDelayed(mInitServiceTask, Def.CLIPBOARD_TIMER);
         super.onCreate();
         RUNNING = true;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void initClipboardService() {
-        if (Utils.hasHcAbove()) {
-            mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
-        } else {
-            mClipboardManagerGINGER = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            if (mClipboardManagerGINGER.hasText())
-                mClipboardText = mClipboardManagerGINGER.getText().toString().trim();
-        }
+        mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
     }
 
     @Override
@@ -275,14 +239,14 @@ public class QDictService extends StandOutWindow {
     public void createAndAttachView(int id, FrameLayout frame) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.capture_window, frame, true);
-        mDictViewContent = (WebView) view.findViewById(R.id.dictContentView);
-        mKeywordLable = (TextView) view.findViewById(R.id.tv_title);
+        mDictViewContent = view.findViewById(R.id.dictContentView);
+        mKeywordLable = view.findViewById(R.id.tv_title);
         WebSettings webSettings = mDictViewContent.getSettings();
         webSettings.setLayoutAlgorithm(Utils.getLayoutAlgorithm(true));
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("UTF-8");
         // webSettings.setSupportZoom(true);
-        mSpeakImg = (ImageButton) view.findViewById(R.id.action_speak);
+        mSpeakImg = view.findViewById(R.id.action_speak);
         mSpeakImg.setVisibility(/* tts ? View.VISIBLE : */View.GONE);
     }
 

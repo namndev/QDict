@@ -3,7 +3,6 @@ package com.annie.dictionary.frags;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -16,7 +15,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.support.v4.app.FragmentActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -25,6 +23,8 @@ import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.annie.dictionary.DictSpeechEng;
 import com.annie.dictionary.MainActivity;
@@ -255,9 +255,9 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
             return true;
         } else if (preference == mLangPreference) {
             int index = mLangPreference.findIndexOfValue(newValue.toString());
-            CharSequence[] entrieValues = mLangPreference.getEntryValues();
+            CharSequence[] entriesValues = mLangPreference.getEntryValues();
             CharSequence[] entries = mLangPreference.getEntries();
-            String lang = entrieValues[index].toString();
+            String lang = entriesValues[index].toString();
             if (!mCurrentLang.equalsIgnoreCase(lang)) {
                 mSharedPreferences.edit().putString("prefs_key_languages", lang).apply();
                 mLangPreference.setSummary(entries[index].toString());
@@ -280,27 +280,13 @@ public class SettingFragment extends PreferenceFragment implements Def, OnPrefer
 
     @SuppressWarnings("unused")
     private void questionResetDlg() {
-        AlertDialog.Builder alertDialogBuilder;
-        if (Utils.hasHcAbove()) {
-            alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
-        } else {
-            alertDialogBuilder = new AlertDialog.Builder(activity);
-        }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
+
         alertDialogBuilder.setMessage(R.string.app_name);
-        alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alertDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                reset();
-                dialog.dismiss();
-            }
+        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            reset();
+            dialog.dismiss();
         });
         alertDialogBuilder.show();
     }

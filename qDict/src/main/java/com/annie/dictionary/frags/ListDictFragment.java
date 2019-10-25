@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +17,9 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.ListFragment;
 
 import com.annie.dictionary.MainActivity;
 import com.annie.dictionary.QDictions;
@@ -92,50 +93,38 @@ public class ListDictFragment extends ListFragment implements Def, OnItemClickLi
         View root = inflater.inflate(R.layout.layout_list_dict, container, false);
         SharedPreferences shares = getActivity().getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         mDictsPath = Utils.getRootDictFolder(shares) + Def.DICT_FOLDER;
-        mCheckBox = (CheckBox) root.findViewById(R.id.check_all);
-        mEmptyDictLayout = (RelativeLayout) root.findViewById(R.id.layout_empty);
-        mEmptyDictTv = (TextView) root.findViewById(R.id.tv_empty);
-        mDictCountTv = (TextView) root.findViewById(R.id.tv_dict_count);
-        Button gotoFTPServer = (Button) root.findViewById(R.id.goto_ftp_server);
-        gotoFTPServer.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClassName("com.m2t.ftpserver", "com.m2t.ftpserver.FTPServerActivity");
-                intent.putExtra("stay_in_folder", mDictsPath);
-                if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
-                    getActivity().startActivity(intent);
-                } else {
-                    try {
-                        Intent ftpIntent = Utils.goToFTPServer();
-                        getActivity().startActivity(ftpIntent);
-                    } catch (ActivityNotFoundException ex) {
-                        Intent ftpIntent = Utils.goToFTPServerLink();
-                        getActivity().startActivity(ftpIntent);
-                    }
+        mCheckBox = root.findViewById(R.id.check_all);
+        mEmptyDictLayout = root.findViewById(R.id.layout_empty);
+        mEmptyDictTv = root.findViewById(R.id.tv_empty);
+        mDictCountTv = root.findViewById(R.id.tv_dict_count);
+        Button gotoFTPServer = root.findViewById(R.id.goto_ftp_server);
+        gotoFTPServer.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClassName("com.m2t.ftpserver", "com.m2t.ftpserver.FTPServerActivity");
+            intent.putExtra("stay_in_folder", mDictsPath);
+            if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
+                getActivity().startActivity(intent);
+            } else {
+                try {
+                    Intent ftpIntent = Utils.goToFTPServer();
+                    getActivity().startActivity(ftpIntent);
+                } catch (ActivityNotFoundException ex) {
+                    Intent ftpIntent = Utils.goToFTPServerLink();
+                    getActivity().startActivity(ftpIntent);
                 }
-
             }
+
         });
-        mCheckBox.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mCheckBox.setChecked(mCheckBox.isChecked());
-                checked(mCheckBox.isChecked());
-                isCurrentCheckAll();
-            }
+        mCheckBox.setOnClickListener(v -> {
+            mCheckBox.setChecked(mCheckBox.isChecked());
+            checked(mCheckBox.isChecked());
+            isCurrentCheckAll();
         });
-        ImageButton backBtn = (ImageButton) root.findViewById(R.id.action_back);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
-                intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.SELECT_DICT);
-                getActivity().sendBroadcast(intent);
-            }
+        ImageButton backBtn = root.findViewById(R.id.action_back);
+        backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.ACTION_UPDATE_UI);
+            intent.putExtra(MainActivity.ACTION_UPDATE_KEY, RECV_UI.SELECT_DICT);
+            getActivity().sendBroadcast(intent);
         });
         return root;
     }

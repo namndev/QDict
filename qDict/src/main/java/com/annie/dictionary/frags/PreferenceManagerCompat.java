@@ -10,7 +10,6 @@ import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -53,15 +52,11 @@ public class PreferenceManagerCompat {
                 Object proxy = Proxy.newProxyInstance(onPreferenceTreeClickListener.getType().getClassLoader(),
                         new Class[]{
                                 onPreferenceTreeClickListener.getType()
-                        }, new InvocationHandler() {
-                            @Override
-                            public Object invoke(Object proxy, Method method, Object[] args) {
-                                if (method.getName().equals("onPreferenceTreeClick")) {
-                                    return Boolean.valueOf(
-                                            listener.onPreferenceTreeClick((PreferenceScreen) args[0], (Preference) args[1]));
-                                } else {
-                                    return null;
-                                }
+                        }, (proxy1, method, args) -> {
+                            if (method.getName().equals("onPreferenceTreeClick")) {
+                                return listener.onPreferenceTreeClick((PreferenceScreen) args[0], (Preference) args[1]);
+                            } else {
+                                return null;
                             }
                         });
                 onPreferenceTreeClickListener.set(manager, proxy);
@@ -93,8 +88,7 @@ public class PreferenceManagerCompat {
             Method m = PreferenceManager.class.getDeclaredMethod("inflateFromIntent", Intent.class,
                     PreferenceScreen.class);
             m.setAccessible(true);
-            PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(manager, intent, screen);
-            return prefScreen;
+            return (PreferenceScreen) m.invoke(manager, intent, screen);
         } catch (Exception e) {
             Log.w(TAG, "Couldn't call PreferenceManager.inflateFromIntent by reflection", e);
         }
@@ -119,8 +113,7 @@ public class PreferenceManagerCompat {
             Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class,
                     PreferenceScreen.class);
             m.setAccessible(true);
-            PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(manager, activity, resId, screen);
-            return prefScreen;
+            return (PreferenceScreen) m.invoke(manager, activity, resId, screen);
         } catch (Exception e) {
             Log.w(TAG, "Couldn't call PreferenceManager.inflateFromResource by reflection", e);
         }

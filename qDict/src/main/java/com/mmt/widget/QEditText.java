@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
@@ -13,7 +14,7 @@ import com.annie.dictionary.utils.Utils.Def;
 /**
  * Extends widget.EditText: Custom font for EditText
  */
-public class QEditText extends EditText {
+public class QEditText extends AppCompatEditText {
 
     public QEditText(Context context, AttributeSet attrs) {
         super(context, attrs);

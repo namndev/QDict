@@ -906,25 +906,22 @@ public class SlidingMenu extends RelativeLayout {
         int rightPadding = insets.right;
         int topPadding = insets.top;
         int bottomPadding = insets.bottom;
-        String brand = android.os.Build.BRAND;
-        if (Utils.hasLlAbove() && !(brand.equalsIgnoreCase("Bkav") || brand.equalsIgnoreCase("Samsung") || brand.equalsIgnoreCase("Xiaomi"))) {
 
-            Resources resources = getContent().getResources();
-            boolean isBottom = isSystemBarOnBottom(resources);
-            Configuration cfg = resources.getConfiguration();
-            int orientation = cfg.orientation;
-            int resourceId = 0;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
-            } else {
-                resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-            }
-            if (resourceId > 0) {
-                if (isBottom)
-                    bottomPadding += resources.getDimensionPixelSize(resourceId);
-                else {
-                    rightPadding += resources.getDimensionPixelSize(resourceId);
-                }
+        Resources resources = getContent().getResources();
+        boolean isBottom = isSystemBarOnBottom(resources);
+        Configuration cfg = resources.getConfiguration();
+        int orientation = cfg.orientation;
+        int resourceId;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+        } else {
+            resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        }
+        if (resourceId > 0) {
+            if (isBottom)
+                bottomPadding += resources.getDimensionPixelSize(resourceId);
+            else {
+                rightPadding += resources.getDimensionPixelSize(resourceId);
             }
         }
 
@@ -942,23 +939,17 @@ public class SlidingMenu extends RelativeLayout {
         return (!canMove || dm.widthPixels < dm.heightPixels);
     }
 
-    @TargetApi(11)
     public void manageLayers(float percentOpen) {
-        if (!Utils.hasHcAbove())
-            return;
-
         boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
         final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
 
         if (layerType != getContent().getLayerType()) {
-            getHandler().post(new Runnable() {
-                public void run() {
-                    Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
-                    getContent().setLayerType(layerType, null);
-                    getMenu().setLayerType(layerType, null);
-                    if (getSecondaryMenu() != null) {
-                        getSecondaryMenu().setLayerType(layerType, null);
-                    }
+            getHandler().post(() -> {
+                Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
+                getContent().setLayerType(layerType, null);
+                getMenu().setLayerType(layerType, null);
+                if (getSecondaryMenu() != null) {
+                    getSecondaryMenu().setLayerType(layerType, null);
                 }
             });
         }

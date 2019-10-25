@@ -1,15 +1,11 @@
 package com.annie.dictionary.frags;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -18,14 +14,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.annie.dictionary.MainActivity;
 import com.annie.dictionary.R;
-import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
 import com.annie.dictionary.utils.Utils.NAVIG;
 import com.annie.dictionary.utils.Utils.RECV_UI;
@@ -44,7 +42,7 @@ public class RecentFragment extends BaseListFragment {
     private HashMap<Integer, Boolean> mSelection = new HashMap<>();
     private SharedPreferences mShares;
     private WordsFileUtils mHistoryFileUtils;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
     private WordsListAdapter mAdapter;
     private TextView mEmpty, mTvRecentTitle, mTvCount;
     private boolean mIsFavorite = false;
@@ -56,54 +54,52 @@ public class RecentFragment extends BaseListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if(Utils.hasHcAbove()) {
-            mActionModeCallback = new ActionMode.Callback() {
+        mActionModeCallback = new ActionMode.Callback() {
 
-                @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    // Inflate a menu resource providing context menu items
-                    MenuInflater inflater = mode.getMenuInflater();
-                    inflater.inflate(R.menu.cabselection_menu, menu);
-                    return true;
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // Inflate a menu resource providing context menu items
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.cabselection_menu, menu);
+                return true;
+            }
+
+            // Called each time the action mode is shown. Always called after
+            // onCreateActionMode, but
+            // may be called multiple times if the mode is invalidated.
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false; // Return false if nothing is done
+            }
+
+            // Called when the user selects a contextual menu item
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        questionDeleteDlg(mode, mIsFavorite);
+                        return true;
+                    default:
+                        return false;
                 }
+            }
 
-                // Called each time the action mode is shown. Always called after
-                // onCreateActionMode, but
-                // may be called multiple times if the mode is invalidated.
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false; // Return false if nothing is done
-                }
+            // Called when the user exits the action mode
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                mAdapter.clearSelection();
+                mActionMode = null;
+            }
 
-                // Called when the user selects a contextual menu item
-                @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.action_delete:
-                            questionDeleteDlg(mode, mIsFavorite);
-                            return true;
-                        default:
-                            return false;
-                    }
-                }
-
-                // Called when the user exits the action mode
-                @Override
-                public void onDestroyActionMode(ActionMode mode) {
-                    mAdapter.clearSelection();
-                    mActionMode = null;
-                }
-
-            };
-        }
+        };
         return getPersistentView(inflater, container, savedInstanceState, R.layout.fragment_recent);
     }
 
@@ -113,10 +109,10 @@ public class RecentFragment extends BaseListFragment {
         Bundle b = getArguments();
         if (b != null)
             mIsFavorite = b.getBoolean("qdict_is_favorite", false);
-        activity = (ActionBarActivity) getActivity();
-        mTvRecentTitle = (TextView) rootView.findViewById(R.id.tv_title);
-        mTvCount = (TextView) rootView.findViewById(R.id.tv_count);
-        mEmpty = (TextView) rootView.findViewById(R.id.tv_empty);
+        activity = (AppCompatActivity) getActivity();
+        mTvRecentTitle = rootView.findViewById(R.id.tv_title);
+        mTvCount = rootView.findViewById(R.id.tv_count);
+        mEmpty = rootView.findViewById(R.id.tv_empty);
         mShares = activity.getSharedPreferences(Def.APP_NAME, Context.MODE_PRIVATE);
         mCheckedColor = getResources().getColor(R.color.mmt_grey_500);
     }
@@ -150,7 +146,7 @@ public class RecentFragment extends BaseListFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.recent_menu, menu);
@@ -176,34 +172,19 @@ public class RecentFragment extends BaseListFragment {
     }
 
     private void questionDeleteAllDlg(final boolean favorite) {
-        AlertDialog.Builder alertDialogBuilder;
-        if (Utils.hasHcAbove()) {
-            alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
-        } else {
-            alertDialogBuilder = new AlertDialog.Builder(activity);
-        }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.QDialog);
 
         alertDialogBuilder
                 .setMessage(favorite ? R.string.delete_all_favorite_summary : R.string.delete_all_recent_summary);
-        alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alertDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mHistoryFileUtils.removeAll();
-                mHistoryFileUtils.save();
-                mWordsArrayList.clear();
-                mAdapter.notifyDataSetChanged();
-                mEmpty.setVisibility(View.VISIBLE);
-                activity.invalidateOptionsMenu();
-                dialog.dismiss();
-            }
+        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            mHistoryFileUtils.removeAll();
+            mHistoryFileUtils.save();
+            mWordsArrayList.clear();
+            mAdapter.notifyDataSetChanged();
+            mEmpty.setVisibility(View.VISIBLE);
+            activity.invalidateOptionsMenu();
+            dialog.dismiss();
         });
         alertDialogBuilder.show();
     }
@@ -211,39 +192,31 @@ public class RecentFragment extends BaseListFragment {
     private void questionDeleteDlg(final ActionMode mode, final boolean favorite) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setMessage(favorite ? R.string.delete_favorite_summary : R.string.delete_recent_summary);
-        alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            StringBuilder sb = new StringBuilder();
+            Set<Integer> set = mAdapter.getCurrentCheckedPosition();
+            List<String> keywords = new ArrayList<>();
+            for (Integer pos : set) {
+                String keyword = mAdapter.getItem(pos);
+                if (!TextUtils.isEmpty(keyword)) {
+                    sb.append(keyword).append("\n ");
+                    keywords.add(keyword);
+                }
             }
-        });
-        alertDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                StringBuilder sb = new StringBuilder();
-                Set<Integer> set = mAdapter.getCurrentCheckedPosition();
-                List<String> keywords = new ArrayList<>();
-                for (Integer pos : set) {
-                    String keyword = mAdapter.getItem(pos);
-                    if (!TextUtils.isEmpty(keyword)) {
-                        sb.append(keyword).append("\n ");
-                        keywords.add(keyword);
-                    }
-                }
-                for (String key : keywords) {
-                    mHistoryFileUtils.remove(key);
-                }
-                if (set.size() > 0) {
-                    mWordsArrayList = mHistoryFileUtils.getArrayList();
-                    checkUIInfor();
-                    sb.append("\n has deleted.");
-                }
-                M2tToast.makeText(activity, sb.toString(), M2tToast.LENGTH_LONG).show();
-                // clear selection android finish actionmode
-                mAdapter.clearSelection();
-                dialog.dismiss();
-                mode.finish();
+            for (String key : keywords) {
+                mHistoryFileUtils.remove(key);
             }
+            if (set.size() > 0) {
+                mWordsArrayList = mHistoryFileUtils.getArrayList();
+                checkUIInfor();
+                sb.append("\n has deleted.");
+            }
+            M2tToast.makeText(activity, sb.toString(), M2tToast.LENGTH_LONG).show();
+            // clear selection android finish actionmode
+            mAdapter.clearSelection();
+            dialog.dismiss();
+            mode.finish();
         });
         alertDialogBuilder.show();
     }
@@ -252,23 +225,17 @@ public class RecentFragment extends BaseListFragment {
         mWordsArrayList = mHistoryFileUtils.getArrayList();
         mAdapter = new WordsListAdapter(mWordsArrayList);
         setListAdapter(mAdapter);
-        if (Utils.hasHcAbove()) {
-            getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> listview, View item, int position, long id) {
-                    getListView().setItemChecked(position, true);
-                    if (mActionMode != null) {
-                        return false;
-                    }
-                    mAdapter.setNewSelection(position, true);
-                    mActionMode = ((MainActivity) activity).getToolbar().startActionMode(mActionModeCallback);
-                    int count = mAdapter.getCheckCount();
-                    mActionMode.setTitle(getResources().getQuantityString(R.plurals.items_count, count, count));
-                    return true;
-                }
-
-            });
-        }
+        getListView().setOnItemLongClickListener((listview, item, position, id) -> {
+            getListView().setItemChecked(position, true);
+            if (mActionMode != null) {
+                return false;
+            }
+            mAdapter.setNewSelection(position, true);
+            mActionMode = ((MainActivity) activity).getToolbar().startActionMode(mActionModeCallback);
+            int count = mAdapter.getCheckCount();
+            mActionMode.setTitle(getResources().getQuantityString(R.plurals.items_count, count, count));
+            return true;
+        });
         checkUIInfor();
     }
 
@@ -280,13 +247,12 @@ public class RecentFragment extends BaseListFragment {
             mEmpty.setVisibility(View.VISIBLE);
         }
         mTvCount.setText(getResources().getQuantityString(R.plurals.words_count, count, count));
-        if (Utils.hasHcAbove())
-            activity.invalidateOptionsMenu();
+        activity.invalidateOptionsMenu();
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        if (Utils.hasHcAbove() && mActionMode != null) {
+        if (mActionMode != null) {
             boolean check = !mAdapter.isPositionChecked(position);
             if (check)
                 mAdapter.setNewSelection(position, true);
@@ -358,15 +324,15 @@ public class RecentFragment extends BaseListFragment {
             notifyDataSetChanged();
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             TextView text = (TextView) convertView;
-
             if (text == null) {
                 text = (TextView) inflater.inflate(R.layout.simple_list_item_1, null);
             }
             if (mWordsArrayList == null || mWordsArrayList.size() == 0)
-                return null;
+                return super.getView(position, convertView, parent);
 
             text.setText(mListWords.get(position));
             if (mSelection.get(position) != null) {

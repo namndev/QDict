@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_toolbar"
                 xmlns:mmt="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:background="@color/mmt_white"
                 android:fitsSystemWindows="true"
                 mmt:theme="@style/ActionBar">
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <FrameLayout
                 android:id="@+id/content_frame"

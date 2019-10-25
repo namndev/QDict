@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -20,7 +19,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -32,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.core.app.NotificationCompat;
 
 import com.annie.dictionary.MainActivity;
 import com.annie.dictionary.R;
@@ -46,7 +46,7 @@ import java.util.Set;
  * Extend this class to easily create and manage floating StandOut windows.
  *
  * @author Mark Wei <markwei@gmail.com> Contributors: Jason
- *         <github.com/jasonconnery>
+ * <github.com/jasonconnery>
  */
 public abstract class StandOutWindow extends Service {
     /**
@@ -662,18 +662,12 @@ public abstract class StandOutWindow extends Service {
         if (dropDownListItems != null) {
             items = dropDownListItems;
         } else {
-            items = new ArrayList<StandOutWindow.DropDownListItem>();
+            items = new ArrayList<>();
         }
 
         // add default drop down items
         items.add(new DropDownListItem((sThemeIndex == 0) ? R.drawable.ic_dlg_close_orange : R.drawable.ic_dlg_close,
-                getResources().getString(R.string.close), new Runnable() {
-
-            @Override
-            public void run() {
-                closeAll();
-            }
-        }));
+                getResources().getString(R.string.close), () -> closeAll()));
 
         // turn item list into views in PopupWindow
         LinearLayout list = new LinearLayout(this);
@@ -686,19 +680,15 @@ public abstract class StandOutWindow extends Service {
             ViewGroup listItem = (ViewGroup) mLayoutInflater.inflate(R.layout.drop_down_list_item, null);
             list.addView(listItem);
 
-            ImageView icon = (ImageView) listItem.findViewById(R.id.icon);
+            ImageView icon = listItem.findViewById(R.id.icon);
             icon.setImageResource(item.icon);
 
-            TextView description = (TextView) listItem.findViewById(R.id.description);
+            TextView description = listItem.findViewById(R.id.description);
             description.setText(item.description);
 
-            listItem.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    item.action.run();
-                    dropDown.dismiss();
-                }
+            listItem.setOnClickListener(v -> {
+                item.action.run();
+                dropDown.dismiss();
             });
         }
 
@@ -1157,7 +1147,7 @@ public abstract class StandOutWindow extends Service {
     }
 
     /**
-     * Send {@link Parceleable} data in a {@link Bundle} to a new or existing
+     * Send data in a {@link Bundle} to a new or existing
      * windows. The implementation of the recipient window can handle what to do
      * with the data. To receive a result, provide the id of the sender.
      *

@@ -9,14 +9,15 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.annie.dictionary.frags.ListDictFragment;
 import com.annie.dictionary.frags.NavigatorFragment;
@@ -43,13 +44,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
     protected SharedPreferences mSharedPreferences;
     protected int mThemeIndex;
     String mCurrentLanguage;
-    OnClosedListener mOnClosedListener = new OnClosedListener() {
-
-        @Override
-        public void onClosed() {
-            onMenuClose();
-        }
-    };
+    OnClosedListener mOnClosedListener = () -> onMenuClose();
 
     public void checkPermission(int requestCode) {
         switch (requestCode) {
@@ -121,7 +116,7 @@ public abstract class BaseActivity extends SlidingFragmentActivity {
         boolean headerShow;
         try {
             headerShow = getResources().getBoolean(R.bool.header_menu_visiable);
-        }catch (Exception e){
+        } catch (Exception e) {
             headerShow = false;
         }
         findViewById(R.id.img_header).setVisibility(headerShow ? View.VISIBLE : View.GONE);

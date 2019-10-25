@@ -1,6 +1,5 @@
 package com.annie.dictionary;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,18 +10,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -34,14 +28,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.annie.dictionary.frags.ListDictFragment;
 import com.annie.dictionary.frags.NavigatorFragment.NavigationCallbacks;
@@ -88,13 +86,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     String tempKeyword;
     int tempPos;
     boolean onNavig = false;
-    private CanvasTransformer mTransformer = new CanvasTransformer() {
-
-        @Override
-        public void transformCanvas(Canvas canvas, float percentOpen) {
-            canvas.scale(percentOpen, 1, 0, 0);
-        }
-    };
+    private CanvasTransformer mTransformer = (canvas, percentOpen) -> canvas.scale(percentOpen, 1, 0, 0);
     // UI
     private SlidingUpPanelLayout mLayout;
     // dict
@@ -152,21 +144,17 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     }
 
     public void initClipboard() {
-        if (Utils.hasHcAbove()) {
-            if (mClipboardManager == null) {
-                mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
-            }
+        if (mClipboardManager == null) {
+            mClipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            mClipboardManager.addPrimaryClipChangedListener(mClipboardListener);
         }
     }
 
     public void releaseClipboard() {
-        if (Utils.hasHcAbove()) {
-            if (mClipboardManager != null) {
-                mClipboardManager.removePrimaryClipChangedListener(mClipboardListener);
-            }
-            mClipboardManager = null;
+        if (mClipboardManager != null) {
+            mClipboardManager.removePrimaryClipChangedListener(mClipboardListener);
         }
+        mClipboardManager = null;
     }
 
     private void clipboardCheck() {
@@ -202,8 +190,11 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         mToolbar.setTitle(null);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(PanelState.HIDDEN);
         mLayout.setTouchEnabled(false);
@@ -246,30 +237,21 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mShowKeyboardHander = new Handler();
         mProgressCBHandler = new Handler() {
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(@NonNull Message msg) {
                 int progress = msg.arg1;
                 if (null != mProgressDialog)
                     mProgressDialog.setProgress(progress);
             }
         };
-        mShowKeyboarRunable = new Runnable() {
-            @Override
-            public void run() {
-                mDictKeywordView.requestFocus();
-                mDictKeywordView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
-                        SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                mDictKeywordView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
-                        SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-            }
+        mShowKeyboarRunable = () -> {
+            mDictKeywordView.requestFocus();
+            mDictKeywordView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                    SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+            mDictKeywordView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                    SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
         };
-        if (Utils.hasHcAbove()){
-            mClipboardListener = new OnPrimaryClipChangedListener() {
-                public void onPrimaryClipChanged() {
-                    clipboardCheck();
-                }
-            };
+        mClipboardListener = this::clipboardCheck;
 
-        }
         startService();
         registerReceiver(mUIReceiver, new IntentFilter(ACTION_UPDATE_UI));
     }
@@ -291,12 +273,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             if (!QDictService.RUNNING)
                 startService(i);
             if (!isSucess) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, R.string.msg_do_not_show_popup, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, R.string.msg_do_not_show_popup, Toast.LENGTH_SHORT).show());
             }
         }
     }
@@ -325,36 +302,27 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mDictKeywordsPopupList.setFocusable(true);
         mDictKeywordsPopupList.setFocusableInTouchMode(true);
         mDictKeywordsPopupList.setListSelectionHidden(false);
-        mDictKeywordsPopupList.setOnItemClickListener(new OnItemClickListener() {
+        mDictKeywordsPopupList.setOnItemClickListener((parent, v, position, id) -> {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            TextView textView = (TextView) v;
+            String keyword = textView.getText().toString();
 
-                TextView textView = (TextView) v;
-                String keyword = textView.getText().toString();
+            mReplaceKeyword = true; // Don't response the
+            // onTextChanged event this
+            // time.
 
-                mReplaceKeyword = true; // Don't response the
-                // onTextChanged event this
-                // time.
-
-                mDictKeywordView.setText(keyword);
-                mInfoSearch.setVisibility(View.GONE);
-                mActionWordsList.setVisibility(View.GONE);
-                mInfoSearch.setText(null);
-                // make sure we keep the caret at the end of the text
-                // view
-                Editable spannable = mDictKeywordView.getText();
-                Selection.setSelection(spannable, spannable.length());
-                showSearchContent();
-            }
+            mDictKeywordView.setText(keyword);
+            mInfoSearch.setVisibility(View.GONE);
+            mActionWordsList.setVisibility(View.GONE);
+            mInfoSearch.setText(null);
+            // make sure we keep the caret at the end of the text
+            // view
+            Editable spannable = mDictKeywordView.getText();
+            Selection.setSelection(spannable, spannable.length());
+            showSearchContent();
         });
         mPopupWordsListHandler = new Handler();
-        mPopupWordsListRunnable = new Runnable() {
-            @Override
-            public void run() {
-                startKeywordsList();
-            }
-        };
+        mPopupWordsListRunnable = this::startKeywordsList;
 
     }
 
@@ -402,12 +370,9 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         mProgressDialog.setMessage(getResources().getString(R.string.keywords_search));
         mProgressDialog.setCancelable(false);
         mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        mDictions.cancelLookup();
-                        dialog.cancel();
-                    }
+                (dialog, i) -> {
+                    mDictions.cancelLookup();
+                    dialog.cancel();
                 });
         mProgressDialog.show();
     }
@@ -440,11 +405,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
             if (LIST_WORDS_NORMAL != listType)
                 showProgressDialog();
             ListWordsTask mListWordsTask = new ListWordsTask(listType);
-            if (Build.VERSION.SDK_INT > 10)
-                mListWordsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, keyword);
-            else {
-                mListWordsTask.execute(keyword);
-            }
+            mListWordsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, keyword);
         }
     }
 
@@ -492,7 +453,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         // check if no view has focus:
         View view = getCurrentFocus();
-        if (view != null) {
+        if (view != null && inputManager != null) {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
@@ -624,12 +585,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
                 String keyword = results.get(0);
                 if (!TextUtils.isEmpty(keyword)) {
                     mDictKeywordView.setText(keyword);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showSearchContent();
-                        }
-                    });
+                    runOnUiThread(() -> showSearchContent());
 
                 }
             }
@@ -677,7 +633,7 @@ public class MainActivity extends BaseActivity implements NavigationCallbacks, O
     }
 
     // Extend classes.
-    private class DictEditTextView extends EditText {
+    private class DictEditTextView extends AppCompatEditText {
 
         int type = LIST_WORDS_NORMAL;
 

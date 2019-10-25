@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.Button;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
@@ -13,7 +14,7 @@ import com.annie.dictionary.utils.Utils.Def;
 /**
  * Extends widget.Button: Custom font for Button
  */
-public class QButton extends Button {
+public class QButton extends AppCompatButton {
 
     public QButton(Context context, AttributeSet attrs) {
         super(context, attrs);

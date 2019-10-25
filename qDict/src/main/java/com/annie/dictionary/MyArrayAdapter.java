@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
 
@@ -34,8 +37,9 @@ public class MyArrayAdapter extends ArrayAdapter<String> {
         return mObjects;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         TextView view = (TextView) convertView;
         if (view == null) {
             view = (TextView) inflater.inflate(R.layout.simple_dropdown_item_1line_left, parent, false);

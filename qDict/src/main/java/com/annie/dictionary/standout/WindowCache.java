@@ -11,7 +11,7 @@ public class WindowCache {
     public Map<Class<? extends StandOutWindow>, SparseArray<Window>> sWindows;
 
     public WindowCache() {
-        sWindows = new HashMap<Class<? extends StandOutWindow>, SparseArray<Window>>();
+        sWindows = new HashMap<>();
     }
 
     /**

@@ -4,5 +4,5 @@
     <dimen name="second_bar_height">56dp</dimen>
     <dimen name="navi_header_height">180dp</dimen>
     <dimen name="slidingmenu_offset">275dp</dimen>
-
+    <dimen name="mmt_margin">24dp</dimen>
 </resources>

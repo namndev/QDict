@@ -1,6 +1,5 @@
 package com.mmt.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,11 +7,8 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -20,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewCompat;
+
 import com.annie.dictionary.R;
 import com.mmt.widget.slidemenu.SlidingMenu;
-import com.nineoldandroids.view.animation.AnimatorProxy;
 
 public class SlidingUpPanelLayout extends ViewGroup {
 
@@ -355,7 +353,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         if (getPanelState() == PanelState.COLLAPSED) {
             smoothToBottom();
             invalidate();
-            return;
         }
     }
 
@@ -420,21 +417,18 @@ public class SlidingUpPanelLayout extends ViewGroup {
             mDragView.setClickable(true);
             mDragView.setFocusable(false);
             mDragView.setFocusableInTouchMode(false);
-            mDragView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isEnabled() || !isTouchEnabled())
-                        return;
-                    if (mSlideState != PanelState.EXPANDED
+            mDragView.setOnClickListener(v -> {
+                if (!isEnabled() || !isTouchEnabled())
+                    return;
+                if (mSlideState != PanelState.EXPANDED
                     /* && mSlideState != PanelState.ANCHORED */) {
-                        if (mAnchorPoint < 1.0f) {
-                            setPanelState(PanelState.HIDDEN); // old COLLAPSED
-                        } else {
-                            setPanelState(PanelState.EXPANDED);
-                        }
-                    } else {
+                    if (mAnchorPoint < 1.0f) {
                         setPanelState(PanelState.HIDDEN); // old COLLAPSED
+                    } else {
+                        setPanelState(PanelState.EXPANDED);
                     }
+                } else {
+                    setPanelState(PanelState.HIDDEN); // old COLLAPSED
                 }
             });
             ;
@@ -499,7 +493,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     /**
      * Sets whether or not the main content is clipped to the top of the panel
      *
-     * @param overlayed
+     * @param clip
      */
     public void setClipPanel(boolean clip) {
         mClipPanel = clip;
@@ -912,15 +906,9 @@ public class SlidingUpPanelLayout extends ViewGroup {
     /**
      * Update the parallax based on the current slide offset.
      */
-    @SuppressLint("NewApi")
     private void applyParallaxForCurrentSlideOffset() {
         if (mParallaxOffset > 0) {
-            int mainViewOffset = getCurrentParalaxOffset();
-            if (Build.VERSION.SDK_INT > 10) {
-                mMainView.setTranslationY(mainViewOffset);
-            } else {
-                AnimatorProxy.wrap(mMainView).setTranslationY(mainViewOffset);
-            }
+            mMainView.setTranslationY(getCurrentParalaxOffset());
         }
     }
 
@@ -951,7 +939,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         boolean result;
-        final int save = canvas.save(Canvas.CLIP_SAVE_FLAG);
+        final int save = canvas.save();
 
         if (mSlideableView != child) { // if main view
             // Clip against the slider; no sense drawing what will immediately
@@ -1159,32 +1147,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
         public void onPanelHidden(View panel);
     }
 
-    /**
-     * No-op stubs for {@link PanelSlideListener}. If you only want to implement
-     * a subset of the listener methods you can extend this instead of implement
-     * the full interface.
-     */
-    public static class SimplePanelSlideListener implements PanelSlideListener {
-        @Override
-        public void onPanelSlide(View panel, float slideOffset) {
-        }
-
-        @Override
-        public void onPanelCollapsed(View panel) {
-        }
-
-        @Override
-        public void onPanelExpanded(View panel) {
-        }
-
-        @Override
-        public void onPanelAnchored(View panel) {
-        }
-
-        @Override
-        public void onPanelHidden(View panel) {
-        }
-    }
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         private static final int[] ATTRS = new int[]{

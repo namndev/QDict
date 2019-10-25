@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="icon_actionRemove" format="reference" />
+    <attr name="icon_actionRotate" format="reference" />
+    <attr name="icon_actionRecent" format="reference" />
+    <attr name="icon_actionFavorite" format="reference" />
+    <attr name="icon_actionVoice" format="reference" />
+    <attr name="icon_actionBack" format="reference" />
+    <attr name="icon_actionSpeak" format="reference" />
+    <attr name="icon_actionWordsList" format="reference" />
+    <attr name="icon_folder" format="reference" />
+    <attr name="icon_folder_back" format="reference" />
+    <attr name="icon_file" format="reference" />
+    <declare-styleable name="ActionButton">
+        <attr name="type" format="enum">
+            <enum name="DEFAULT" value="0" />
+            <enum name="MINI" value="1" />
 
+            <!--Deprecated and will be removed in version 2.0.0. Use DEFAULT and MINI instead-->
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
+        <attr name="button_color" format="color" />
+        <attr name="button_colorPressed" format="color" />
+        <attr name="shadow_radius" format="dimension" />
+        <attr name="shadow_xOffset" format="dimension" />
+        <attr name="shadow_yOffset" format="dimension" />
+        <attr name="shadow_color" format="color" />
+        <attr name="stroke_width" format="dimension" />
+        <attr name="stroke_color" format="color" />
+        <attr name="show_animation" format="reference" />
+        <attr name="hide_animation" format="reference" />
+        <attr name="image" format="reference" />
+        <attr name="image_size" format="dimension" />
+
+        <!--Deprecated and will be removed in version 2.0.0. Use show_animation and hide_animation instead-->
+        <attr name="animation_onShow" format="reference" />
+        <attr name="animation_onHide" format="reference" />
+    </declare-styleable>
     <declare-styleable name="SlidingUpPanelLayout">
         <attr name="umanoPanelHeight" format="dimension"/>
         <attr name="umanoShadowHeight" format="dimension"/>

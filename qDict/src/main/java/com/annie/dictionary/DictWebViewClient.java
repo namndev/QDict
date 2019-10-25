@@ -13,7 +13,7 @@ import com.mmt.widget.M2tToast;
 
 public class DictWebViewClient extends WebViewClient {
 
-    private WebViewClientCallback mCallback = null;
+    private WebViewClientCallback mCallback;
 
     private Context mContext;
 

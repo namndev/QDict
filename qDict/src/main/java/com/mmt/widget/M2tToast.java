@@ -33,7 +33,7 @@ public class M2tToast extends Toast {
         LayoutInflater inflate = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.transient_notification, null);
-        tvMessage = (TextView) v.findViewById(android.R.id.message);
+        tvMessage = v.findViewById(android.R.id.message);
         tvMessage.setGravity(Gravity.CENTER_VERTICAL);
         tvMessage.setText(text);
         tvMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));

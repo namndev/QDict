@@ -1,0 +1,82 @@
+TODO:
+
+
+
+Check the heap spend.
+计划界面可根据屏幕尺寸设置不同大小。
+播放单词声音文件。
+Speech可选择所使用的语言。
+
+语音识别。
+软件在线评价及建议。
+
+
+BUG:
+!!! 在FFA上页内查找总个数不正确，永远是1。!!!
+!!! 背景颜色设置并保存后无法即时更新主窗口WebView背景颜色。!!!
+!!! There are some issues about powerword format. !!!
+??? 背光亮才设置定时器，背光暗停止。(此功能不一定需要，手机进入休眠后可能会自动暂停定时器。) ??? 
+??? It crashs in Emulator when use Fuzzy search. Need to test it more and more. ??? 
+??? 写文件后过早关闭模拟器保存的文件为0字节。如果过早关闭模拟器，内容没来得及写入文件。 ???
+
+
+COMPLETED TASKS:
+搜索下拉框列出相似单词，可点击三角按钮查看相似单词列表。
+支持多种查询模式，点击查词框右边按钮进行查询。
+多线程，查询中可取消查询。
+有全文搜索功能，全文搜索时关键词高亮(可输入任意单词并高亮)。
+取词功能，取词窗口可拖动，可最小化有最大化。取词窗口按返回键可关闭。取词窗口可输入单词进行查询。
+取词窗口可匹配大写，小写，首字母大写单词，去掉“,. "'”等符号。
+可点击当前词典名称收起/打开当前词典。
+设置窗口。可设置词典，给词典排序。可设置是否取词，据此判断是否需要启动后台服务程序。
+可选择词典路径。
+背单词可单独写一个应用，此应用可通过主应用获取单词信息。背单词，可保存进度。
+当次没有记住的单词需要放到尾部。当前背诵进度显示在单词右边。
+Total cards and unseen cards in the statistic.
+The hyperlink word in the dictionary.
+Image in the dictionary content data.
+Support pure text dict format.
+应用图标修改，界面美化。
+在单词库选择界面显示背诵进度百分比。
+词典选择界面按住词典名称可以排序，点击选择框则选择词典。
+语音朗读，支持语音方式朗读单词。可选整句朗读（朗读剪切版中内容）。
+背诵界面可播放单词语音。实现一个单独的界面可以录音及重放，且可播放单词音。
+Don't use px units, use dp(or sp for text)
+Use Theme/style, dimension, color resources to reduce redundancy.
+自适应不同屏幕尺寸。
+横屏显示[设置界面需要修改以适应横屏界面，包括Schedule界面]。
+有单独历史单词记录，记录总数可配置。有生词记录功能，记录总数可配置。历史单词及生词记录可查询。[最多存储99条记录]
+中文资源。
+查词取词界面可设置背景颜色，字体颜色及查询单词颜色。
+Support other stardict format, such as KingSoft/xdxf and so on.
+Support SDK 1.6(API Level: 4)
+Release the code with documents.
+
+
+REMOVED TASKS:
+可识别网址并打开。可打开文本文件及网页文件，有单独的文件浏览历史记录功能。有网址收藏功能。（此功能不需要，已经可在浏览器中直接取词）
+单词逆向背诵与默写。桌面背单词小组件。
+尝试隐藏菜单（不使用时收起，使用时点击弹出）。
+背诵单词随机算法，需要在整个单词表中随机。
+支持全文朗读。
+取词窗口可打开MangoDict主应用。
+Can recognize inflected forms of word
+Cache the idx & syn index files to improve the performance.
+查词取词界面可设置背景图片
+词典跳转（选择词典名称，直接跳转到相应词典处查看解释）。
+Support MediaWiki online search.
+
+
+Reference:
+
+QVGA    : 240×320
+HVGA    : 480×320
+VGA     : 640×480
+WVGA    : 800×480
+WVGA854 : 854×480
+WQVGA432：432×240
+WQVGA400：400×240
+WXGA    ：800×1280
+
+hdpi:~240dpi 480x800
+mdpi:~160dpi 320x480

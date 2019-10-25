@@ -62,9 +62,6 @@ public class StandOutFlags {
 
     /**
      * Setting this flag indicates that windows are able to be hidden, that
-     * {@link StandOutWindow#getHiddenIcon(int)},
-     * {@link StandOutWindow#getHiddenTitle(int)}, and
-     * {@link StandOutWindow#getHiddenMessage(int)} are implemented, and that
      * the system window decorator should provide a hide button if
      * {@link #FLAG_DECORATION_SYSTEM} is set.
      */
@@ -134,9 +131,6 @@ public class StandOutFlags {
      * The benefit of disabling focus is that your window will not consume any
      * key events. Normally, focused windows will consume the Back and Menu
      * keys.
-     *
-     * @see {@link StandOutWindow#focus(int)}
-     * @see {@link StandOutWindow#unfocus(int)}
      */
     public static final int FLAG_WINDOW_FOCUSABLE_DISABLE = 1 << flag_bit++;
 
@@ -152,21 +146,13 @@ public class StandOutFlags {
 
     /**
      * Setting this flag indicates that the system should disable all
-     * compatibility workarounds. The default behavior is to run
-     * {@link Window#fixCompatibility(View, int)} on the view returned by the
-     * implementation.
-     *
-     * @see {@link Window#fixCompatibility(View, int)}
+     * compatibility workarounds.
      */
     public static final int FLAG_FIX_COMPATIBILITY_ALL_DISABLE = 1 << flag_bit++;
 
     /**
      * Setting this flag indicates that the system should disable all additional
-     * functionality. The default behavior is to run
-     * {@link Window#addFunctionality(View, int)} on the view returned by the
-     * implementation.
-     *
-     * @see {@link StandOutWindow#addFunctionality(View, int)}
+     * functionality.
      */
     public static final int FLAG_ADD_FUNCTIONALITY_ALL_DISABLE = 1 << flag_bit++;
 
@@ -176,8 +162,6 @@ public class StandOutFlags {
      * <p/>
      * If {@link #FLAG_DECORATION_SYSTEM} is set, the user will always be able
      * to resize the window with the default corner.
-     *
-     * @see {@link Window#addFunctionality(View, int)}
      */
     public static final int FLAG_ADD_FUNCTIONALITY_RESIZE_DISABLE = 1 << flag_bit++;
 
@@ -188,8 +172,6 @@ public class StandOutFlags {
      * <p/>
      * If {@link #FLAG_DECORATION_SYSTEM} is set, the user will always be able
      * to show the drop down menu with the default window icon.
-     *
-     * @see {@link Window#addFunctionality(View, int)}
      */
     public static final int FLAG_ADD_FUNCTIONALITY_DROP_DOWN_DISABLE = 1 << flag_bit++;
 }

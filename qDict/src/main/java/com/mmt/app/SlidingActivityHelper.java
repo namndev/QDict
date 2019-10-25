@@ -72,17 +72,15 @@ public class SlidingActivityHelper {
             open = false;
             secondary = false;
         }
-        new Handler().post(new Runnable() {
-            public void run() {
-                if (open) {
-                    if (secondary) {
-                        mSlidingMenu.showSecondaryMenu(false);
-                    } else {
-                        mSlidingMenu.showMenu(false);
-                    }
+        new Handler().post(() -> {
+            if (open) {
+                if (secondary) {
+                    mSlidingMenu.showSecondaryMenu(false);
                 } else {
-                    mSlidingMenu.showContent(false);
+                    mSlidingMenu.showMenu(false);
                 }
+            } else {
+                mSlidingMenu.showContent(false);
             }
         });
     }

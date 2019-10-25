@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.CheckedTextView;
+
+import androidx.appcompat.widget.AppCompatCheckedTextView;
 
 import com.annie.dictionary.utils.Utils;
 import com.annie.dictionary.utils.Utils.Def;
@@ -13,7 +14,7 @@ import com.annie.dictionary.utils.Utils.Def;
 /**
  * Extends widget.CheckedTextView: Custom font for CheckedTextView
  */
-public class QCheckedTextView extends CheckedTextView {
+public class QCheckedTextView extends AppCompatCheckedTextView {
 
     public QCheckedTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -67,38 +66,31 @@ public class PathSelectActivity extends ActionBarListActivity implements OnItemC
             mSelectType = SELECT_TYPE_FOLDER;
         }
 
-        mDictPath = (TextView) findViewById(R.id.dictPath);
-        QButton buttonConfirm = (QButton) findViewById(R.id.buttonConfirm);
+        mDictPath = findViewById(R.id.dictPath);
+        QButton buttonConfirm = findViewById(R.id.buttonConfirm);
         getListView().setOnItemClickListener(this);
-        buttonConfirm.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                String filePath;
-                if (SELECT_TYPE_FILE == mSelectType) {
-                    if (null == mFilePath) {
-                        finish();
-                        return;
-                    }
-                    filePath = mFilePath;
-                } else {
-                    filePath = curPath;
+        buttonConfirm.setOnClickListener(v -> {
+            String filePath;
+            if (SELECT_TYPE_FILE == mSelectType) {
+                if (null == mFilePath) {
+                    finish();
+                    return;
                 }
-
-                Intent intent = new Intent(SettingFragment.DATA_SOURCE_INTENT);
-                Bundle bundle = new Bundle();
-                bundle.putString("filePath", filePath);
-                intent.putExtras(bundle);
-                sendBroadcast(intent);
-                finish();
+                filePath = mFilePath;
+            } else {
+                filePath = curPath;
             }
+
+            Intent intent1 = new Intent(SettingFragment.DATA_SOURCE_INTENT);
+            Bundle bundle1 = new Bundle();
+            bundle1.putString("filePath", filePath);
+            intent1.putExtras(bundle1);
+            sendBroadcast(intent1);
+            finish();
         });
 
-        QButton buttonCancle = (QButton) findViewById(R.id.buttonCancle);
-        buttonCancle.setOnClickListener(new OnClickListener() {
-
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        QButton buttonCancle = findViewById(R.id.buttonCancle);
+        buttonCancle.setOnClickListener(v -> finish());
 
         getFileDir(curPath);
     }
@@ -129,7 +121,7 @@ public class PathSelectActivity extends ActionBarListActivity implements OnItemC
             }
         }
 
-        if (f.exists()) {
+        if (f.exists() && files != null) {
             for (File file : files) {
                 if (file.canRead()) {
                     items.add(file.getName());
@@ -192,8 +184,8 @@ public class PathSelectActivity extends ActionBarListActivity implements OnItemC
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.file_row, null);
                 holder = new ViewHolder();
-                holder.text = (TextView) convertView.findViewById(R.id.text);
-                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                holder.text = convertView.findViewById(R.id.text);
+                holder.icon = convertView.findViewById(R.id.icon);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
