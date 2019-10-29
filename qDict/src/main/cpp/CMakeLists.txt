@@ -29,6 +29,7 @@ target_include_directories(qdicteng PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/plugs
         )
 
+set(ANDROID_STL gnustl_shared)
 
 # Include libraries needed for qdicteng lib
 target_link_libraries(qdicteng
