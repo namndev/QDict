@@ -11,7 +11,7 @@ android {
         versionCode 20191029
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_STL=gnustl_shared'
+                arguments '-DANDROID_STL=c++_shared'
             }
         }
     }
