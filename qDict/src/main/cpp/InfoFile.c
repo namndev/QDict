@@ -2,7 +2,7 @@
 #include "utils/DictUtils.h"
 #include "utils/MapFile.h"
 #include <sys/stat.h>
-#include <Stdlib.h>
+#include <stdlib.h>
 
 static const char* skip_new_line(const char *p) {
 	if (!p)
