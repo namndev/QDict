@@ -596,10 +596,6 @@ class MainActivity : BaseActivity(), NavigatorFragment.NavigationCallbacks, OnCl
         }
 
         override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-            if (keyCode != KeyEvent.KEYCODE_SPACE && (drop_list.selectedItemPosition >= 0 || keyCode != KeyEvent.KEYCODE_SEARCH && keyCode != KeyEvent.KEYCODE_DPAD_CENTER)) {
-                drop_list.onKeyUp(keyCode, event)
-            }
-
             when (keyCode) {
                 // avoid passing the focus from the text view to the next
                 // component
@@ -609,10 +605,6 @@ class MainActivity : BaseActivity(), NavigatorFragment.NavigationCallbacks, OnCl
         }
 
         override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-            if (keyCode != KeyEvent.KEYCODE_SPACE && (drop_list.selectedItemPosition >= 0 || keyCode != KeyEvent.KEYCODE_SEARCH && keyCode != KeyEvent.KEYCODE_DPAD_CENTER)) {
-                drop_list.requestFocusFromTouch()
-                drop_list.onKeyDown(keyCode, event)
-            }
             when (keyCode) {
                 // avoid passing the focus from the text view to the next
                 // component
