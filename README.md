@@ -1,6 +1,6 @@
 # QDict
 
-[![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/namndev)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/namndev)
 
 This is an open source Android dictionary application which support `stardict` format dictionaries.
 
@@ -45,5 +45,7 @@ You can find all in Play Store
 
 
 [![Play Store](https://www.google.com/photos/about/static/images/badge_google_play_36dp.svg)](https://play.google.com/store/apps/details?id=com.annie.dictionary)
+
+[![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/namndev)
 
 > Thanks!
