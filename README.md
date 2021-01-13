@@ -1,6 +1,6 @@
 # QDict
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/namndev)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/paypalme/namndev)
 
 This is an open source Android dictionary application which support `stardict` format dictionaries.
 
